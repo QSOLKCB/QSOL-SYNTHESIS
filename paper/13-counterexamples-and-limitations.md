@@ -4,7 +4,7 @@ A synthesis becomes unhelpful if every project is forced into it. Several limits
 
 ## Not every project implements the full pipeline
 
-Creative, historical, infrastructure and experimental repositories emphasize different stages. Some have rich replay and provenance; others mainly expose a representation or hypothesis. Absence of a stage is not a defect unless the project claims that stage.
+Creative, historical, infrastructure and experimental repositories emphasize different stages. Some have rich replay and provenance; others mainly expose a representation or hypothesis. Representative contrasting sources include `src:qai-uft:readme`, `src:uff:readme`, `src:qsol-substrate:readme`, and `src:rivet:readme`. Absence of a stage is not a defect unless the project claims that stage.
 
 ## Shared vocabulary can be accidental
 
@@ -24,7 +24,7 @@ A theme marked documented means the indexed source supports it. A not-found cell
 
 ## Methodological evolution is not a ladder of quality
 
-Older exploratory work should not be rewritten to resemble later evidence discipline. The evolution section records a change in emphasis, not a score.
+Older exploratory work should not be rewritten to resemble later evidence discipline. The contrast is grounded, for example, in `src:qai-uft:readme` versus later evidence-bound sources such as `src:uft-id-3-0:readme` and `src:uff:readme`. The evolution section records a change in emphasis, not a score.
 
 ## The central thesis can fail
 

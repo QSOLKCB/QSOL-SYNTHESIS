@@ -8,7 +8,7 @@ Raw public discovery and curated synthesis are deliberately separated. scripts/c
 
 ## Source hierarchy
 
-The baseline prefers first-party sources: repository README files, CITATION.cff, .zenodo.json, release metadata, and project documentation. Zenodo API metadata is useful for verification and enrichment, but a failed external lookup does not authorize fabricated metadata.
+The baseline prefers first-party sources: repository README files, CITATION.cff, .zenodo.json, release metadata, and project documentation. Zenodo API metadata is useful for verification and enrichment, but a failed external lookup does not authorize fabricated metadata. Representative indexed anchors include `src:uff:readme`, `src:e8-music:readme`, and `src:zenodo-22026554`.
 
 data/source-index.json provides stable internal source identifiers. Project README sources also carry the theme tags they support. The project-theme matrix is validated against those source supports.
 

@@ -18,6 +18,7 @@ ZENODO_RECORD_RE = re.compile(r"^https://zenodo\.org/records/(\d+)/?$")
 DOI_SOURCE_RE = re.compile(r"^https://doi\.org/(10\.\d{4,9}/[-._;()/:A-Z0-9]+)$", re.IGNORECASE)
 ZENODO_DOI_RE = re.compile(r"^10\.5281/zenodo\.(\d+)$", re.IGNORECASE)
 SOURCE_ID_RE = re.compile(r"\bsrc:[A-Za-z0-9._-]+(?::[A-Za-z0-9._-]+)*\b")
+PROJECT_ID_RE = re.compile(r"^project:[A-Za-z0-9._-]+$")
 
 ALLOWED_MATRIX_VALUES = {"documented", "partial", "not-found"}
 ALLOWED_LINK_RELATIONS = {"repository-associated-publication", "lineage-reference"}
@@ -40,7 +41,7 @@ def read_json(path: pathlib.Path):
 
 
 def source_id_for_project(project_id: str | None) -> str | None:
-    if not isinstance(project_id, str) or not project_id:
+    if not isinstance(project_id, str) or not PROJECT_ID_RE.fullmatch(project_id):
         return None
     return f"src:{project_id.removeprefix('project:')}:readme"
 
@@ -204,8 +205,18 @@ def validate(root: pathlib.Path) -> list[str]:
     sources = sources_doc.get("sources", [])
 
     project_ids = [p.get("id") for p in projects]
-    if None in project_ids or len(project_ids) != len(set(project_ids)):
-        fail("project IDs must be non-null and unique")
+    invalid_project_ids = [
+        project_id
+        for project_id in project_ids
+        if not isinstance(project_id, str) or not PROJECT_ID_RE.fullmatch(project_id)
+    ]
+    if invalid_project_ids:
+        fail(
+            f"project IDs must be non-empty strings in the project: namespace: "
+            f"{invalid_project_ids!r}"
+        )
+    if len(project_ids) != len(set(project_ids)):
+        fail("project IDs must be unique")
     project_set = set(project_ids)
     project_by_id = {p.get("id"): p for p in projects if p.get("id")}
 
@@ -331,8 +342,15 @@ def validate(root: pathlib.Path) -> list[str]:
 
     zenodo_rows = zenodo_doc.get("records", [])
     zenodo_dois = [row.get("doi") for row in zenodo_rows]
-    if None in zenodo_dois or len({doi.casefold() for doi in zenodo_dois}) != len(zenodo_dois):
-        fail("curated Zenodo DOI identifiers must be non-null and unique")
+    valid_zenodo_dois = [
+        doi
+        for doi in zenodo_dois
+        if isinstance(doi, str) and doi
+    ]
+    if len(valid_zenodo_dois) != len(zenodo_dois):
+        fail("curated Zenodo DOI identifiers must be non-empty strings")
+    if len({doi.casefold() for doi in valid_zenodo_dois}) != len(valid_zenodo_dois):
+        fail("curated Zenodo DOI identifiers must be unique ignoring case")
     expected_zenodo_dois = {
         doi
         for doi in publication_by_doi

@@ -682,6 +682,87 @@ class ValidateSourcesRegressionTests(unittest.TestCase):
             "lineage-reference links must exactly match historical-lineage declarations",
         )
 
+    def test_historical_lineage_publication_must_belong_to_origin(self):
+        root = self.fixture()
+        rels = self.read_json(root, "relationships.json")
+        rel = next(
+            rel for rel in rels["relationships"]
+            if rel.get("relation_type") == "historical-lineage"
+        )
+        old_source = rel["source"]
+        rel["source"] = "project:qsolqec"
+        self.write_json(root, "relationships.json", rels)
+
+        graph = root / "figures" / "theme-network.dot"
+        text = graph.read_text(encoding="utf-8")
+        text = text.replace(
+            f'"{old_source}" -> "{rel["target"]}"',
+            f'"{rel["source"]}" -> "{rel["target"]}"',
+            1,
+        )
+        graph.write_text(text, encoding="utf-8")
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "historical-lineage publication must belong to the origin project",
+        )
+
+    def test_shared_relationship_requires_evidence_from_both_endpoints(self):
+        root = self.fixture()
+        rels = self.read_json(root, "relationships.json")
+        rel = next(
+            rel for rel in rels["relationships"]
+            if rel.get("relation_type") == "shared-validation-architecture"
+        )
+        old_target = rel["target"]
+        rel["target"] = "project:spectral"
+        rel["evidence"] = [
+            "https://github.com/QSOLKCB/GALAXY/blob/main/README.md"
+        ]
+        self.write_json(root, "relationships.json", rels)
+
+        graph = root / "figures" / "theme-network.dot"
+        text = graph.read_text(encoding="utf-8")
+        text = text.replace(
+            f'"{rel["source"]}" -> "{old_target}"',
+            f'"{rel["source"]}" -> "{rel["target"]}"',
+            1,
+        )
+        graph.write_text(text, encoding="utf-8")
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "bilateral relationship evidence must cover both endpoints",
+        )
+
+    def test_project_summary_publications_must_match_curated_links(self):
+        root = self.fixture()
+        path = root / "projects" / "uff.md"
+        text = path.read_text(encoding="utf-8")
+        text = text.replace(
+            "10.5281/zenodo.22026554",
+            "10.5281/zenodo.99999999",
+            1,
+        )
+        path.write_text(text, encoding="utf-8")
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "project summary publications must match curated links",
+        )
+
+    def test_matrix_rejects_overwide_rows(self):
+        root = self.fixture()
+        matrix = root / "evidence" / "project-theme-matrix.csv"
+        lines = matrix.read_text(encoding="utf-8").splitlines()
+        lines[1] = lines[1] + ",documented"
+        matrix.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "matrix rows must match the declared header width exactly",
+        )
+
     def test_matrix_cannot_deny_declared_theme_support(self):
         root = self.fixture()
         projects = self.read_json(root, "projects.json")["projects"]

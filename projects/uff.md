@@ -23,7 +23,7 @@ Reproducible astrophysics laboratory with replay gates, Lean assurance, and expl
 
 ## Cross-project connections
 
-- ← **project:galaxy** — shared-validation-architecture; theme: oracle_candidate_parity; mechanism_claim=false. Both emphasize deterministic runtime, parity checks, replay evidence, and explicit claim boundaries.
+- ← **project:galaxy** — shared-validation-architecture; theme: provenance; mechanism_claim=false. Both emphasize deterministic runtime, parity checks, replay evidence, and explicit claim boundaries.
 
 ## Publications and archival records
 

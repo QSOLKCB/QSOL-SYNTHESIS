@@ -41,6 +41,17 @@ NON_MECHANISM_RELATIONS = {
     "shared-validation-architecture",
     "analogous-computational-structure",
 }
+BILATERAL_RELATIONS = {
+    "shared-methodological-principle",
+    "shared-provenance-architecture",
+    "shared-validation-architecture",
+    "analogous-computational-structure",
+}
+SUMMARY_PUBLICATIONS_SECTION_RE = re.compile(
+    r"^## Publications and archival records\s*$\n(?P<body>.*?)(?=^## |\Z)",
+    re.MULTILINE | re.DOTALL,
+)
+DOI_TOKEN_RE = re.compile(r"\b10\.\d{4,9}/[-._;()/:A-Z0-9]+\b", re.IGNORECASE)
 ALLOWED_SUPPORT_TAGS = {"inventory", "publication-linking", "doi-linking"}
 ALLOWED_SOURCE_TYPES = {"github-readme", "publication-metadata"}
 
@@ -764,9 +775,15 @@ def validate(root: pathlib.Path) -> list[str]:
             fail(f"unknown/unreviewed relationship type: {relation_type}")
         if relation_type == "historical-lineage":
             publication_id = rel.get("publication_id")
-            if publication_id not in pub_set:
+            lineage_publication = publication_by_id.get(publication_id)
+            if lineage_publication is None:
                 fail(
                     f"historical-lineage relationship must bind a curated publication: "
+                    f"{source_id} -> {target_id}: {publication_id}"
+                )
+            elif lineage_publication.get("repository_association") != source_id:
+                fail(
+                    f"historical-lineage publication must belong to the origin project: "
                     f"{source_id} -> {target_id}: {publication_id}"
                 )
         elif "publication_id" in rel:
@@ -784,7 +801,13 @@ def validate(root: pathlib.Path) -> list[str]:
                 set(project_by_id.get(endpoint_id, {}).get("themes", []))
                 for endpoint_id in (source_id, target_id)
             ]
-            if not any(theme in themes_for_endpoint for themes_for_endpoint in endpoint_theme_sets):
+            if relation_type in BILATERAL_RELATIONS:
+                if not all(theme in themes_for_endpoint for themes_for_endpoint in endpoint_theme_sets):
+                    fail(
+                        f"bilateral relationship theme must be supported by both endpoints: "
+                        f"{source_id} -> {target_id}: {theme}"
+                    )
+            elif not any(theme in themes_for_endpoint for themes_for_endpoint in endpoint_theme_sets):
                 fail(
                     f"relationship theme is not supported by either endpoint: "
                     f"{source_id} -> {target_id}: {theme}"
@@ -803,8 +826,10 @@ def validate(root: pathlib.Path) -> list[str]:
         if not isinstance(evidence, list) or not evidence:
             fail(f"relationship requires first-party GitHub evidence: {source_id} -> {target_id}")
         else:
+            evidence_identities = set()
             for url in evidence:
                 evidence_repo = github_repository(url)
+                identity = github_blob_identity(url)
                 if evidence_repo is None:
                     fail(f"relationship evidence must be a GitHub repository URL: {source_id} -> {target_id}: {url!r}")
                 elif normalize_repository(evidence_repo) not in endpoint_repos:
@@ -812,11 +837,18 @@ def validate(root: pathlib.Path) -> list[str]:
                         f"relationship evidence repository must match an endpoint: "
                         f"{source_id} -> {target_id}: {evidence_repo}"
                     )
-                elif github_blob_identity(url) not in endpoint_sources:
+                elif identity not in endpoint_sources:
                     fail(
                         f"relationship evidence must match a curated endpoint source: "
                         f"{source_id} -> {target_id}: {url!r}"
                     )
+                else:
+                    evidence_identities.add(identity)
+            if relation_type in BILATERAL_RELATIONS and evidence_identities != endpoint_sources:
+                fail(
+                    f"bilateral relationship evidence must cover both endpoints: "
+                    f"{source_id} -> {target_id}"
+                )
         relationship_keys.append((source_id, target_id, rel.get("relation_type"), theme))
     if len(relationship_keys) != len(set(relationship_keys)):
         fail("relationships must be unique by endpoints, type, and theme")
@@ -943,6 +975,8 @@ def validate(root: pathlib.Path) -> list[str]:
         if set(columns) != theme_set or len(columns) != len(theme_set):
             fail("matrix theme columns must match the theme registry exactly")
         rows = list(reader)
+        if any(None in row for row in rows):
+            fail("matrix rows must match the declared header width exactly")
 
     matrix_ids = [row.get("project_id") for row in rows]
     if len(matrix_ids) != len(set(matrix_ids)):
@@ -1028,6 +1062,35 @@ def validate(root: pathlib.Path) -> list[str]:
                             f"project summary path does not match curated summary_path: "
                             f"{actual_summary_path} -> {project_refs[0]}"
                         )
+                    if summary_project_by_source is not None:
+                        section_match = SUMMARY_PUBLICATIONS_SECTION_RE.search(text)
+                        section_text = section_match.group("body") if section_match else ""
+                        actual_publication_dois = [
+                            doi.casefold()
+                            for doi in DOI_TOKEN_RE.findall(section_text)
+                        ]
+                        expected_publication_dois = sorted(
+                            publication_by_id[link.get("publication_id")]["doi"].casefold()
+                            for link in links
+                            if (
+                                link.get("project_id") == summary_project_by_source.get("id")
+                                and link.get("relation") in ALLOWED_LINK_RELATIONS
+                                and link.get("publication_id") in publication_by_id
+                                and isinstance(
+                                    publication_by_id[link.get("publication_id")].get("doi"),
+                                    str,
+                                )
+                            )
+                        )
+                        if (
+                            len(actual_publication_dois) != len(set(actual_publication_dois))
+                            or sorted(actual_publication_dois) != expected_publication_dois
+                        ):
+                            fail(
+                                f"project summary publications must match curated links: "
+                                f"{actual_summary_path} expected={expected_publication_dois} "
+                                f"actual={sorted(actual_publication_dois)}"
+                            )
             for source_ref in source_refs:
                 if source_ref not in source_by_id:
                     fail(

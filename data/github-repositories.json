@@ -14,7 +14,8 @@
         "deterministic-proof-stack"
       ],
       "source": "https://github.com/QSOLKCB/QEC/blob/main/README.md",
-      "publication_dois": []
+      "publication_dois": [],
+      "publication_sources": {}
     },
     {
       "name": "UFT-ID-3.0",
@@ -26,7 +27,8 @@
         "falsification-lab"
       ],
       "source": "https://github.com/QSOLKCB/UFT-ID-3.0/blob/main/README.md",
-      "publication_dois": []
+      "publication_dois": [],
+      "publication_sources": {}
     },
     {
       "name": "UFF",
@@ -40,7 +42,10 @@
       "source": "https://github.com/QSOLKCB/UFF/blob/main/README.md",
       "publication_dois": [
         "10.5281/zenodo.22026554"
-      ]
+      ],
+      "publication_sources": {
+        "10.5281/zenodo.22026554": "https://github.com/QSOLKCB/UFF/blob/main/CITATION.cff"
+      }
     },
     {
       "name": "QAI-UFT",
@@ -54,7 +59,11 @@
       "publication_dois": [
         "10.5281/zenodo.17520186",
         "10.5281/zenodo.17569256"
-      ]
+      ],
+      "publication_sources": {
+        "10.5281/zenodo.17520186": "https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md",
+        "10.5281/zenodo.17569256": "https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md"
+      }
     },
     {
       "name": "res-rag",
@@ -68,7 +77,10 @@
       "source": "https://github.com/QSOLKCB/res-rag/blob/main/README.md",
       "publication_dois": [
         "10.5281/zenodo.21917464"
-      ]
+      ],
+      "publication_sources": {
+        "10.5281/zenodo.21917464": "https://github.com/QSOLKCB/res-rag/blob/main/CITATION.cff"
+      }
     },
     {
       "name": "res-rag-viz",
@@ -79,7 +91,8 @@
         "empirical-simulation-laboratory"
       ],
       "source": "https://github.com/QSOLKCB/res-rag-viz/blob/main/README.md",
-      "publication_dois": []
+      "publication_dois": [],
+      "publication_sources": {}
     },
     {
       "name": "QSOLQEC",
@@ -90,7 +103,8 @@
         "empirical-simulation-laboratory"
       ],
       "source": "https://github.com/QSOLKCB/QSOLQEC/blob/main/README.md",
-      "publication_dois": []
+      "publication_dois": [],
+      "publication_sources": {}
     },
     {
       "name": "QSOL-QEC-BRIDGE",
@@ -101,7 +115,8 @@
         "compatibility-research"
       ],
       "source": "https://github.com/QSOLKCB/QSOL-QEC-BRIDGE/blob/main/README.md",
-      "publication_dois": []
+      "publication_dois": [],
+      "publication_sources": {}
     },
     {
       "name": "SONIFICATION",
@@ -118,7 +133,14 @@
         "10.5281/zenodo.21455181",
         "10.5281/zenodo.21494678",
         "10.5281/zenodo.22831753"
-      ]
+      ],
+      "publication_sources": {
+        "10.5281/zenodo.21404223": "https://doi.org/10.5281/zenodo.21404223",
+        "10.5281/zenodo.21432511": "https://github.com/QSOLKCB/SONIFICATION/blob/main/CITATION.cff",
+        "10.5281/zenodo.21455181": "https://github.com/QSOLKCB/SONIFICATION/blob/main/CITATION.cff",
+        "10.5281/zenodo.21494678": "https://github.com/QSOLKCB/SONIFICATION/blob/main/CITATION.cff",
+        "10.5281/zenodo.22831753": "https://github.com/QSOLKCB/SONIFICATION/blob/main/README.md"
+      }
     },
     {
       "name": "E8_MUSIC",
@@ -129,7 +151,8 @@
         "creative-interpretive-experiment"
       ],
       "source": "https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md",
-      "publication_dois": []
+      "publication_dois": [],
+      "publication_sources": {}
     },
     {
       "name": "SPECTRAL",
@@ -144,7 +167,12 @@
         "10.5281/zenodo.21292906",
         "10.5281/zenodo.21293821",
         "10.5281/zenodo.21308248"
-      ]
+      ],
+      "publication_sources": {
+        "10.5281/zenodo.21292906": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md",
+        "10.5281/zenodo.21293821": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md",
+        "10.5281/zenodo.21308248": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md"
+      }
     },
     {
       "name": "QSOL-MAP",
@@ -155,7 +183,8 @@
         "observation-infrastructure"
       ],
       "source": "https://github.com/QSOLKCB/QSOL-MAP/blob/main/README.md",
-      "publication_dois": []
+      "publication_dois": [],
+      "publication_sources": {}
     },
     {
       "name": "QSOL-GEO-REASON",
@@ -167,7 +196,8 @@
         "falsification-lab"
       ],
       "source": "https://github.com/QSOLKCB/QSOL-GEO-REASON/blob/main/README.md",
-      "publication_dois": []
+      "publication_dois": [],
+      "publication_sources": {}
     },
     {
       "name": "QSOL-SEMANTIC-RELAY",
@@ -178,7 +208,8 @@
         "hypothesis-laboratory"
       ],
       "source": "https://github.com/QSOLKCB/QSOL-SEMANTIC-RELAY/blob/main/README.md",
-      "publication_dois": []
+      "publication_dois": [],
+      "publication_sources": {}
     },
     {
       "name": "QSOL-SUBSTRATE",
@@ -191,7 +222,10 @@
       "source": "https://github.com/QSOLKCB/QSOL-SUBSTRATE/blob/main/README.md",
       "publication_dois": [
         "10.5281/zenodo.21959180"
-      ]
+      ],
+      "publication_sources": {
+        "10.5281/zenodo.21959180": "https://github.com/QSOLKCB/QSOL-SUBSTRATE/blob/main/README.md"
+      }
     },
     {
       "name": "QSOL-ORACLE",
@@ -203,7 +237,8 @@
         "authority-partitioning-infrastructure"
       ],
       "source": "https://github.com/QSOLKCB/QSOL-ORACLE/blob/main/README.md",
-      "publication_dois": []
+      "publication_dois": [],
+      "publication_sources": {}
     },
     {
       "name": "QSOL-NEXUS",
@@ -216,7 +251,10 @@
       "source": "https://github.com/QSOLKCB/QSOL-NEXUS/blob/main/README.md",
       "publication_dois": [
         "10.5281/zenodo.21895577"
-      ]
+      ],
+      "publication_sources": {
+        "10.5281/zenodo.21895577": "https://github.com/QSOLKCB/QSOL-NEXUS/blob/main/README.md"
+      }
     },
     {
       "name": "QSOL-CONTROL",
@@ -227,7 +265,8 @@
         "compatibility-research"
       ],
       "source": "https://github.com/QSOLKCB/QSOL-CONTROL/blob/main/README.md",
-      "publication_dois": []
+      "publication_dois": [],
+      "publication_sources": {}
     },
     {
       "name": "GALAXY",
@@ -240,7 +279,10 @@
       "source": "https://github.com/QSOLKCB/GALAXY/blob/main/README.md",
       "publication_dois": [
         "10.5281/zenodo.22756969"
-      ]
+      ],
+      "publication_sources": {
+        "10.5281/zenodo.22756969": "https://github.com/QSOLKCB/GALAXY/blob/main/README.md"
+      }
     },
     {
       "name": "PSYCLE-LINUX",
@@ -251,7 +293,8 @@
         "compatibility-research"
       ],
       "source": "https://github.com/QSOLKCB/PSYCLE-LINUX/blob/main/README.md",
-      "publication_dois": []
+      "publication_dois": [],
+      "publication_sources": {}
     },
     {
       "name": "RIVET",
@@ -262,7 +305,8 @@
         "minimal-systems-engineering"
       ],
       "source": "https://github.com/QSOLKCB/RIVET/blob/main/README.md",
-      "publication_dois": []
+      "publication_dois": [],
+      "publication_sources": {}
     },
     {
       "name": "COSMO",
@@ -273,7 +317,8 @@
         "hypothesis-laboratory"
       ],
       "source": "https://github.com/QSOLKCB/COSMO/blob/main/README.md",
-      "publication_dois": []
+      "publication_dois": [],
+      "publication_sources": {}
     },
     {
       "name": "QSOL-ARK",
@@ -284,7 +329,8 @@
         "provenance-infrastructure"
       ],
       "source": "https://github.com/QSOLKCB/QSOL-ARK/blob/main/README.md",
-      "publication_dois": []
+      "publication_dois": [],
+      "publication_sources": {}
     },
     {
       "name": "LATTICE",
@@ -295,7 +341,8 @@
         "provenance-infrastructure"
       ],
       "source": "https://github.com/QSOLKCB/LATTICE/blob/main/README.md",
-      "publication_dois": []
+      "publication_dois": [],
+      "publication_sources": {}
     }
   ],
   "selected_count": 24

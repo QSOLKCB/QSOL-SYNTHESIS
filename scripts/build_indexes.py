@@ -79,13 +79,42 @@ def build(root: pathlib.Path) -> dict:
     data = root / "data"
     projects_doc = read_json(data / "projects.json")
     publications_doc = read_json(data / "publications.json")
-    dates = {projects_doc.get("generated_at"), publications_doc.get("generated_at")}
+    links_doc = read_json(data / "project-publication-links.json")
+    dates = {
+        projects_doc.get("generated_at"),
+        publications_doc.get("generated_at"),
+        links_doc.get("generated_at"),
+    }
     dates.discard(None)
     if len(dates) != 1:
         raise RuntimeError(f"curated generated_at values disagree: {sorted(dates)}")
     generated_at = next(iter(dates))
 
     projects = projects_doc.get("projects", [])
+    publications = publications_doc.get("publications", [])
+    links = links_doc.get("links", [])
+
+    ownership_concept_by_publication: dict[str, str | None] = {}
+    for link in links:
+        if link.get("relation") != "repository-associated-publication":
+            continue
+        publication_id = link.get("publication_id")
+        if not isinstance(publication_id, str) or not publication_id:
+            raise RuntimeError("publication ownership link requires publication_id")
+        if publication_id in ownership_concept_by_publication:
+            raise RuntimeError(f"duplicate publication ownership link: {publication_id}")
+        if "concept_doi" not in link:
+            raise RuntimeError(
+                f"publication ownership link must declare concept_doi: {publication_id}"
+            )
+        expected_concept_doi = link.get("concept_doi")
+        if expected_concept_doi is not None and not isinstance(expected_concept_doi, str):
+            raise RuntimeError(
+                f"publication ownership link concept_doi must be a string or null: "
+                f"{publication_id}"
+            )
+        ownership_concept_by_publication[publication_id] = expected_concept_doi
+
     project_repo_by_id = {
         project.get("id"): project.get("repo")
         for project in projects
@@ -116,7 +145,34 @@ def build(root: pathlib.Path) -> dict:
             "supports": sorted({"inventory", *project.get("themes", [])}),
         })
 
-    for pub in publications_doc.get("publications", []):
+    for pub in publications:
+        publication_id = pub.get("id")
+        if publication_id not in ownership_concept_by_publication:
+            raise RuntimeError(
+                f"publication requires a curated ownership concept binding: {publication_id}"
+            )
+        actual_concept_doi = pub.get("concept_doi")
+        expected_concept_doi = ownership_concept_by_publication[publication_id]
+        if actual_concept_doi is not None and not isinstance(actual_concept_doi, str):
+            raise RuntimeError(
+                f"publication {publication_id} concept_doi must be a string or null"
+            )
+        comparable_actual = (
+            actual_concept_doi.casefold()
+            if isinstance(actual_concept_doi, str)
+            else actual_concept_doi
+        )
+        comparable_expected = (
+            expected_concept_doi.casefold()
+            if isinstance(expected_concept_doi, str)
+            else expected_concept_doi
+        )
+        if comparable_actual != comparable_expected:
+            raise RuntimeError(
+                f"publication concept DOI disagrees with curated ownership binding: "
+                f"{publication_id}"
+            )
+
         try:
             kind, repository, branch, path = parse_source(pub.get("source"))
         except RuntimeError as exc:

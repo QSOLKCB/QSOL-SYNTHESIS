@@ -12,7 +12,8 @@
         "quantum-error-correction-research",
         "evidence-infrastructure",
         "deterministic-proof-stack"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/QEC/blob/main/README.md"
     },
     {
       "name": "UFT-ID-3.0",
@@ -22,7 +23,8 @@
         "foundational-theory",
         "formalisation",
         "falsification-lab"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/UFT-ID-3.0/blob/main/README.md"
     },
     {
       "name": "UFF",
@@ -32,7 +34,8 @@
         "empirical-simulation-laboratory",
         "formalisation",
         "provenance-infrastructure"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/UFF/blob/main/README.md"
     },
     {
       "name": "QAI-UFT",
@@ -41,7 +44,8 @@
       "classification": [
         "historical-exploratory-precursor",
         "creative-interpretive-experiment"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md"
     },
     {
       "name": "res-rag",
@@ -51,7 +55,8 @@
         "formalisation",
         "hypothesis-laboratory",
         "evidence-infrastructure"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/res-rag/blob/main/README.md"
     },
     {
       "name": "res-rag-viz",
@@ -60,7 +65,8 @@
       "classification": [
         "sonification-visualisation-instrument",
         "empirical-simulation-laboratory"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/res-rag-viz/blob/main/README.md"
     },
     {
       "name": "QSOLQEC",
@@ -69,7 +75,8 @@
       "classification": [
         "hypothesis-laboratory",
         "empirical-simulation-laboratory"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/QSOLQEC/blob/main/README.md"
     },
     {
       "name": "QSOL-QEC-BRIDGE",
@@ -78,7 +85,8 @@
       "classification": [
         "evidence-infrastructure",
         "compatibility-research"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-QEC-BRIDGE/blob/main/README.md"
     },
     {
       "name": "SONIFICATION",
@@ -87,7 +95,8 @@
       "classification": [
         "formalisation",
         "sonification-visualisation-instrument"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/SONIFICATION/blob/main/README.md"
     },
     {
       "name": "E8_MUSIC",
@@ -96,7 +105,8 @@
       "classification": [
         "sonification-visualisation-instrument",
         "creative-interpretive-experiment"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md"
     },
     {
       "name": "SPECTRAL",
@@ -105,7 +115,8 @@
       "classification": [
         "sonification-visualisation-instrument",
         "empirical-simulation-laboratory"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md"
     },
     {
       "name": "QSOL-MAP",
@@ -114,7 +125,8 @@
       "classification": [
         "formalisation",
         "observation-infrastructure"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-MAP/blob/main/README.md"
     },
     {
       "name": "QSOL-GEO-REASON",
@@ -124,7 +136,8 @@
         "hypothesis-laboratory",
         "formalisation",
         "falsification-lab"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-GEO-REASON/blob/main/README.md"
     },
     {
       "name": "QSOL-SEMANTIC-RELAY",
@@ -133,7 +146,8 @@
       "classification": [
         "ai-semantic-experiment",
         "hypothesis-laboratory"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-SEMANTIC-RELAY/blob/main/README.md"
     },
     {
       "name": "QSOL-SUBSTRATE",
@@ -142,7 +156,8 @@
       "classification": [
         "evidence-infrastructure",
         "provenance-infrastructure"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-SUBSTRATE/blob/main/README.md"
     },
     {
       "name": "QSOL-ORACLE",
@@ -152,7 +167,8 @@
         "evidence-infrastructure",
         "provenance-infrastructure",
         "authority-partitioning-infrastructure"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-ORACLE/blob/main/README.md"
     },
     {
       "name": "QSOL-NEXUS",
@@ -161,7 +177,8 @@
       "classification": [
         "orchestration-control-infrastructure",
         "ai-semantic-experiment"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-NEXUS/blob/main/README.md"
     },
     {
       "name": "QSOL-CONTROL",
@@ -170,7 +187,8 @@
       "classification": [
         "orchestration-control-infrastructure",
         "compatibility-research"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-CONTROL/blob/main/README.md"
     },
     {
       "name": "GALAXY",
@@ -179,7 +197,8 @@
       "classification": [
         "empirical-simulation-laboratory",
         "formalisation"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/GALAXY/blob/main/README.md"
     },
     {
       "name": "PSYCLE-LINUX",
@@ -188,7 +207,8 @@
       "classification": [
         "preservation-engineering",
         "compatibility-research"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/PSYCLE-LINUX/blob/main/README.md"
     },
     {
       "name": "RIVET",
@@ -197,7 +217,8 @@
       "classification": [
         "compatibility-research",
         "minimal-systems-engineering"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/RIVET/blob/main/README.md"
     },
     {
       "name": "COSMO",
@@ -206,7 +227,8 @@
       "classification": [
         "formalisation",
         "hypothesis-laboratory"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/COSMO/blob/main/README.md"
     },
     {
       "name": "QSOL-ARK",
@@ -215,7 +237,8 @@
       "classification": [
         "preservation-engineering",
         "provenance-infrastructure"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-ARK/blob/main/README.md"
     },
     {
       "name": "LATTICE",
@@ -224,7 +247,8 @@
       "classification": [
         "formalisation",
         "provenance-infrastructure"
-      ]
+      ],
+      "source": "https://github.com/QSOLKCB/LATTICE/blob/main/README.md"
     }
   ],
   "selected_count": 24

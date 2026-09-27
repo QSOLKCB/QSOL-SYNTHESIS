@@ -13,7 +13,8 @@
         "evidence-infrastructure",
         "deterministic-proof-stack"
       ],
-      "source": "https://github.com/QSOLKCB/QEC/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QEC/blob/main/README.md",
+      "publication_dois": []
     },
     {
       "name": "UFT-ID-3.0",
@@ -24,7 +25,8 @@
         "formalisation",
         "falsification-lab"
       ],
-      "source": "https://github.com/QSOLKCB/UFT-ID-3.0/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/UFT-ID-3.0/blob/main/README.md",
+      "publication_dois": []
     },
     {
       "name": "UFF",
@@ -35,7 +37,10 @@
         "formalisation",
         "provenance-infrastructure"
       ],
-      "source": "https://github.com/QSOLKCB/UFF/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/UFF/blob/main/README.md",
+      "publication_dois": [
+        "10.5281/zenodo.22026554"
+      ]
     },
     {
       "name": "QAI-UFT",
@@ -45,7 +50,11 @@
         "historical-exploratory-precursor",
         "creative-interpretive-experiment"
       ],
-      "source": "https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md",
+      "publication_dois": [
+        "10.5281/zenodo.17520186",
+        "10.5281/zenodo.17569256"
+      ]
     },
     {
       "name": "res-rag",
@@ -56,7 +65,10 @@
         "hypothesis-laboratory",
         "evidence-infrastructure"
       ],
-      "source": "https://github.com/QSOLKCB/res-rag/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/res-rag/blob/main/README.md",
+      "publication_dois": [
+        "10.5281/zenodo.21917464"
+      ]
     },
     {
       "name": "res-rag-viz",
@@ -66,7 +78,8 @@
         "sonification-visualisation-instrument",
         "empirical-simulation-laboratory"
       ],
-      "source": "https://github.com/QSOLKCB/res-rag-viz/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/res-rag-viz/blob/main/README.md",
+      "publication_dois": []
     },
     {
       "name": "QSOLQEC",
@@ -76,7 +89,8 @@
         "hypothesis-laboratory",
         "empirical-simulation-laboratory"
       ],
-      "source": "https://github.com/QSOLKCB/QSOLQEC/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QSOLQEC/blob/main/README.md",
+      "publication_dois": []
     },
     {
       "name": "QSOL-QEC-BRIDGE",
@@ -86,7 +100,8 @@
         "evidence-infrastructure",
         "compatibility-research"
       ],
-      "source": "https://github.com/QSOLKCB/QSOL-QEC-BRIDGE/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QSOL-QEC-BRIDGE/blob/main/README.md",
+      "publication_dois": []
     },
     {
       "name": "SONIFICATION",
@@ -96,7 +111,14 @@
         "formalisation",
         "sonification-visualisation-instrument"
       ],
-      "source": "https://github.com/QSOLKCB/SONIFICATION/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/SONIFICATION/blob/main/README.md",
+      "publication_dois": [
+        "10.5281/zenodo.21404223",
+        "10.5281/zenodo.21432511",
+        "10.5281/zenodo.21455181",
+        "10.5281/zenodo.21494678",
+        "10.5281/zenodo.22831753"
+      ]
     },
     {
       "name": "E8_MUSIC",
@@ -106,7 +128,8 @@
         "sonification-visualisation-instrument",
         "creative-interpretive-experiment"
       ],
-      "source": "https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md",
+      "publication_dois": []
     },
     {
       "name": "SPECTRAL",
@@ -116,7 +139,12 @@
         "sonification-visualisation-instrument",
         "empirical-simulation-laboratory"
       ],
-      "source": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md",
+      "publication_dois": [
+        "10.5281/zenodo.21292906",
+        "10.5281/zenodo.21293821",
+        "10.5281/zenodo.21308248"
+      ]
     },
     {
       "name": "QSOL-MAP",
@@ -126,7 +154,8 @@
         "formalisation",
         "observation-infrastructure"
       ],
-      "source": "https://github.com/QSOLKCB/QSOL-MAP/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QSOL-MAP/blob/main/README.md",
+      "publication_dois": []
     },
     {
       "name": "QSOL-GEO-REASON",
@@ -137,7 +166,8 @@
         "formalisation",
         "falsification-lab"
       ],
-      "source": "https://github.com/QSOLKCB/QSOL-GEO-REASON/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QSOL-GEO-REASON/blob/main/README.md",
+      "publication_dois": []
     },
     {
       "name": "QSOL-SEMANTIC-RELAY",
@@ -147,7 +177,8 @@
         "ai-semantic-experiment",
         "hypothesis-laboratory"
       ],
-      "source": "https://github.com/QSOLKCB/QSOL-SEMANTIC-RELAY/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QSOL-SEMANTIC-RELAY/blob/main/README.md",
+      "publication_dois": []
     },
     {
       "name": "QSOL-SUBSTRATE",
@@ -157,7 +188,10 @@
         "evidence-infrastructure",
         "provenance-infrastructure"
       ],
-      "source": "https://github.com/QSOLKCB/QSOL-SUBSTRATE/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QSOL-SUBSTRATE/blob/main/README.md",
+      "publication_dois": [
+        "10.5281/zenodo.21959180"
+      ]
     },
     {
       "name": "QSOL-ORACLE",
@@ -168,7 +202,8 @@
         "provenance-infrastructure",
         "authority-partitioning-infrastructure"
       ],
-      "source": "https://github.com/QSOLKCB/QSOL-ORACLE/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QSOL-ORACLE/blob/main/README.md",
+      "publication_dois": []
     },
     {
       "name": "QSOL-NEXUS",
@@ -178,7 +213,10 @@
         "orchestration-control-infrastructure",
         "ai-semantic-experiment"
       ],
-      "source": "https://github.com/QSOLKCB/QSOL-NEXUS/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QSOL-NEXUS/blob/main/README.md",
+      "publication_dois": [
+        "10.5281/zenodo.21895577"
+      ]
     },
     {
       "name": "QSOL-CONTROL",
@@ -188,7 +226,8 @@
         "orchestration-control-infrastructure",
         "compatibility-research"
       ],
-      "source": "https://github.com/QSOLKCB/QSOL-CONTROL/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QSOL-CONTROL/blob/main/README.md",
+      "publication_dois": []
     },
     {
       "name": "GALAXY",
@@ -198,7 +237,10 @@
         "empirical-simulation-laboratory",
         "formalisation"
       ],
-      "source": "https://github.com/QSOLKCB/GALAXY/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/GALAXY/blob/main/README.md",
+      "publication_dois": [
+        "10.5281/zenodo.22756969"
+      ]
     },
     {
       "name": "PSYCLE-LINUX",
@@ -208,7 +250,8 @@
         "preservation-engineering",
         "compatibility-research"
       ],
-      "source": "https://github.com/QSOLKCB/PSYCLE-LINUX/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/PSYCLE-LINUX/blob/main/README.md",
+      "publication_dois": []
     },
     {
       "name": "RIVET",
@@ -218,7 +261,8 @@
         "compatibility-research",
         "minimal-systems-engineering"
       ],
-      "source": "https://github.com/QSOLKCB/RIVET/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/RIVET/blob/main/README.md",
+      "publication_dois": []
     },
     {
       "name": "COSMO",
@@ -228,7 +272,8 @@
         "formalisation",
         "hypothesis-laboratory"
       ],
-      "source": "https://github.com/QSOLKCB/COSMO/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/COSMO/blob/main/README.md",
+      "publication_dois": []
     },
     {
       "name": "QSOL-ARK",
@@ -238,7 +283,8 @@
         "preservation-engineering",
         "provenance-infrastructure"
       ],
-      "source": "https://github.com/QSOLKCB/QSOL-ARK/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QSOL-ARK/blob/main/README.md",
+      "publication_dois": []
     },
     {
       "name": "LATTICE",
@@ -248,7 +294,8 @@
         "formalisation",
         "provenance-infrastructure"
       ],
-      "source": "https://github.com/QSOLKCB/LATTICE/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/LATTICE/blob/main/README.md",
+      "publication_dois": []
     }
   ],
   "selected_count": 24

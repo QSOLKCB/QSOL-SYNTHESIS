@@ -28,6 +28,22 @@ DOT_EDGE_RE = re.compile(
 PROJECT_SUMMARY_REPO_RE = re.compile(
     r"\*\*Repository:\*\*\s*\[[^\]]+\]\(https://github\.com/([^/]+/[^/)]+)\)"
 )
+PROJECT_SUMMARY_SOURCE_RE = re.compile(
+    r"^- \[First-party project source\]\((https://github\.com/[^)]+)\)\s*$",
+    re.MULTILINE,
+)
+SUMMARY_CONNECTION_RE = re.compile(
+    r"^- (?P<arrow>[←→]) \*\*(?P<project_id>project:[A-Za-z0-9._-]+)\*\* — "
+    r"(?P<relation>[a-z0-9-]+); theme: (?P<theme>[a-z0-9_]+); "
+    r"mechanism_claim=(?P<mechanism>true|false)\.",
+    re.MULTILINE,
+)
+SUMMARY_PUBLICATION_ROW_RE = re.compile(
+    r"^- \*\*(?P<relation>[a-z0-9-]+)\*\* — "
+    r"(?P<doi>10\.\d{4,9}/[-._;()/:A-Z0-9]+):",
+    re.IGNORECASE | re.MULTILINE,
+)
+THEME_NAME_RE = re.compile(r"^[a-z0-9]+(?:_[a-z0-9]+)*$")
 
 ALLOWED_MATRIX_VALUES = {"documented", "partial", "not-found"}
 ALLOWED_LINK_RELATIONS = {"repository-associated-publication", "lineage-reference"}
@@ -211,16 +227,23 @@ def validate(root: pathlib.Path) -> list[str]:
         "zenodo-records.json": zenodo_doc,
     }
     date_values = []
+    all_dates_valid = True
     for name, doc in curated_docs.items():
         value = doc.get("generated_at")
         if not valid_date(value):
             fail(f"{name} generated_at must use a real YYYY-MM-DD date: {value!r}")
+            all_dates_valid = False
         elif dt.date.fromisoformat(value) > dt.date.today():
             fail(f"{name} generated_at must not be in the future: {value!r}")
         date_values.append(value)
-    if len(set(date_values)) != 1:
-        fail(f"curated generated_at values must agree: {sorted(str(x) for x in set(date_values))}")
-    corpus_date = date_values[0] if date_values else None
+    date_signatures = sorted({repr(value) for value in date_values})
+    if len(date_signatures) != 1:
+        fail(f"curated generated_at values must agree: {date_signatures}")
+    corpus_date = (
+        date_values[0]
+        if date_values and all_dates_valid and len(date_signatures) == 1
+        else None
+    )
 
     projects = projects_doc.get("projects", [])
     pubs = publications_doc.get("publications", [])
@@ -420,8 +443,25 @@ def validate(root: pathlib.Path) -> list[str]:
 
     doi_seen: dict[str, str] = {}
     for pub in pubs:
-        doi = pub.get("doi")
         publication_id = pub.get("id")
+        title = pub.get("title")
+        resource_type = pub.get("resource_type")
+        version = pub.get("version")
+        association = pub.get("repository_association")
+        if not isinstance(title, str) or not title.strip():
+            fail(f"publication title must be a non-empty string: {publication_id}")
+        if not isinstance(resource_type, str) or not resource_type.strip():
+            fail(f"publication resource_type must be a non-empty string: {publication_id}")
+        if version is not None and (
+            not isinstance(version, str) or not version.strip()
+        ):
+            fail(f"publication version must be a non-empty string or null: {publication_id}")
+        if not isinstance(association, str) or not PROJECT_ID_RE.fullmatch(association):
+            fail(
+                f"publication repository_association must be a project ID: "
+                f"{publication_id} -> {association!r}"
+            )
+        doi = pub.get("doi")
         zenodo_id_match = (
             ZENODO_PUBLICATION_ID_RE.fullmatch(publication_id)
             if isinstance(publication_id, str)
@@ -471,7 +511,7 @@ def validate(root: pathlib.Path) -> list[str]:
                     f"concept-doi publication must self-identify with concept_doi equal to doi: "
                     f"{pub.get('id')}"
                 )
-        assoc = pub.get("repository_association")
+        assoc = association
         if assoc and assoc not in project_set:
             fail(f"publication association missing project: {pub.get('id')} -> {assoc}")
         source_url = pub.get("source")
@@ -595,8 +635,18 @@ def validate(root: pathlib.Path) -> list[str]:
             )
 
     theme_names = [t.get("name") for t in themes]
-    if None in theme_names or len(theme_names) != len(set(theme_names)):
-        fail("theme names must be non-null and unique")
+    invalid_theme_names = [
+        name
+        for name in theme_names
+        if not isinstance(name, str) or not THEME_NAME_RE.fullmatch(name)
+    ]
+    if invalid_theme_names:
+        fail(
+            f"theme names must use the atomic theme slug namespace: "
+            f"{invalid_theme_names!r}"
+        )
+    if len(theme_names) != len(set(theme_names)):
+        fail("theme names must be unique")
     theme_set = set(theme_names)
 
     theme_id_list = [t.get("id") for t in themes]
@@ -801,7 +851,19 @@ def validate(root: pathlib.Path) -> list[str]:
                 set(project_by_id.get(endpoint_id, {}).get("themes", []))
                 for endpoint_id in (source_id, target_id)
             ]
-            if not any(theme in themes_for_endpoint for themes_for_endpoint in endpoint_theme_sets):
+            if relation_type in BILATERAL_RELATIONS:
+                if not all(
+                    theme in themes_for_endpoint
+                    for themes_for_endpoint in endpoint_theme_sets
+                ):
+                    fail(
+                        f"bilateral relationship theme must be supported by both endpoints: "
+                        f"{source_id} -> {target_id}: {theme}"
+                    )
+            elif not any(
+                theme in themes_for_endpoint
+                for themes_for_endpoint in endpoint_theme_sets
+            ):
                 fail(
                     f"relationship theme is not supported by either endpoint: "
                     f"{source_id} -> {target_id}: {theme}"
@@ -1057,17 +1119,81 @@ def validate(root: pathlib.Path) -> list[str]:
                             f"{actual_summary_path} -> {project_refs[0]}"
                         )
                     if summary_project_by_source is not None:
+                        expected_project_source = summary_project_by_source.get("source")
+                        source_link_match = PROJECT_SUMMARY_SOURCE_RE.search(text)
+                        actual_project_source = (
+                            source_link_match.group(1)
+                            if source_link_match
+                            else None
+                        )
+                        if not github_blob_source_matches(
+                            actual_project_source,
+                            expected_project_source,
+                        ):
+                            fail(
+                                f"project summary first-party source link must match curated source: "
+                                f"{actual_summary_path}"
+                            )
+
+                        summary_project_id = summary_project_by_source.get("id")
+                        actual_connections = [
+                            (
+                                match.group("arrow"),
+                                match.group("project_id"),
+                                match.group("relation"),
+                                match.group("theme"),
+                                match.group("mechanism") == "true",
+                            )
+                            for match in SUMMARY_CONNECTION_RE.finditer(text)
+                        ]
+                        expected_connections = []
+                        for rel in rels:
+                            if rel.get("source") == summary_project_id:
+                                expected_connections.append(
+                                    (
+                                        "→",
+                                        rel.get("target"),
+                                        rel.get("relation_type"),
+                                        rel.get("theme"),
+                                        rel.get("mechanism_claim"),
+                                    )
+                                )
+                            elif rel.get("target") == summary_project_id:
+                                expected_connections.append(
+                                    (
+                                        "←",
+                                        rel.get("source"),
+                                        rel.get("relation_type"),
+                                        rel.get("theme"),
+                                        rel.get("mechanism_claim"),
+                                    )
+                                )
+                        if (
+                            len(actual_connections) != len(set(actual_connections))
+                            or sorted(actual_connections) != sorted(expected_connections)
+                        ):
+                            fail(
+                                f"project summary relationships must match curated registry: "
+                                f"{actual_summary_path}"
+                            )
+
                         section_match = SUMMARY_PUBLICATIONS_SECTION_RE.search(text)
                         section_text = section_match.group("body") if section_match else ""
-                        actual_publication_dois = [
-                            doi.casefold()
-                            for doi in DOI_TOKEN_RE.findall(section_text)
+                        actual_publications = [
+                            (
+                                match.group("relation"),
+                                match.group("doi").casefold(),
+                            )
+                            for match in SUMMARY_PUBLICATION_ROW_RE.finditer(section_text)
                         ]
-                        expected_publication_dois = sorted(
-                            publication_by_id[link.get("publication_id")]["doi"].casefold()
+                        expected_publications = sorted(
+                            (
+                                link.get("relation"),
+                                publication_by_id[link.get("publication_id")]["doi"].casefold(),
+                            )
                             for link in links
                             if (
-                                link.get("project_id") == summary_project_by_source.get("id")
+                                link.get("project_id") == summary_project_id
                                 and link.get("relation") in ALLOWED_LINK_RELATIONS
                                 and link.get("publication_id") in publication_by_id
                                 and isinstance(
@@ -1077,13 +1203,13 @@ def validate(root: pathlib.Path) -> list[str]:
                             )
                         )
                         if (
-                            len(actual_publication_dois) != len(set(actual_publication_dois))
-                            or sorted(actual_publication_dois) != expected_publication_dois
+                            len(actual_publications) != len(set(actual_publications))
+                            or sorted(actual_publications) != expected_publications
                         ):
                             fail(
-                                f"project summary publications must match curated links: "
-                                f"{actual_summary_path} expected={expected_publication_dois} "
-                                f"actual={sorted(actual_publication_dois)}"
+                                f"project summary publications must match curated links and relation types: "
+                                f"{actual_summary_path} expected={expected_publications} "
+                                f"actual={sorted(actual_publications)}"
                             )
             for source_ref in source_refs:
                 if source_ref not in source_by_id:

@@ -96,7 +96,7 @@
       "source": "project:galaxy",
       "target": "project:uff",
       "relation_type": "shared-validation-architecture",
-      "theme": "oracle_candidate_parity",
+      "theme": "provenance",
       "mechanism_claim": false,
       "summary": "Both emphasize deterministic runtime, parity checks, replay evidence, and explicit claim boundaries.",
       "evidence": [

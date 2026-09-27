@@ -1,0 +1,433 @@
+{
+  "generated_at": "2026-09-27",
+  "projects": [
+    {
+      "id": "project:uft-id-3-0",
+      "name": "UFT-ID-3.0",
+      "repo": "QSOLKCB/UFT-ID-3.0",
+      "url": "https://github.com/QSOLKCB/UFT-ID-3.0",
+      "role": [
+        "foundational-theory",
+        "formalisation",
+        "falsification-lab"
+      ],
+      "purpose": "Constraint-governed information-dynamics programme separating formal, empirical, interpretive, and speculative layers.",
+      "themes": [
+        "representation",
+        "observation",
+        "recovery",
+        "provenance",
+        "nonclaims",
+        "falsification"
+      ],
+      "source": "https://github.com/QSOLKCB/UFT-ID-3.0/blob/main/README.md"
+    },
+    {
+      "id": "project:uff",
+      "name": "UFF",
+      "repo": "QSOLKCB/UFF",
+      "url": "https://github.com/QSOLKCB/UFF",
+      "role": [
+        "empirical-simulation-laboratory",
+        "formalisation",
+        "provenance-infrastructure"
+      ],
+      "purpose": "Reproducible astrophysics laboratory with replay gates, Lean assurance, and explicit nonclaim calibration.",
+      "themes": [
+        "observation",
+        "simulation",
+        "provenance",
+        "replay",
+        "nonclaims",
+        "falsification"
+      ],
+      "source": "https://github.com/QSOLKCB/UFF/blob/main/README.md"
+    },
+    {
+      "id": "project:qai-uft",
+      "name": "QAI-UFT",
+      "repo": "QSOLKCB/QAI-UFT",
+      "url": "https://github.com/QSOLKCB/QAI-UFT",
+      "role": [
+        "historical-exploratory-precursor",
+        "creative-interpretive-experiment"
+      ],
+      "purpose": "Early resonance-oriented framework linking frequency mappings and symbolic encodings.",
+      "themes": [
+        "representation",
+        "sonification",
+        "interpretation"
+      ],
+      "source": "https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md"
+    },
+    {
+      "id": "project:res-rag",
+      "name": "res-rag",
+      "repo": "QSOLKCB/res-rag",
+      "url": "https://github.com/QSOLKCB/res-rag",
+      "role": [
+        "formalisation",
+        "hypothesis-laboratory",
+        "evidence-infrastructure"
+      ],
+      "purpose": "Formal RES=RAG specification and CSNP protocol with falsifiability and receipt-chain governance.",
+      "themes": [
+        "observation",
+        "provenance",
+        "replay",
+        "falsification",
+        "nonclaims"
+      ],
+      "source": "https://github.com/QSOLKCB/res-rag/blob/main/README.md"
+    },
+    {
+      "id": "project:res-rag-viz",
+      "name": "res-rag-viz",
+      "repo": "QSOLKCB/res-rag-viz",
+      "url": "https://github.com/QSOLKCB/res-rag-viz",
+      "role": [
+        "sonification-visualisation-instrument",
+        "empirical-simulation-laboratory"
+      ],
+      "purpose": "Offline instrument visualising and sonifying RES=RAG diagnostics with local receipt verification.",
+      "themes": [
+        "observation",
+        "sonification",
+        "visualisation",
+        "provenance"
+      ],
+      "source": "https://github.com/QSOLKCB/res-rag-viz/blob/main/README.md"
+    },
+    {
+      "id": "project:qsolqec",
+      "name": "QSOLQEC",
+      "repo": "QSOLKCB/QSOLQEC",
+      "url": "https://github.com/QSOLKCB/QSOLQEC",
+      "role": [
+        "hypothesis-laboratory",
+        "empirical-simulation-laboratory"
+      ],
+      "purpose": "Modular experimental compute laboratory for classical quantum/qudit emulation, diagnostics, and decoder research.",
+      "themes": [
+        "simulation",
+        "observation",
+        "recovery",
+        "oracle_candidate_parity",
+        "nonclaims"
+      ],
+      "source": "https://github.com/QSOLKCB/QSOLQEC/blob/main/README.md"
+    },
+    {
+      "id": "project:qsol-qec-bridge",
+      "name": "QSOL-QEC-BRIDGE",
+      "repo": "QSOLKCB/QSOL-QEC-BRIDGE",
+      "url": "https://github.com/QSOLKCB/QSOL-QEC-BRIDGE",
+      "role": [
+        "evidence-infrastructure",
+        "compatibility-research"
+      ],
+      "purpose": "Conformance airlock translating and reproducing QSOLQEC candidates before canonical QEC review.",
+      "themes": [
+        "provenance",
+        "replay",
+        "recovery",
+        "preservation"
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-QEC-BRIDGE/blob/main/README.md"
+    },
+    {
+      "id": "project:sonification",
+      "name": "SONIFICATION",
+      "repo": "QSOLKCB/SONIFICATION",
+      "url": "https://github.com/QSOLKCB/SONIFICATION",
+      "role": [
+        "formalisation",
+        "sonification-visualisation-instrument"
+      ],
+      "purpose": "ETQ-303 and D4-triality exact event protocols with deterministic exports and explicit claim boundaries.",
+      "themes": [
+        "representation",
+        "sonification",
+        "nonclaims",
+        "provenance"
+      ],
+      "source": "https://github.com/QSOLKCB/SONIFICATION/blob/main/README.md"
+    },
+    {
+      "id": "project:e8-music",
+      "name": "E8_MUSIC",
+      "repo": "QSOLKCB/E8_MUSIC",
+      "url": "https://github.com/QSOLKCB/E8_MUSIC",
+      "role": [
+        "sonification-visualisation-instrument",
+        "creative-interpretive-experiment"
+      ],
+      "purpose": "Offline sonification workbench separating interpretive authored audio from frozen canonical source-forced profiles.",
+      "themes": [
+        "representation",
+        "observation",
+        "sonification",
+        "provenance",
+        "nonclaims"
+      ],
+      "source": "https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md"
+    },
+    {
+      "id": "project:spectral",
+      "name": "SPECTRAL",
+      "repo": "QSOLKCB/SPECTRAL",
+      "url": "https://github.com/QSOLKCB/SPECTRAL",
+      "role": [
+        "sonification-visualisation-instrument",
+        "empirical-simulation-laboratory"
+      ],
+      "purpose": "Deterministic sonification and spectral-analysis suite with reproducible artifact receipts.",
+      "themes": [
+        "sonification",
+        "representation",
+        "provenance",
+        "replay"
+      ],
+      "source": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md"
+    },
+    {
+      "id": "project:qsol-map",
+      "name": "QSOL-MAP",
+      "repo": "QSOLKCB/QSOL-MAP",
+      "url": "https://github.com/QSOLKCB/QSOL-MAP",
+      "role": [
+        "formalisation",
+        "observation-infrastructure"
+      ],
+      "purpose": "Machine-perception audio protocol separating deterministic acoustic observation from learned tokenization and interpretation layers.",
+      "themes": [
+        "representation",
+        "observation",
+        "external_state",
+        "nonclaims"
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-MAP/blob/main/README.md"
+    },
+    {
+      "id": "project:qsol-geo-reason",
+      "name": "QSOL-GEO-REASON",
+      "repo": "QSOLKCB/QSOL-GEO-REASON",
+      "url": "https://github.com/QSOLKCB/QSOL-GEO-REASON",
+      "role": [
+        "hypothesis-laboratory",
+        "formalisation",
+        "falsification-lab"
+      ],
+      "purpose": "Framework for measuring and perturbing geometric reasoning trajectories with explicit evidence-class contracts.",
+      "themes": [
+        "representation",
+        "observation",
+        "falsification",
+        "nonclaims"
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-GEO-REASON/blob/main/README.md"
+    },
+    {
+      "id": "project:qsol-semantic-relay",
+      "name": "QSOL-SEMANTIC-RELAY",
+      "repo": "QSOLKCB/QSOL-SEMANTIC-RELAY",
+      "url": "https://github.com/QSOLKCB/QSOL-SEMANTIC-RELAY",
+      "role": [
+        "ai-semantic-experiment",
+        "hypothesis-laboratory"
+      ],
+      "purpose": "Tests semantic transfer between context-isolated agents via persistent external artifact controls.",
+      "themes": [
+        "semantic_transport",
+        "external_state",
+        "falsification",
+        "provenance"
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-SEMANTIC-RELAY/blob/main/README.md"
+    },
+    {
+      "id": "project:qsol-substrate",
+      "name": "QSOL-SUBSTRATE",
+      "repo": "QSOLKCB/QSOL-SUBSTRATE",
+      "url": "https://github.com/QSOLKCB/QSOL-SUBSTRATE",
+      "role": [
+        "evidence-infrastructure",
+        "provenance-infrastructure"
+      ],
+      "purpose": "Public context substrate with fail-closed export and deterministic adapter/probe pipelines.",
+      "themes": [
+        "external_state",
+        "provenance",
+        "semantic_transport",
+        "authority_partitioning",
+        "nonclaims"
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-SUBSTRATE/blob/main/README.md"
+    },
+    {
+      "id": "project:qsol-oracle",
+      "name": "QSOL-ORACLE",
+      "repo": "QSOLKCB/QSOL-ORACLE",
+      "url": "https://github.com/QSOLKCB/QSOL-ORACLE",
+      "role": [
+        "evidence-infrastructure",
+        "provenance-infrastructure",
+        "authority-partitioning-infrastructure"
+      ],
+      "purpose": "Witness/attestation membrane recording what evidence permits without promoting observation into truth.",
+      "themes": [
+        "evidence_promotion",
+        "authority_partitioning",
+        "provenance",
+        "replay",
+        "nonclaims"
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-ORACLE/blob/main/README.md"
+    },
+    {
+      "id": "project:qsol-nexus",
+      "name": "QSOL-NEXUS",
+      "repo": "QSOLKCB/QSOL-NEXUS",
+      "url": "https://github.com/QSOLKCB/QSOL-NEXUS",
+      "role": [
+        "orchestration-control-infrastructure",
+        "ai-semantic-experiment"
+      ],
+      "purpose": "Persistent multi-actor world with separated governance, evidence, and model adapters.",
+      "themes": [
+        "external_state",
+        "authority_partitioning",
+        "provenance",
+        "nonclaims"
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-NEXUS/blob/main/README.md"
+    },
+    {
+      "id": "project:qsol-control",
+      "name": "QSOL-CONTROL",
+      "repo": "QSOLKCB/QSOL-CONTROL",
+      "url": "https://github.com/QSOLKCB/QSOL-CONTROL",
+      "role": [
+        "orchestration-control-infrastructure",
+        "compatibility-research"
+      ],
+      "purpose": "Human/AI control plane orchestrating ORACLE evidence, NEXUS reasoning, replay, and recovery contracts.",
+      "themes": [
+        "authority_partitioning",
+        "provenance",
+        "replay",
+        "external_state",
+        "preservation"
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-CONTROL/blob/main/README.md"
+    },
+    {
+      "id": "project:galaxy",
+      "name": "GALAXY",
+      "repo": "QSOLKCB/GALAXY",
+      "url": "https://github.com/QSOLKCB/GALAXY",
+      "role": [
+        "empirical-simulation-laboratory",
+        "formalisation"
+      ],
+      "purpose": "Deterministic galaxy dynamics instrument with CPU/GPU parity and Barnes-Hut correctness ladder.",
+      "themes": [
+        "simulation",
+        "observation",
+        "oracle_candidate_parity",
+        "provenance",
+        "nonclaims"
+      ],
+      "source": "https://github.com/QSOLKCB/GALAXY/blob/main/README.md"
+    },
+    {
+      "id": "project:psycle-linux",
+      "name": "PSYCLE-LINUX",
+      "repo": "QSOLKCB/PSYCLE-LINUX",
+      "url": "https://github.com/QSOLKCB/PSYCLE-LINUX",
+      "role": [
+        "preservation-engineering",
+        "compatibility-research"
+      ],
+      "purpose": "Compatibility-first Linux revival of Psycle using provenance-gated parity evidence.",
+      "themes": [
+        "preservation",
+        "recovery",
+        "provenance",
+        "replay"
+      ],
+      "source": "https://github.com/QSOLKCB/PSYCLE-LINUX/blob/main/README.md"
+    },
+    {
+      "id": "project:rivet",
+      "name": "RIVET",
+      "repo": "QSOLKCB/RIVET",
+      "url": "https://github.com/QSOLKCB/RIVET",
+      "role": [
+        "compatibility-research",
+        "minimal-systems-engineering"
+      ],
+      "purpose": "Capability-driven runtime targeting long-lived software portability and minimal sufficient implementations.",
+      "themes": [
+        "preservation",
+        "minimal_sufficient_systems",
+        "external_state"
+      ],
+      "source": "https://github.com/QSOLKCB/RIVET/blob/main/README.md"
+    },
+    {
+      "id": "project:cosmo",
+      "name": "COSMO",
+      "repo": "QSOLKCB/COSMO",
+      "url": "https://github.com/QSOLKCB/COSMO",
+      "role": [
+        "formalisation",
+        "hypothesis-laboratory"
+      ],
+      "purpose": "Symbolic-computational project separating formal/computational claims from scientific and symbolic interpretation classes.",
+      "themes": [
+        "representation",
+        "formal_verification",
+        "nonclaims"
+      ],
+      "source": "https://github.com/QSOLKCB/COSMO/blob/main/README.md"
+    },
+    {
+      "id": "project:qsol-ark",
+      "name": "QSOL-ARK",
+      "repo": "QSOLKCB/QSOL-ARK",
+      "url": "https://github.com/QSOLKCB/QSOL-ARK",
+      "role": [
+        "preservation-engineering",
+        "provenance-infrastructure"
+      ],
+      "purpose": "Recovery archive and benchmark for reconstructing context and claim classes across model/runtime loss.",
+      "themes": [
+        "preservation",
+        "recovery",
+        "provenance",
+        "external_state",
+        "nonclaims"
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-ARK/blob/main/README.md"
+    },
+    {
+      "id": "project:lattice",
+      "name": "LATTICE",
+      "repo": "QSOLKCB/LATTICE",
+      "url": "https://github.com/QSOLKCB/LATTICE",
+      "role": [
+        "formalisation",
+        "provenance-infrastructure"
+      ],
+      "purpose": "Reference 3x3x3 structural memory protocol separating address structure from authority/truth claims.",
+      "themes": [
+        "external_state",
+        "preservation",
+        "authority_partitioning",
+        "nonclaims"
+      ],
+      "source": "https://github.com/QSOLKCB/LATTICE/blob/main/README.md"
+    }
+  ]
+}

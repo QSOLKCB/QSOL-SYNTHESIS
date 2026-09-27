@@ -1,0 +1,14 @@
+digraph ThemeNetwork {
+  rankdir=LR;
+  node [shape=ellipse];
+  representation -> observation;
+  observation -> validation;
+  validation -> recovery;
+  recovery -> provenance;
+  provenance -> interpretation;
+  external_state -> semantic_transport;
+  authority_partitioning -> evidence_promotion;
+  simulation -> nonclaims;
+  sonification -> representation;
+  formal_verification -> nonclaims;
+}

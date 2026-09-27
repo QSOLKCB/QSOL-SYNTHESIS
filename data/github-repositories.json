@@ -1,0 +1,220 @@
+{
+  "generated_at": "2026-09-27",
+  "source": "github-mcp search_repositories query=\"org:QSOLKCB\"",
+  "total_count_observed": 75,
+  "notes": "Snapshot retained from GitHub search API via MCP because direct unauthenticated api.github.com calls returned 403 in this environment.",
+  "repositories": [
+    {
+      "name": "UFT-ID-3.0",
+      "full_name": "QSOLKCB/UFT-ID-3.0",
+      "html_url": "https://github.com/QSOLKCB/UFT-ID-3.0",
+      "classification": [
+        "foundational-theory",
+        "formalisation",
+        "falsification-lab"
+      ]
+    },
+    {
+      "name": "UFF",
+      "full_name": "QSOLKCB/UFF",
+      "html_url": "https://github.com/QSOLKCB/UFF",
+      "classification": [
+        "empirical-simulation-laboratory",
+        "formalisation",
+        "provenance-infrastructure"
+      ]
+    },
+    {
+      "name": "QAI-UFT",
+      "full_name": "QSOLKCB/QAI-UFT",
+      "html_url": "https://github.com/QSOLKCB/QAI-UFT",
+      "classification": [
+        "historical-exploratory-precursor",
+        "creative-interpretive-experiment"
+      ]
+    },
+    {
+      "name": "res-rag",
+      "full_name": "QSOLKCB/res-rag",
+      "html_url": "https://github.com/QSOLKCB/res-rag",
+      "classification": [
+        "formalisation",
+        "hypothesis-laboratory",
+        "evidence-infrastructure"
+      ]
+    },
+    {
+      "name": "res-rag-viz",
+      "full_name": "QSOLKCB/res-rag-viz",
+      "html_url": "https://github.com/QSOLKCB/res-rag-viz",
+      "classification": [
+        "sonification-visualisation-instrument",
+        "empirical-simulation-laboratory"
+      ]
+    },
+    {
+      "name": "QSOLQEC",
+      "full_name": "QSOLKCB/QSOLQEC",
+      "html_url": "https://github.com/QSOLKCB/QSOLQEC",
+      "classification": [
+        "hypothesis-laboratory",
+        "empirical-simulation-laboratory"
+      ]
+    },
+    {
+      "name": "QSOL-QEC-BRIDGE",
+      "full_name": "QSOLKCB/QSOL-QEC-BRIDGE",
+      "html_url": "https://github.com/QSOLKCB/QSOL-QEC-BRIDGE",
+      "classification": [
+        "evidence-infrastructure",
+        "compatibility-research"
+      ]
+    },
+    {
+      "name": "SONIFICATION",
+      "full_name": "QSOLKCB/SONIFICATION",
+      "html_url": "https://github.com/QSOLKCB/SONIFICATION",
+      "classification": [
+        "formalisation",
+        "sonification-visualisation-instrument"
+      ]
+    },
+    {
+      "name": "E8_MUSIC",
+      "full_name": "QSOLKCB/E8_MUSIC",
+      "html_url": "https://github.com/QSOLKCB/E8_MUSIC",
+      "classification": [
+        "sonification-visualisation-instrument",
+        "creative-interpretive-experiment"
+      ]
+    },
+    {
+      "name": "SPECTRAL",
+      "full_name": "QSOLKCB/SPECTRAL",
+      "html_url": "https://github.com/QSOLKCB/SPECTRAL",
+      "classification": [
+        "sonification-visualisation-instrument",
+        "empirical-simulation-laboratory"
+      ]
+    },
+    {
+      "name": "QSOL-MAP",
+      "full_name": "QSOLKCB/QSOL-MAP",
+      "html_url": "https://github.com/QSOLKCB/QSOL-MAP",
+      "classification": [
+        "formalisation",
+        "observation-infrastructure"
+      ]
+    },
+    {
+      "name": "QSOL-GEO-REASON",
+      "full_name": "QSOLKCB/QSOL-GEO-REASON",
+      "html_url": "https://github.com/QSOLKCB/QSOL-GEO-REASON",
+      "classification": [
+        "hypothesis-laboratory",
+        "formalisation",
+        "falsification-lab"
+      ]
+    },
+    {
+      "name": "QSOL-SEMANTIC-RELAY",
+      "full_name": "QSOLKCB/QSOL-SEMANTIC-RELAY",
+      "html_url": "https://github.com/QSOLKCB/QSOL-SEMANTIC-RELAY",
+      "classification": [
+        "ai-semantic-experiment",
+        "hypothesis-laboratory"
+      ]
+    },
+    {
+      "name": "QSOL-SUBSTRATE",
+      "full_name": "QSOLKCB/QSOL-SUBSTRATE",
+      "html_url": "https://github.com/QSOLKCB/QSOL-SUBSTRATE",
+      "classification": [
+        "evidence-infrastructure",
+        "provenance-infrastructure"
+      ]
+    },
+    {
+      "name": "QSOL-ORACLE",
+      "full_name": "QSOLKCB/QSOL-ORACLE",
+      "html_url": "https://github.com/QSOLKCB/QSOL-ORACLE",
+      "classification": [
+        "evidence-infrastructure",
+        "provenance-infrastructure",
+        "authority-partitioning-infrastructure"
+      ]
+    },
+    {
+      "name": "QSOL-NEXUS",
+      "full_name": "QSOLKCB/QSOL-NEXUS",
+      "html_url": "https://github.com/QSOLKCB/QSOL-NEXUS",
+      "classification": [
+        "orchestration-control-infrastructure",
+        "ai-semantic-experiment"
+      ]
+    },
+    {
+      "name": "QSOL-CONTROL",
+      "full_name": "QSOLKCB/QSOL-CONTROL",
+      "html_url": "https://github.com/QSOLKCB/QSOL-CONTROL",
+      "classification": [
+        "orchestration-control-infrastructure",
+        "compatibility-research"
+      ]
+    },
+    {
+      "name": "GALAXY",
+      "full_name": "QSOLKCB/GALAXY",
+      "html_url": "https://github.com/QSOLKCB/GALAXY",
+      "classification": [
+        "empirical-simulation-laboratory",
+        "formalisation"
+      ]
+    },
+    {
+      "name": "PSYCLE-LINUX",
+      "full_name": "QSOLKCB/PSYCLE-LINUX",
+      "html_url": "https://github.com/QSOLKCB/PSYCLE-LINUX",
+      "classification": [
+        "preservation-engineering",
+        "compatibility-research"
+      ]
+    },
+    {
+      "name": "RIVET",
+      "full_name": "QSOLKCB/RIVET",
+      "html_url": "https://github.com/QSOLKCB/RIVET",
+      "classification": [
+        "compatibility-research",
+        "minimal-systems-engineering"
+      ]
+    },
+    {
+      "name": "COSMO",
+      "full_name": "QSOLKCB/COSMO",
+      "html_url": "https://github.com/QSOLKCB/COSMO",
+      "classification": [
+        "formalisation",
+        "hypothesis-laboratory"
+      ]
+    },
+    {
+      "name": "QSOL-ARK",
+      "full_name": "QSOLKCB/QSOL-ARK",
+      "html_url": "https://github.com/QSOLKCB/QSOL-ARK",
+      "classification": [
+        "preservation-engineering",
+        "provenance-infrastructure"
+      ]
+    },
+    {
+      "name": "LATTICE",
+      "full_name": "QSOLKCB/LATTICE",
+      "html_url": "https://github.com/QSOLKCB/LATTICE",
+      "classification": [
+        "formalisation",
+        "provenance-infrastructure"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "generated_at": "2026-09-27",
+  "themes": [
+    {
+      "id": "theme:representation",
+      "name": "representation"
+    },
+    {
+      "id": "theme:observation",
+      "name": "observation"
+    },
+    {
+      "id": "theme:recovery",
+      "name": "recovery"
+    },
+    {
+      "id": "theme:provenance",
+      "name": "provenance"
+    },
+    {
+      "id": "theme:replay",
+      "name": "replay"
+    },
+    {
+      "id": "theme:external_state",
+      "name": "external_state"
+    },
+    {
+      "id": "theme:formal_verification",
+      "name": "formal_verification"
+    },
+    {
+      "id": "theme:simulation",
+      "name": "simulation"
+    },
+    {
+      "id": "theme:nonclaims",
+      "name": "nonclaims"
+    },
+    {
+      "id": "theme:falsification",
+      "name": "falsification"
+    },
+    {
+      "id": "theme:authority_partitioning",
+      "name": "authority_partitioning"
+    },
+    {
+      "id": "theme:preservation",
+      "name": "preservation"
+    },
+    {
+      "id": "theme:sonification",
+      "name": "sonification"
+    },
+    {
+      "id": "theme:semantic_transport",
+      "name": "semantic_transport"
+    },
+    {
+      "id": "theme:oracle_candidate_parity",
+      "name": "oracle_candidate_parity"
+    },
+    {
+      "id": "theme:minimal_sufficient_systems",
+      "name": "minimal_sufficient_systems"
+    },
+    {
+      "id": "theme:evidence_promotion",
+      "name": "evidence_promotion"
+    }
+  ]
+}

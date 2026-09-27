@@ -1,0 +1,25 @@
+# GALAXY
+
+## Purpose
+Deterministic galaxy dynamics instrument with CPU/GPU parity and Barnes-Hut correctness ladder.
+
+## Core research question
+Derived from first-party README language; refine as dedicated deep-reads proceed.
+
+## Method / architecture
+Current classification roles: empirical-simulation-laboratory, formalisation.
+
+## Major claim boundaries
+This summary does not treat structural similarity as evidence of shared physical mechanism.
+
+## Recurring themes
+simulation, observation, oracle_candidate_parity, provenance, nonclaims
+
+## Connections
+- `shared-validation-architecture` with `project:uff` (oracle_candidate_parity); mechanism_claim=false
+
+## Publications
+- 10.5281/zenodo.22756969 (GALAXY v0.4.0: Deterministic Native CPU Runtime and Scaling Evidence)
+
+## Sources
+- https://github.com/QSOLKCB/GALAXY/blob/main/README.md

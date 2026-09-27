@@ -1,0 +1,125 @@
+{
+  "generated_at": "2026-09-27",
+  "links": [
+    {
+      "project_id": "project:uff",
+      "publication_id": "publication:zenodo-22026554",
+      "relation": "repository-associated-publication",
+      "evidence": [
+        "https://github.com/QSOLKCB/UFF/blob/main/CITATION.cff"
+      ]
+    },
+    {
+      "project_id": "project:res-rag",
+      "publication_id": "publication:zenodo-21917464",
+      "relation": "repository-associated-publication",
+      "evidence": [
+        "https://github.com/QSOLKCB/res-rag/blob/main/CITATION.cff"
+      ]
+    },
+    {
+      "project_id": "project:sonification",
+      "publication_id": "publication:zenodo-21494678",
+      "relation": "repository-associated-publication",
+      "evidence": [
+        "https://github.com/QSOLKCB/SONIFICATION/blob/main/CITATION.cff"
+      ]
+    },
+    {
+      "project_id": "project:sonification",
+      "publication_id": "publication:zenodo-21455181",
+      "relation": "repository-associated-publication",
+      "evidence": [
+        "https://github.com/QSOLKCB/SONIFICATION/blob/main/CITATION.cff"
+      ]
+    },
+    {
+      "project_id": "project:sonification",
+      "publication_id": "publication:zenodo-21432511",
+      "relation": "repository-associated-publication",
+      "evidence": [
+        "https://github.com/QSOLKCB/SONIFICATION/blob/main/CITATION.cff"
+      ]
+    },
+    {
+      "project_id": "project:sonification",
+      "publication_id": "publication:zenodo-22831753",
+      "relation": "repository-associated-publication",
+      "evidence": [
+        "https://github.com/QSOLKCB/SONIFICATION/blob/main/README.md"
+      ]
+    },
+    {
+      "project_id": "project:spectral",
+      "publication_id": "publication:zenodo-21308248",
+      "relation": "repository-associated-publication",
+      "evidence": [
+        "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md"
+      ]
+    },
+    {
+      "project_id": "project:spectral",
+      "publication_id": "publication:zenodo-21293821",
+      "relation": "repository-associated-publication",
+      "evidence": [
+        "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md"
+      ]
+    },
+    {
+      "project_id": "project:spectral",
+      "publication_id": "publication:zenodo-21292906",
+      "relation": "repository-associated-publication",
+      "evidence": [
+        "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md"
+      ]
+    },
+    {
+      "project_id": "project:galaxy",
+      "publication_id": "publication:zenodo-22756969",
+      "relation": "repository-associated-publication",
+      "evidence": [
+        "https://github.com/QSOLKCB/GALAXY/blob/main/README.md"
+      ]
+    },
+    {
+      "project_id": "project:qsol-substrate",
+      "publication_id": "publication:zenodo-21959180",
+      "relation": "repository-associated-publication",
+      "evidence": [
+        "https://github.com/QSOLKCB/QSOL-SUBSTRATE/blob/main/README.md"
+      ]
+    },
+    {
+      "project_id": "project:qai-uft",
+      "publication_id": "publication:zenodo-17520186",
+      "relation": "repository-associated-publication",
+      "evidence": [
+        "https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md"
+      ]
+    },
+    {
+      "project_id": "project:qai-uft",
+      "publication_id": "publication:zenodo-17569256",
+      "relation": "repository-associated-publication",
+      "evidence": [
+        "https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md"
+      ]
+    },
+    {
+      "project_id": "project:e8-music",
+      "publication_id": "publication:zenodo-21404223",
+      "relation": "repository-associated-publication",
+      "evidence": [
+        "https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md"
+      ]
+    },
+    {
+      "project_id": "project:qsol-nexus",
+      "publication_id": "publication:zenodo-21895577",
+      "relation": "repository-associated-publication",
+      "evidence": [
+        "https://github.com/QSOLKCB/QSOL-NEXUS/blob/main/README.md"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "generated_at": "2026-09-27",
+  "relationships": [
+    {
+      "source": "project:qsolqec",
+      "target": "project:qsol-qec-bridge",
+      "relation_type": "formal-dependency",
+      "theme": "recovery",
+      "mechanism_claim": false,
+      "summary": "Bridge is defined as promotion airlock for QSOLQEC candidates before QEC canonical integration.",
+      "evidence": [
+        "https://github.com/QSOLKCB/QSOL-QEC-BRIDGE/blob/main/README.md"
+      ]
+    },
+    {
+      "source": "project:qsol-qec-bridge",
+      "target": "project:qsolqec",
+      "relation_type": "evidence-dependency",
+      "theme": "provenance",
+      "mechanism_claim": false,
+      "summary": "Bridge expects candidate package exports from QSOLQEC.",
+      "evidence": [
+        "https://github.com/QSOLKCB/QSOL-QEC-BRIDGE/blob/main/README.md"
+      ]
+    },
+    {
+      "source": "project:sonification",
+      "target": "project:e8-music",
+      "relation_type": "historical-lineage",
+      "theme": "sonification",
+      "mechanism_claim": false,
+      "summary": "E8_MUSIC README cites SONIFICATION release line and concept DOI lineage.",
+      "evidence": [
+        "https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md"
+      ]
+    },
+    {
+      "source": "project:spectral",
+      "target": "project:sonification",
+      "relation_type": "shared-methodological-principle",
+      "theme": "provenance",
+      "mechanism_claim": false,
+      "summary": "Both emphasize deterministic render contracts and replay/provenance artifacts.",
+      "evidence": [
+        "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md",
+        "https://github.com/QSOLKCB/SONIFICATION/blob/main/README.md"
+      ]
+    },
+    {
+      "source": "project:qsol-substrate",
+      "target": "project:qsol-oracle",
+      "relation_type": "shared-provenance-architecture",
+      "theme": "authority_partitioning",
+      "mechanism_claim": false,
+      "summary": "SUBSTRATE and ORACLE both separate observation/provenance from authority and truth claims.",
+      "evidence": [
+        "https://github.com/QSOLKCB/QSOL-SUBSTRATE/blob/main/README.md",
+        "https://github.com/QSOLKCB/QSOL-ORACLE/blob/main/README.md"
+      ]
+    },
+    {
+      "source": "project:qsol-oracle",
+      "target": "project:qsol-nexus",
+      "relation_type": "implementation-dependency",
+      "theme": "authority_partitioning",
+      "mechanism_claim": false,
+      "summary": "ORACLE positions itself as evidentiary membrane around NEXUS and three-pillar stack.",
+      "evidence": [
+        "https://github.com/QSOLKCB/QSOL-ORACLE/blob/main/README.md"
+      ]
+    },
+    {
+      "source": "project:qsol-control",
+      "target": "project:qsol-oracle",
+      "relation_type": "implementation-dependency",
+      "theme": "provenance",
+      "mechanism_claim": false,
+      "summary": "CONTROL defines read-only ORACLE adapter and provenance boundaries.",
+      "evidence": [
+        "https://github.com/QSOLKCB/QSOL-CONTROL/blob/main/README.md"
+      ]
+    },
+    {
+      "source": "project:qsol-control",
+      "target": "project:qsol-nexus",
+      "relation_type": "implementation-dependency",
+      "theme": "authority_partitioning",
+      "mechanism_claim": false,
+      "summary": "CONTROL invokes NEXUS council adapters while preserving governance authority separation.",
+      "evidence": [
+        "https://github.com/QSOLKCB/QSOL-CONTROL/blob/main/README.md"
+      ]
+    },
+    {
+      "source": "project:galaxy",
+      "target": "project:uff",
+      "relation_type": "shared-validation-architecture",
+      "theme": "oracle_candidate_parity",
+      "mechanism_claim": false,
+      "summary": "Both emphasize deterministic runtime, parity checks, replay evidence, and explicit claim boundaries.",
+      "evidence": [
+        "https://github.com/QSOLKCB/GALAXY/blob/main/README.md",
+        "https://github.com/QSOLKCB/UFF/blob/main/README.md"
+      ]
+    },
+    {
+      "source": "project:psycle-linux",
+      "target": "project:rivet",
+      "relation_type": "analogous-computational-structure",
+      "theme": "preservation",
+      "mechanism_claim": false,
+      "summary": "Both prioritize compatibility/preservation over reinvention and use evidence-gated portability claims.",
+      "evidence": [
+        "https://github.com/QSOLKCB/PSYCLE-LINUX/blob/main/README.md",
+        "https://github.com/QSOLKCB/RIVET/blob/main/README.md"
+      ]
+    },
+    {
+      "source": "project:qsol-semantic-relay",
+      "target": "project:qsol-substrate",
+      "relation_type": "shared-methodological-principle",
+      "theme": "external_state",
+      "mechanism_claim": false,
+      "summary": "Both treat externalized artifacts as bounded carriers with explicit unknown/not-found semantics.",
+      "evidence": [
+        "https://github.com/QSOLKCB/QSOL-SEMANTIC-RELAY/blob/main/README.md",
+        "https://github.com/QSOLKCB/QSOL-SUBSTRATE/blob/main/README.md"
+      ]
+    },
+    {
+      "source": "project:lattice",
+      "target": "project:qsol-control",
+      "relation_type": "implementation-dependency",
+      "theme": "external_state",
+      "mechanism_claim": false,
+      "summary": "CONTROL references LATTICE structural memory semantics while separating authority.",
+      "evidence": [
+        "https://github.com/QSOLKCB/LATTICE/blob/main/README.md",
+        "https://github.com/QSOLKCB/QSOL-CONTROL/blob/main/README.md"
+      ]
+    },
+    {
+      "source": "project:qsol-geo-reason",
+      "target": "project:uft-id-3-0",
+      "relation_type": "shared-methodological-principle",
+      "theme": "falsification",
+      "mechanism_claim": false,
+      "summary": "Both explicitly separate formal/simulation layers from empirical truth and enforce nonclaim boundaries.",
+      "evidence": [
+        "https://github.com/QSOLKCB/QSOL-GEO-REASON/blob/main/README.md",
+        "https://github.com/QSOLKCB/UFT-ID-3.0/blob/main/README.md"
+      ]
+    }
+  ]
+}

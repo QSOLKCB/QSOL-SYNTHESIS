@@ -1,0 +1,504 @@
+{
+  "generated_at": "2026-09-27",
+  "sources": [
+    {
+      "source_id": "src:uft-id-3-0:readme",
+      "repository": "QSOLKCB/UFT-ID-3.0",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "representation",
+        "observation",
+        "recovery",
+        "provenance"
+      ]
+    },
+    {
+      "source_id": "src:uff:readme",
+      "repository": "QSOLKCB/UFF",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "observation",
+        "simulation",
+        "provenance",
+        "replay"
+      ]
+    },
+    {
+      "source_id": "src:qai-uft:readme",
+      "repository": "QSOLKCB/QAI-UFT",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "representation",
+        "sonification",
+        "interpretation"
+      ]
+    },
+    {
+      "source_id": "src:res-rag:readme",
+      "repository": "QSOLKCB/res-rag",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "observation",
+        "provenance",
+        "replay",
+        "falsification"
+      ]
+    },
+    {
+      "source_id": "src:res-rag-viz:readme",
+      "repository": "QSOLKCB/res-rag-viz",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "observation",
+        "sonification",
+        "visualisation",
+        "provenance"
+      ]
+    },
+    {
+      "source_id": "src:qsolqec:readme",
+      "repository": "QSOLKCB/QSOLQEC",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "simulation",
+        "observation",
+        "recovery",
+        "oracle_candidate_parity"
+      ]
+    },
+    {
+      "source_id": "src:qsol-qec-bridge:readme",
+      "repository": "QSOLKCB/QSOL-QEC-BRIDGE",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "provenance",
+        "replay",
+        "recovery",
+        "preservation"
+      ]
+    },
+    {
+      "source_id": "src:sonification:readme",
+      "repository": "QSOLKCB/SONIFICATION",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "representation",
+        "sonification",
+        "nonclaims",
+        "provenance"
+      ]
+    },
+    {
+      "source_id": "src:e8-music:readme",
+      "repository": "QSOLKCB/E8_MUSIC",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "representation",
+        "observation",
+        "sonification",
+        "provenance"
+      ]
+    },
+    {
+      "source_id": "src:spectral:readme",
+      "repository": "QSOLKCB/SPECTRAL",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "sonification",
+        "representation",
+        "provenance",
+        "replay"
+      ]
+    },
+    {
+      "source_id": "src:qsol-map:readme",
+      "repository": "QSOLKCB/QSOL-MAP",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "representation",
+        "observation",
+        "external_state",
+        "nonclaims"
+      ]
+    },
+    {
+      "source_id": "src:qsol-geo-reason:readme",
+      "repository": "QSOLKCB/QSOL-GEO-REASON",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "representation",
+        "observation",
+        "falsification",
+        "nonclaims"
+      ]
+    },
+    {
+      "source_id": "src:qsol-semantic-relay:readme",
+      "repository": "QSOLKCB/QSOL-SEMANTIC-RELAY",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "semantic_transport",
+        "external_state",
+        "falsification",
+        "provenance"
+      ]
+    },
+    {
+      "source_id": "src:qsol-substrate:readme",
+      "repository": "QSOLKCB/QSOL-SUBSTRATE",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "external_state",
+        "provenance",
+        "semantic_transport",
+        "authority_partitioning"
+      ]
+    },
+    {
+      "source_id": "src:qsol-oracle:readme",
+      "repository": "QSOLKCB/QSOL-ORACLE",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "evidence_promotion",
+        "authority_partitioning",
+        "provenance",
+        "replay"
+      ]
+    },
+    {
+      "source_id": "src:qsol-nexus:readme",
+      "repository": "QSOLKCB/QSOL-NEXUS",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "external_state",
+        "authority_partitioning",
+        "provenance",
+        "nonclaims"
+      ]
+    },
+    {
+      "source_id": "src:qsol-control:readme",
+      "repository": "QSOLKCB/QSOL-CONTROL",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "authority_partitioning",
+        "provenance",
+        "replay",
+        "external_state"
+      ]
+    },
+    {
+      "source_id": "src:galaxy:readme",
+      "repository": "QSOLKCB/GALAXY",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "simulation",
+        "observation",
+        "oracle_candidate_parity",
+        "provenance"
+      ]
+    },
+    {
+      "source_id": "src:psycle-linux:readme",
+      "repository": "QSOLKCB/PSYCLE-LINUX",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "preservation",
+        "recovery",
+        "provenance",
+        "replay"
+      ]
+    },
+    {
+      "source_id": "src:rivet:readme",
+      "repository": "QSOLKCB/RIVET",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "preservation",
+        "minimal_sufficient_systems",
+        "external_state"
+      ]
+    },
+    {
+      "source_id": "src:cosmo:readme",
+      "repository": "QSOLKCB/COSMO",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "representation",
+        "formal_verification",
+        "nonclaims"
+      ]
+    },
+    {
+      "source_id": "src:qsol-ark:readme",
+      "repository": "QSOLKCB/QSOL-ARK",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "preservation",
+        "recovery",
+        "provenance",
+        "external_state"
+      ]
+    },
+    {
+      "source_id": "src:lattice:readme",
+      "repository": "QSOLKCB/LATTICE",
+      "path": "README.md",
+      "branch_or_commit": "main (observed via GitHub API)",
+      "access_date": "2026-09-27",
+      "source_type": "github-readme",
+      "supports": [
+        "external_state",
+        "preservation",
+        "authority_partitioning",
+        "nonclaims"
+      ]
+    },
+    {
+      "source_id": "src:zenodo-22026554",
+      "repository": "QSOLKCB/UFF",
+      "path": "https://github.com/QSOLKCB/UFF/blob/main/CITATION.cff",
+      "branch_or_commit": null,
+      "access_date": "2026-09-27",
+      "source_type": "publication-metadata",
+      "supports": [
+        "provenance",
+        "doi-linking"
+      ]
+    },
+    {
+      "source_id": "src:zenodo-21917464",
+      "repository": "QSOLKCB/RES-RAG",
+      "path": "https://github.com/QSOLKCB/res-rag/blob/main/CITATION.cff",
+      "branch_or_commit": null,
+      "access_date": "2026-09-27",
+      "source_type": "publication-metadata",
+      "supports": [
+        "provenance",
+        "doi-linking"
+      ]
+    },
+    {
+      "source_id": "src:zenodo-21494678",
+      "repository": "QSOLKCB/SONIFICATION",
+      "path": "https://github.com/QSOLKCB/SONIFICATION/blob/main/CITATION.cff",
+      "branch_or_commit": null,
+      "access_date": "2026-09-27",
+      "source_type": "publication-metadata",
+      "supports": [
+        "provenance",
+        "doi-linking"
+      ]
+    },
+    {
+      "source_id": "src:zenodo-21455181",
+      "repository": "QSOLKCB/SONIFICATION",
+      "path": "https://github.com/QSOLKCB/SONIFICATION/blob/main/CITATION.cff",
+      "branch_or_commit": null,
+      "access_date": "2026-09-27",
+      "source_type": "publication-metadata",
+      "supports": [
+        "provenance",
+        "doi-linking"
+      ]
+    },
+    {
+      "source_id": "src:zenodo-21432511",
+      "repository": "QSOLKCB/SONIFICATION",
+      "path": "https://github.com/QSOLKCB/SONIFICATION/blob/main/CITATION.cff",
+      "branch_or_commit": null,
+      "access_date": "2026-09-27",
+      "source_type": "publication-metadata",
+      "supports": [
+        "provenance",
+        "doi-linking"
+      ]
+    },
+    {
+      "source_id": "src:zenodo-22831753",
+      "repository": "QSOLKCB/SONIFICATION",
+      "path": "https://github.com/QSOLKCB/SONIFICATION/blob/main/README.md",
+      "branch_or_commit": null,
+      "access_date": "2026-09-27",
+      "source_type": "publication-metadata",
+      "supports": [
+        "provenance",
+        "doi-linking"
+      ]
+    },
+    {
+      "source_id": "src:zenodo-21308248",
+      "repository": "QSOLKCB/SPECTRAL",
+      "path": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md",
+      "branch_or_commit": null,
+      "access_date": "2026-09-27",
+      "source_type": "publication-metadata",
+      "supports": [
+        "provenance",
+        "doi-linking"
+      ]
+    },
+    {
+      "source_id": "src:zenodo-21293821",
+      "repository": "QSOLKCB/SPECTRAL",
+      "path": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md",
+      "branch_or_commit": null,
+      "access_date": "2026-09-27",
+      "source_type": "publication-metadata",
+      "supports": [
+        "provenance",
+        "doi-linking"
+      ]
+    },
+    {
+      "source_id": "src:zenodo-21292906",
+      "repository": "QSOLKCB/SPECTRAL",
+      "path": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md",
+      "branch_or_commit": null,
+      "access_date": "2026-09-27",
+      "source_type": "publication-metadata",
+      "supports": [
+        "provenance",
+        "doi-linking"
+      ]
+    },
+    {
+      "source_id": "src:zenodo-22756969",
+      "repository": "QSOLKCB/GALAXY",
+      "path": "https://github.com/QSOLKCB/GALAXY/blob/main/README.md",
+      "branch_or_commit": null,
+      "access_date": "2026-09-27",
+      "source_type": "publication-metadata",
+      "supports": [
+        "provenance",
+        "doi-linking"
+      ]
+    },
+    {
+      "source_id": "src:zenodo-21959180",
+      "repository": "QSOLKCB/QSOL-SUBSTRATE",
+      "path": "https://github.com/QSOLKCB/QSOL-SUBSTRATE/blob/main/README.md",
+      "branch_or_commit": null,
+      "access_date": "2026-09-27",
+      "source_type": "publication-metadata",
+      "supports": [
+        "provenance",
+        "doi-linking"
+      ]
+    },
+    {
+      "source_id": "src:zenodo-17520186",
+      "repository": "QSOLKCB/QAI-UFT",
+      "path": "https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md",
+      "branch_or_commit": null,
+      "access_date": "2026-09-27",
+      "source_type": "publication-metadata",
+      "supports": [
+        "provenance",
+        "doi-linking"
+      ]
+    },
+    {
+      "source_id": "src:zenodo-17569256",
+      "repository": "QSOLKCB/QAI-UFT",
+      "path": "https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md",
+      "branch_or_commit": null,
+      "access_date": "2026-09-27",
+      "source_type": "publication-metadata",
+      "supports": [
+        "provenance",
+        "doi-linking"
+      ]
+    },
+    {
+      "source_id": "src:zenodo-21404223",
+      "repository": "QSOLKCB/E8-MUSIC",
+      "path": "https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md",
+      "branch_or_commit": null,
+      "access_date": "2026-09-27",
+      "source_type": "publication-metadata",
+      "supports": [
+        "provenance",
+        "doi-linking"
+      ]
+    },
+    {
+      "source_id": "src:zenodo-21895577",
+      "repository": "QSOLKCB/QSOL-NEXUS",
+      "path": "https://github.com/QSOLKCB/QSOL-NEXUS/blob/main/README.md",
+      "branch_or_commit": null,
+      "access_date": "2026-09-27",
+      "source_type": "publication-metadata",
+      "supports": [
+        "provenance",
+        "doi-linking"
+      ]
+    }
+  ]
+}

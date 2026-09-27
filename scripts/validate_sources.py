@@ -20,6 +20,11 @@ ZENODO_DOI_RE = re.compile(r"^10\.5281/zenodo\.(\d+)$", re.IGNORECASE)
 SOURCE_ID_RE = re.compile(r"\bsrc:[A-Za-z0-9._-]+(?::[A-Za-z0-9._-]+)*\b")
 PROJECT_ID_RE = re.compile(r"^project:[A-Za-z0-9._-]+$")
 PUBLICATION_ID_RE = re.compile(r"^publication:[A-Za-z0-9._-]+$")
+ZENODO_PUBLICATION_ID_RE = re.compile(r"^publication:zenodo-(\d+)$")
+DOT_EDGE_RE = re.compile(
+    r'^\s*"([^"]+)"\s*->\s*"([^"]+)"\s*\[label="([^"\\]+)\\n([^"]+)"\];\s*$',
+    re.MULTILINE,
+)
 PROJECT_SUMMARY_REPO_RE = re.compile(
     r"\*\*Repository:\*\*\s*\[[^\]]+\]\(https://github\.com/([^/]+/[^/)]+)\)"
 )
@@ -155,10 +160,13 @@ def publication_link_evidence_is_valid(
         return publication_external_source_matches(publication, url)
 
     if relation == "repository-associated-publication":
-        # Ownership evidence must identify the selected publication, not merely
-        # some path in the owning repository.
+        # Each evidence item must bind either the asserted owner project or the
+        # selected publication. The link-level validator requires both classes.
         if evidence_repo is not None:
-            return github_blob_source_matches(url, publication.get("source"))
+            return (
+                github_blob_source_matches(url, project_source)
+                or github_blob_source_matches(url, publication.get("source"))
+            )
 
         return publication_external_source_matches(publication, url)
 
@@ -196,6 +204,8 @@ def validate(root: pathlib.Path) -> list[str]:
         value = doc.get("generated_at")
         if not valid_date(value):
             fail(f"{name} generated_at must use a real YYYY-MM-DD date: {value!r}")
+        elif dt.date.fromisoformat(value) > dt.date.today():
+            fail(f"{name} generated_at must not be in the future: {value!r}")
         date_values.append(value)
     if len(set(date_values)) != 1:
         fail(f"curated generated_at values must agree: {sorted(str(x) for x in set(date_values))}")
@@ -223,6 +233,18 @@ def validate(root: pathlib.Path) -> list[str]:
         fail("project IDs must be unique")
     project_set = set(project_ids)
     project_by_id = {p.get("id"): p for p in projects if p.get("id")}
+
+    summary_paths = [p.get("summary_path") for p in projects]
+    if (
+        any(
+            not isinstance(path, str)
+            or not path.startswith("projects/")
+            or not path.endswith(".md")
+            for path in summary_paths
+        )
+        or len(summary_paths) != len(set(summary_paths))
+    ):
+        fail("project summary_path values must be unique project Markdown paths")
 
     repos = [p.get("repo") for p in projects]
     normalized_repos = [normalize_repository(repo) for repo in repos]
@@ -311,6 +333,31 @@ def validate(root: pathlib.Path) -> list[str]:
     doi_seen: dict[str, str] = {}
     for pub in pubs:
         doi = pub.get("doi")
+        publication_id = pub.get("id")
+        zenodo_id_match = (
+            ZENODO_PUBLICATION_ID_RE.fullmatch(publication_id)
+            if isinstance(publication_id, str)
+            else None
+        )
+        zenodo_doi_match = (
+            ZENODO_DOI_RE.fullmatch(doi)
+            if isinstance(doi, str)
+            else None
+        )
+        if zenodo_id_match is not None:
+            if (
+                zenodo_doi_match is None
+                or zenodo_id_match.group(1) != zenodo_doi_match.group(1)
+            ):
+                fail(
+                    f"Zenodo publication ID must match declared DOI record: "
+                    f"{publication_id} -> {doi!r}"
+                )
+        elif zenodo_doi_match is not None:
+            fail(
+                f"Zenodo DOI publication must use matching publication:zenodo-* ID: "
+                f"{publication_id!r} -> {doi}"
+            )
         if not isinstance(doi, str) or not doi.strip():
             fail(f"publication DOI must be a non-empty identifier: {pub.get('id')}")
         else:
@@ -510,6 +557,33 @@ def validate(root: pathlib.Path) -> list[str]:
                         f"publication link evidence is not traceable to the linked project/publication: "
                         f"{link.get('project_id')} -> {link.get('publication_id')}: {url!r}"
                     )
+            if relation == "repository-associated-publication" and publication is not None:
+                owner_bound = any(
+                    isinstance(url, str)
+                    and (
+                        github_blob_source_matches(url, project_source)
+                        or (
+                            github_blob_source_matches(url, publication.get("source"))
+                            and normalize_repository(github_repository(url))
+                            == normalize_repository(project_repo)
+                        )
+                    )
+                    for url in evidence
+                )
+                publication_bound = any(
+                    isinstance(url, str)
+                    and (
+                        github_blob_source_matches(url, publication.get("source"))
+                        or publication_external_source_matches(publication, url)
+                    )
+                    for url in evidence
+                )
+                if not owner_bound or not publication_bound:
+                    fail(
+                        f"publication ownership evidence must bind both asserted project "
+                        f"and selected publication: "
+                        f"{link.get('project_id')} -> {link.get('publication_id')}"
+                    )
             if relation == "lineage-reference" and publication is not None:
                 project_bound = any(
                     isinstance(url, str)
@@ -610,6 +684,29 @@ def validate(root: pathlib.Path) -> list[str]:
     if len(relationship_keys) != len(set(relationship_keys)):
         fail("relationships must be unique by endpoints, type, and theme")
 
+    graph_path = root / "figures" / "theme-network.dot"
+    graph_text = graph_path.read_text(encoding="utf-8") if graph_path.exists() else ""
+    graph_edges = DOT_EDGE_RE.findall(graph_text)
+    actual_graph_edges = set(graph_edges)
+    expected_graph_edges = {
+        (
+            rel.get("source"),
+            rel.get("target"),
+            rel.get("relation_type"),
+            rel.get("theme"),
+        )
+        for rel in rels
+    }
+    if len(graph_edges) != len(actual_graph_edges):
+        fail("relationship graph contains duplicate edges")
+    if actual_graph_edges != expected_graph_edges:
+        missing = sorted(expected_graph_edges - actual_graph_edges)
+        extra = sorted(actual_graph_edges - expected_graph_edges)
+        fail(
+            f"relationship graph must match data/relationships.json exactly: "
+            f"missing={missing} extra={extra}"
+        )
+
     source_ids = [s.get("source_id") for s in sources]
     if None in source_ids or len(source_ids) != len(set(source_ids)):
         fail("source IDs must be non-null and unique")
@@ -630,6 +727,8 @@ def validate(root: pathlib.Path) -> list[str]:
         access_date = src.get("access_date")
         if not valid_date(access_date):
             fail(f"source access_date must use a real YYYY-MM-DD date: {src.get('source_id')} -> {access_date!r}")
+        elif dt.date.fromisoformat(access_date) > dt.date.today():
+            fail(f"source access_date must not be in the future: {src.get('source_id')} -> {access_date!r}")
         elif corpus_date is not None and access_date != corpus_date:
             fail(f"source access_date must match curated generated_at: {src.get('source_id')}")
 
@@ -774,6 +873,23 @@ def validate(root: pathlib.Path) -> list[str]:
                         fail(
                             f"project summary source does not match its repository: "
                             f"{path.relative_to(root)} -> {project_refs[0]}"
+                        )
+                    summary_project_by_source = next(
+                        (
+                            project
+                            for project in projects
+                            if source_id_for_project(project.get("id")) == project_refs[0]
+                        ),
+                        None,
+                    )
+                    actual_summary_path = path.relative_to(root).as_posix()
+                    if (
+                        summary_project_by_source is None
+                        or summary_project_by_source.get("summary_path") != actual_summary_path
+                    ):
+                        fail(
+                            f"project summary path does not match curated summary_path: "
+                            f"{actual_summary_path} -> {project_refs[0]}"
                         )
             for source_ref in source_refs:
                 if source_ref not in source_by_id:

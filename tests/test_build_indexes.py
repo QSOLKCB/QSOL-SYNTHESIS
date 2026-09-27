@@ -17,7 +17,7 @@ class BuildIndexesRegressionTests(unittest.TestCase):
         temp = pathlib.Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, temp)
         (temp / "data").mkdir()
-        for name in ("projects.json", "publications.json"):
+        for name in ("projects.json", "publications.json", "project-publication-links.json"):
             shutil.copy2(REPO_ROOT / "data" / name, temp / "data" / name)
         return temp
 
@@ -76,9 +76,30 @@ class BuildIndexesRegressionTests(unittest.TestCase):
         row = next(row for row in built["sources"] if row["source_id"] == source_id)
         self.assertEqual(row["repository"], declared_repo)
 
+    def test_rejects_version_concept_doi_without_curated_ownership_binding(self):
+        root = self.fixture()
+        publications = self.read(root, "publications.json")
+        concept = next(
+            pub for pub in publications["publications"]
+            if pub.get("resource_type") == "concept-doi"
+        )
+        version = next(
+            pub for pub in publications["publications"]
+            if pub.get("repository_association") == concept.get("repository_association")
+            and pub.get("resource_type") != "concept-doi"
+        )
+        version["concept_doi"] = concept["doi"]
+        self.write(root, "publications.json", publications)
+
+        with self.assertRaisesRegex(
+            RuntimeError,
+            "publication concept DOI disagrees with curated ownership binding",
+        ):
+            build_indexes.build(root)
+
     def test_generated_date_can_advance_without_old_index_state(self):
         root = self.fixture()
-        for name in ("projects.json", "publications.json"):
+        for name in ("projects.json", "publications.json", "project-publication-links.json"):
             doc = self.read(root, name)
             doc["generated_at"] = "2099-01-02"
             self.write(root, name, doc)

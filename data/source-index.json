@@ -4,7 +4,8 @@
     "data/projects.json",
     "data/publications.json",
     "data/project-publication-links.json",
-    "data/github-repositories.json"
+    "data/github-repositories.json",
+    "data/relationships.json"
   ],
   "sources": [
     {

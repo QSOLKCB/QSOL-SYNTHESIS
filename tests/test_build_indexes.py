@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import datetime as dt
 import json
 import pathlib
 import shutil
@@ -141,7 +142,55 @@ class BuildIndexesRegressionTests(unittest.TestCase):
         ):
             build_indexes.build(root)
 
-    def test_generated_date_can_advance_without_old_index_state(self):
+    def test_rejects_ownership_reassignment_without_repository_manifest_support(self):
+        root = self.fixture()
+        publications = self.read(root, "publications.json")
+        links = self.read(root, "project-publication-links.json")
+        pub = next(
+            p for p in publications["publications"]
+            if p["id"] == "publication:zenodo-22026554"
+        )
+        pub["repository_association"] = "project:galaxy"
+        pub["source"] = "https://doi.org/10.5281/zenodo.22026554"
+        link = next(
+            link for link in links["links"]
+            if link.get("publication_id") == pub["id"]
+            and link.get("relation") == "repository-associated-publication"
+        )
+        link["project_id"] = "project:galaxy"
+        link["evidence"] = ["https://doi.org/10.5281/zenodo.22026554"]
+        self.write(root, "publications.json", publications)
+        self.write(root, "project-publication-links.json", links)
+
+        with self.assertRaisesRegex(
+            RuntimeError,
+            "publication ownership disagrees with curated GitHub registry",
+        ):
+            build_indexes.build(root)
+
+    def test_rejects_zenodo_publication_id_doi_mismatch(self):
+        root = self.fixture()
+        publications = self.read(root, "publications.json")
+        links = self.read(root, "project-publication-links.json")
+        pub = next(
+            p for p in publications["publications"]
+            if p["id"] == "publication:zenodo-22026554"
+        )
+        old_id = pub["id"]
+        pub["id"] = "publication:zenodo-99999999"
+        for link in links["links"]:
+            if link.get("publication_id") == old_id:
+                link["publication_id"] = pub["id"]
+        self.write(root, "publications.json", publications)
+        self.write(root, "project-publication-links.json", links)
+
+        with self.assertRaisesRegex(
+            RuntimeError,
+            "Zenodo publication ID must match declared DOI record",
+        ):
+            build_indexes.build(root)
+
+    def test_future_generated_date_is_rejected(self):
         root = self.fixture()
         for name in (
             "projects.json",
@@ -150,12 +199,28 @@ class BuildIndexesRegressionTests(unittest.TestCase):
             "github-repositories.json",
         ):
             doc = self.read(root, name)
-            doc["generated_at"] = "2099-01-02"
+            doc["generated_at"] = "2999-01-01"
+            self.write(root, name, doc)
+
+        with self.assertRaisesRegex(RuntimeError, "must not be in the future"):
+            build_indexes.build(root)
+
+    def test_generated_date_can_advance_without_old_index_state(self):
+        root = self.fixture()
+        current_date = dt.date.today().isoformat()
+        for name in (
+            "projects.json",
+            "publications.json",
+            "project-publication-links.json",
+            "github-repositories.json",
+        ):
+            doc = self.read(root, name)
+            doc["generated_at"] = current_date
             self.write(root, name, doc)
 
         built = build_indexes.build(root)
-        self.assertEqual(built["generated_at"], "2099-01-02")
-        self.assertTrue(all(row["access_date"] == "2099-01-02" for row in built["sources"]))
+        self.assertEqual(built["generated_at"], current_date)
+        self.assertTrue(all(row["access_date"] == current_date for row in built["sources"]))
 
 
 if __name__ == "__main__":

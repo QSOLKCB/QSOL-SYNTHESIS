@@ -63,7 +63,10 @@ def collect_release_pages(
             return releases, False, str(exc)
         if not isinstance(batch, list):
             return releases, False, "unexpected GitHub releases response"
-        releases.extend(item for item in batch if isinstance(item, dict))
+        if any(not isinstance(item, dict) for item in batch):
+            releases.extend(item for item in batch if isinstance(item, dict))
+            return releases, False, "unexpected GitHub release entry"
+        releases.extend(batch)
         if len(batch) < RELEASE_PAGE_SIZE:
             return releases, True, None
         page += 1

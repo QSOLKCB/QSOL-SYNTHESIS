@@ -104,6 +104,8 @@ def query_all(query: str, per_page: int, max_pages: int):
         hits = hits_obj.get("hits")
         if not isinstance(hits, list):
             raise RuntimeError("unexpected Zenodo query response: hits must be a list")
+        if any(not isinstance(hit, dict) for hit in hits):
+            raise RuntimeError("unexpected Zenodo query response: hit must be an object")
         if total is None:
             raw_total = hits_obj.get("total")
             if isinstance(raw_total, dict):

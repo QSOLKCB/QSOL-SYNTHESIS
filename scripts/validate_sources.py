@@ -287,8 +287,10 @@ def validate(root: pathlib.Path) -> list[str]:
                 fail(f"duplicate DOI ignoring case: {doi} conflicts with {doi_seen[normalized_doi]}")
             doi_seen[normalized_doi] = doi
         concept_doi = pub.get("concept_doi")
-        if concept_doi and not DOI_RE.fullmatch(concept_doi):
-            fail(f"invalid concept DOI syntax: {concept_doi}")
+        if concept_doi is not None and (
+            not isinstance(concept_doi, str) or not DOI_RE.fullmatch(concept_doi)
+        ):
+            fail(f"invalid concept DOI syntax: {concept_doi!r}")
         if pub.get("resource_type") == "concept-doi":
             if (
                 not isinstance(concept_doi, str)
@@ -369,7 +371,9 @@ def validate(root: pathlib.Path) -> list[str]:
     # identity or lineage.
     for pub in pubs:
         concept_doi = pub.get("concept_doi")
-        if not concept_doi:
+        if concept_doi is None:
+            continue
+        if not isinstance(concept_doi, str):
             continue
         concept_row = zenodo_by_doi.get(concept_doi.casefold())
         if concept_row is None:
@@ -420,6 +424,35 @@ def validate(root: pathlib.Path) -> list[str]:
             pub = next((p for p in pubs if p.get("id") == link.get("publication_id")), None)
             if pub and pub.get("repository_association") != link.get("project_id"):
                 fail(f"publication ownership mismatch: {link.get('publication_id')}")
+            if "concept_doi" not in link:
+                fail(f"publication ownership link must declare concept_doi: {link.get('publication_id')}")
+            else:
+                link_concept_doi = link.get("concept_doi")
+                if link_concept_doi is not None and (
+                    not isinstance(link_concept_doi, str)
+                    or not DOI_RE.fullmatch(link_concept_doi)
+                ):
+                    fail(
+                        f"publication ownership link has invalid concept_doi: "
+                        f"{link.get('publication_id')} -> {link_concept_doi!r}"
+                    )
+                if pub is not None:
+                    pub_concept_doi = pub.get("concept_doi")
+                    comparable_pub = (
+                        pub_concept_doi.casefold()
+                        if isinstance(pub_concept_doi, str)
+                        else pub_concept_doi
+                    )
+                    comparable_link = (
+                        link_concept_doi.casefold()
+                        if isinstance(link_concept_doi, str)
+                        else link_concept_doi
+                    )
+                    if comparable_pub != comparable_link:
+                        fail(
+                            f"publication concept DOI disagrees with curated ownership binding: "
+                            f"{link.get('publication_id')}"
+                        )
         evidence = link.get("evidence")
         if not isinstance(evidence, list) or not evidence:
             fail(f"publication link requires evidence: {link.get('project_id')} -> {link.get('publication_id')}")
@@ -619,12 +652,34 @@ def validate(root: pathlib.Path) -> list[str]:
             if supported and not positive:
                 fail(f"matrix denies declared theme support: {pid} -> {theme}")
 
+    expected_project_summary_ids = {
+        sid
+        for project in projects
+        if (sid := source_id_for_project(project.get("id"))) is not None
+    }
+    project_summary_counts: dict[str, int] = {}
+
     for directory in ("paper", "themes", "projects"):
         for path in (root / directory).glob("*.md"):
             text = path.read_text(encoding="utf-8")
             if "Bootstrap placeholder" in text or "Draft section. This bootstrap" in text:
                 fail(f"placeholder prose remains: {path.relative_to(root)}")
             source_refs = sorted(set(SOURCE_ID_RE.findall(text)))
+            if directory == "projects":
+                project_refs = [
+                    source_ref
+                    for source_ref in source_refs
+                    if source_ref in expected_project_summary_ids
+                ]
+                if len(project_refs) != 1:
+                    fail(
+                        f"project summary must identify exactly one curated project source: "
+                        f"{path.relative_to(root)}"
+                    )
+                else:
+                    project_summary_counts[project_refs[0]] = (
+                        project_summary_counts.get(project_refs[0], 0) + 1
+                    )
             for source_ref in source_refs:
                 if source_ref not in source_by_id:
                     fail(
@@ -640,6 +695,25 @@ def validate(root: pathlib.Path) -> list[str]:
                     f"substantive paper section requires source index references: "
                     f"{path.relative_to(root)}"
                 )
+
+    actual_project_summary_ids = set(project_summary_counts)
+    if actual_project_summary_ids != expected_project_summary_ids:
+        missing = sorted(expected_project_summary_ids - actual_project_summary_ids)
+        extra = sorted(actual_project_summary_ids - expected_project_summary_ids)
+        fail(
+            f"project summaries must cover projects.json exactly: "
+            f"missing={missing} extra={extra}"
+        )
+    duplicate_project_summaries = sorted(
+        source_id
+        for source_id, count in project_summary_counts.items()
+        if count != 1
+    )
+    if duplicate_project_summaries:
+        fail(
+            f"project summaries must be unique by curated project source: "
+            f"{duplicate_project_summaries}"
+        )
 
     return errors
 

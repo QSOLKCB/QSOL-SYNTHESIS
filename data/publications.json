@@ -1,0 +1,155 @@
+{
+  "generated_at": "2026-09-27",
+  "publications": [
+    {
+      "id": "publication:zenodo-22026554",
+      "title": "QSOL UFF v5.3.0: Nonclaim Calibration and Evidence-Scope Discipline for Reproducible Astrophysics",
+      "doi": "10.5281/zenodo.22026554",
+      "resource_type": "software",
+      "version": "5.3.0",
+      "repository_association": "project:uff",
+      "source": "https://github.com/QSOLKCB/UFF/blob/main/CITATION.cff",
+      "concept_doi": null
+    },
+    {
+      "id": "publication:zenodo-21917464",
+      "title": "RES=RAG and the Coherent State Network Protocol: A Formal Architecture for Endogenous Stability in Human-Machine Systems",
+      "doi": "10.5281/zenodo.21917464",
+      "resource_type": "preprint",
+      "version": "1.1.0",
+      "repository_association": "project:res-rag",
+      "source": "https://github.com/QSOLKCB/res-rag/blob/main/CITATION.cff",
+      "concept_doi": null
+    },
+    {
+      "id": "publication:zenodo-21494678",
+      "title": "ETQ-303 v3: Exact 303-State Root-Indexed Event Protocol",
+      "doi": "10.5281/zenodo.21494678",
+      "resource_type": "software",
+      "version": "3.0.1",
+      "repository_association": "project:sonification",
+      "source": "https://github.com/QSOLKCB/SONIFICATION/blob/main/CITATION.cff",
+      "concept_doi": null
+    },
+    {
+      "id": "publication:zenodo-21455181",
+      "title": "ETQ-303 original release",
+      "doi": "10.5281/zenodo.21455181",
+      "resource_type": "software",
+      "version": "3.0.0",
+      "repository_association": "project:sonification",
+      "source": "https://github.com/QSOLKCB/SONIFICATION/blob/main/CITATION.cff",
+      "concept_doi": null
+    },
+    {
+      "id": "publication:zenodo-21432511",
+      "title": "ETQ-101 v2.0.0 base release",
+      "doi": "10.5281/zenodo.21432511",
+      "resource_type": "software",
+      "version": "2.0.0",
+      "repository_association": "project:sonification",
+      "source": "https://github.com/QSOLKCB/SONIFICATION/blob/main/CITATION.cff",
+      "concept_doi": null
+    },
+    {
+      "id": "publication:zenodo-22831753",
+      "title": "D4-TIA v2.0.0",
+      "doi": "10.5281/zenodo.22831753",
+      "resource_type": "software",
+      "version": "2.0.0",
+      "repository_association": "project:sonification",
+      "source": "https://github.com/QSOLKCB/SONIFICATION/blob/main/README.md",
+      "concept_doi": null
+    },
+    {
+      "id": "publication:zenodo-21308248",
+      "title": "Spectral Algebraics: Audible Geometry via E8-Inspired Signal Synthesis and 3D Visualization",
+      "doi": "10.5281/zenodo.21308248",
+      "resource_type": "dataset",
+      "version": null,
+      "repository_association": "project:spectral",
+      "source": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md",
+      "concept_doi": null
+    },
+    {
+      "id": "publication:zenodo-21293821",
+      "title": "Collective Modes... (v1.2)",
+      "doi": "10.5281/zenodo.21293821",
+      "resource_type": "dataset",
+      "version": "1.2",
+      "repository_association": "project:spectral",
+      "source": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md",
+      "concept_doi": null
+    },
+    {
+      "id": "publication:zenodo-21292906",
+      "title": "Collective Modes... (v1.0)",
+      "doi": "10.5281/zenodo.21292906",
+      "resource_type": "dataset",
+      "version": "1.0",
+      "repository_association": "project:spectral",
+      "source": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md",
+      "concept_doi": null
+    },
+    {
+      "id": "publication:zenodo-22756969",
+      "title": "GALAXY v0.4.0: Deterministic Native CPU Runtime and Scaling Evidence",
+      "doi": "10.5281/zenodo.22756969",
+      "resource_type": "software",
+      "version": "0.4.0",
+      "repository_association": "project:galaxy",
+      "source": "https://github.com/QSOLKCB/GALAXY/blob/main/README.md",
+      "concept_doi": null
+    },
+    {
+      "id": "publication:zenodo-21959180",
+      "title": "QSOL-SUBSTRATE archival release",
+      "doi": "10.5281/zenodo.21959180",
+      "resource_type": "software",
+      "version": null,
+      "repository_association": "project:qsol-substrate",
+      "source": "https://github.com/QSOLKCB/QSOL-SUBSTRATE/blob/main/README.md",
+      "concept_doi": null
+    },
+    {
+      "id": "publication:zenodo-17520186",
+      "title": "QSOL Unified Field Framework: Resonance as Embodied Physics",
+      "doi": "10.5281/zenodo.17520186",
+      "resource_type": "report",
+      "version": null,
+      "repository_association": "project:qai-uft",
+      "source": "https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md",
+      "concept_doi": null
+    },
+    {
+      "id": "publication:zenodo-17569256",
+      "title": "QAI-UFT badge-linked Zenodo record (metadata unresolved)",
+      "doi": "10.5281/zenodo.17569256",
+      "resource_type": "unknown",
+      "version": null,
+      "repository_association": "project:qai-uft",
+      "source": "https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md",
+      "concept_doi": null
+    },
+    {
+      "id": "publication:zenodo-21404223",
+      "title": "SONIFICATION model-lineage concept DOI referenced by E8_MUSIC",
+      "doi": "10.5281/zenodo.21404223",
+      "resource_type": "concept-doi",
+      "version": null,
+      "repository_association": "project:sonification",
+      "source": "https://doi.org/10.5281/zenodo.21404223",
+      "concept_doi": "10.5281/zenodo.21404223"
+    },
+    {
+      "id": "publication:zenodo-21895577",
+      "title": "QSOL-NEXUS v2.0.0 DOI release",
+      "doi": "10.5281/zenodo.21895577",
+      "resource_type": "software",
+      "version": "2.0.0",
+      "repository_association": "project:qsol-nexus",
+      "source": "https://github.com/QSOLKCB/QSOL-NEXUS/blob/main/README.md",
+      "concept_doi": null
+    }
+  ]
+}

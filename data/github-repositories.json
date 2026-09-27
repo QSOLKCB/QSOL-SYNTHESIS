@@ -1,0 +1,349 @@
+{
+  "generated_at": "2026-09-27",
+  "source": "maintainer-curated high-relevance subset derived from the public QSOLKCB inventory and first-party repository documentation",
+  "total_count_observed": 78,
+  "notes": "This file is a curated synthesis input, not the raw output of scripts/collect_github.py. Raw discovery snapshots belong under data/raw/.",
+  "repositories": [
+    {
+      "name": "QEC",
+      "full_name": "QSOLKCB/QEC",
+      "html_url": "https://github.com/QSOLKCB/QEC",
+      "classification": [
+        "quantum-error-correction-research",
+        "evidence-infrastructure",
+        "deterministic-proof-stack"
+      ],
+      "source": "https://github.com/QSOLKCB/QEC/blob/main/README.md",
+      "publication_dois": [],
+      "publication_sources": {}
+    },
+    {
+      "name": "UFT-ID-3.0",
+      "full_name": "QSOLKCB/UFT-ID-3.0",
+      "html_url": "https://github.com/QSOLKCB/UFT-ID-3.0",
+      "classification": [
+        "foundational-theory",
+        "formalisation",
+        "falsification-lab"
+      ],
+      "source": "https://github.com/QSOLKCB/UFT-ID-3.0/blob/main/README.md",
+      "publication_dois": [],
+      "publication_sources": {}
+    },
+    {
+      "name": "UFF",
+      "full_name": "QSOLKCB/UFF",
+      "html_url": "https://github.com/QSOLKCB/UFF",
+      "classification": [
+        "empirical-simulation-laboratory",
+        "formalisation",
+        "provenance-infrastructure"
+      ],
+      "source": "https://github.com/QSOLKCB/UFF/blob/main/README.md",
+      "publication_dois": [
+        "10.5281/zenodo.22026554"
+      ],
+      "publication_sources": {
+        "10.5281/zenodo.22026554": "https://github.com/QSOLKCB/UFF/blob/main/CITATION.cff"
+      }
+    },
+    {
+      "name": "QAI-UFT",
+      "full_name": "QSOLKCB/QAI-UFT",
+      "html_url": "https://github.com/QSOLKCB/QAI-UFT",
+      "classification": [
+        "historical-exploratory-precursor",
+        "creative-interpretive-experiment"
+      ],
+      "source": "https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md",
+      "publication_dois": [
+        "10.5281/zenodo.17520186",
+        "10.5281/zenodo.17569256"
+      ],
+      "publication_sources": {
+        "10.5281/zenodo.17520186": "https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md",
+        "10.5281/zenodo.17569256": "https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md"
+      }
+    },
+    {
+      "name": "res-rag",
+      "full_name": "QSOLKCB/res-rag",
+      "html_url": "https://github.com/QSOLKCB/res-rag",
+      "classification": [
+        "formalisation",
+        "hypothesis-laboratory",
+        "evidence-infrastructure"
+      ],
+      "source": "https://github.com/QSOLKCB/res-rag/blob/main/README.md",
+      "publication_dois": [
+        "10.5281/zenodo.21917464"
+      ],
+      "publication_sources": {
+        "10.5281/zenodo.21917464": "https://github.com/QSOLKCB/res-rag/blob/main/CITATION.cff"
+      }
+    },
+    {
+      "name": "res-rag-viz",
+      "full_name": "QSOLKCB/res-rag-viz",
+      "html_url": "https://github.com/QSOLKCB/res-rag-viz",
+      "classification": [
+        "sonification-visualisation-instrument",
+        "empirical-simulation-laboratory"
+      ],
+      "source": "https://github.com/QSOLKCB/res-rag-viz/blob/main/README.md",
+      "publication_dois": [],
+      "publication_sources": {}
+    },
+    {
+      "name": "QSOLQEC",
+      "full_name": "QSOLKCB/QSOLQEC",
+      "html_url": "https://github.com/QSOLKCB/QSOLQEC",
+      "classification": [
+        "hypothesis-laboratory",
+        "empirical-simulation-laboratory"
+      ],
+      "source": "https://github.com/QSOLKCB/QSOLQEC/blob/main/README.md",
+      "publication_dois": [],
+      "publication_sources": {}
+    },
+    {
+      "name": "QSOL-QEC-BRIDGE",
+      "full_name": "QSOLKCB/QSOL-QEC-BRIDGE",
+      "html_url": "https://github.com/QSOLKCB/QSOL-QEC-BRIDGE",
+      "classification": [
+        "evidence-infrastructure",
+        "compatibility-research"
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-QEC-BRIDGE/blob/main/README.md",
+      "publication_dois": [],
+      "publication_sources": {}
+    },
+    {
+      "name": "SONIFICATION",
+      "full_name": "QSOLKCB/SONIFICATION",
+      "html_url": "https://github.com/QSOLKCB/SONIFICATION",
+      "classification": [
+        "formalisation",
+        "sonification-visualisation-instrument"
+      ],
+      "source": "https://github.com/QSOLKCB/SONIFICATION/blob/main/README.md",
+      "publication_dois": [
+        "10.5281/zenodo.21404223",
+        "10.5281/zenodo.21432511",
+        "10.5281/zenodo.21455181",
+        "10.5281/zenodo.21494678",
+        "10.5281/zenodo.22831753"
+      ],
+      "publication_sources": {
+        "10.5281/zenodo.21404223": "https://doi.org/10.5281/zenodo.21404223",
+        "10.5281/zenodo.21432511": "https://github.com/QSOLKCB/SONIFICATION/blob/main/CITATION.cff",
+        "10.5281/zenodo.21455181": "https://github.com/QSOLKCB/SONIFICATION/blob/main/CITATION.cff",
+        "10.5281/zenodo.21494678": "https://github.com/QSOLKCB/SONIFICATION/blob/main/CITATION.cff",
+        "10.5281/zenodo.22831753": "https://github.com/QSOLKCB/SONIFICATION/blob/main/README.md"
+      }
+    },
+    {
+      "name": "E8_MUSIC",
+      "full_name": "QSOLKCB/E8_MUSIC",
+      "html_url": "https://github.com/QSOLKCB/E8_MUSIC",
+      "classification": [
+        "sonification-visualisation-instrument",
+        "creative-interpretive-experiment"
+      ],
+      "source": "https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md",
+      "publication_dois": [],
+      "publication_sources": {}
+    },
+    {
+      "name": "SPECTRAL",
+      "full_name": "QSOLKCB/SPECTRAL",
+      "html_url": "https://github.com/QSOLKCB/SPECTRAL",
+      "classification": [
+        "sonification-visualisation-instrument",
+        "empirical-simulation-laboratory"
+      ],
+      "source": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md",
+      "publication_dois": [
+        "10.5281/zenodo.21292906",
+        "10.5281/zenodo.21293821",
+        "10.5281/zenodo.21308248"
+      ],
+      "publication_sources": {
+        "10.5281/zenodo.21292906": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md",
+        "10.5281/zenodo.21293821": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md",
+        "10.5281/zenodo.21308248": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md"
+      }
+    },
+    {
+      "name": "QSOL-MAP",
+      "full_name": "QSOLKCB/QSOL-MAP",
+      "html_url": "https://github.com/QSOLKCB/QSOL-MAP",
+      "classification": [
+        "formalisation",
+        "observation-infrastructure"
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-MAP/blob/main/README.md",
+      "publication_dois": [],
+      "publication_sources": {}
+    },
+    {
+      "name": "QSOL-GEO-REASON",
+      "full_name": "QSOLKCB/QSOL-GEO-REASON",
+      "html_url": "https://github.com/QSOLKCB/QSOL-GEO-REASON",
+      "classification": [
+        "hypothesis-laboratory",
+        "formalisation",
+        "falsification-lab"
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-GEO-REASON/blob/main/README.md",
+      "publication_dois": [],
+      "publication_sources": {}
+    },
+    {
+      "name": "QSOL-SEMANTIC-RELAY",
+      "full_name": "QSOLKCB/QSOL-SEMANTIC-RELAY",
+      "html_url": "https://github.com/QSOLKCB/QSOL-SEMANTIC-RELAY",
+      "classification": [
+        "ai-semantic-experiment",
+        "hypothesis-laboratory"
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-SEMANTIC-RELAY/blob/main/README.md",
+      "publication_dois": [],
+      "publication_sources": {}
+    },
+    {
+      "name": "QSOL-SUBSTRATE",
+      "full_name": "QSOLKCB/QSOL-SUBSTRATE",
+      "html_url": "https://github.com/QSOLKCB/QSOL-SUBSTRATE",
+      "classification": [
+        "evidence-infrastructure",
+        "provenance-infrastructure"
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-SUBSTRATE/blob/main/README.md",
+      "publication_dois": [
+        "10.5281/zenodo.21959180"
+      ],
+      "publication_sources": {
+        "10.5281/zenodo.21959180": "https://github.com/QSOLKCB/QSOL-SUBSTRATE/blob/main/README.md"
+      }
+    },
+    {
+      "name": "QSOL-ORACLE",
+      "full_name": "QSOLKCB/QSOL-ORACLE",
+      "html_url": "https://github.com/QSOLKCB/QSOL-ORACLE",
+      "classification": [
+        "evidence-infrastructure",
+        "provenance-infrastructure",
+        "authority-partitioning-infrastructure"
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-ORACLE/blob/main/README.md",
+      "publication_dois": [],
+      "publication_sources": {}
+    },
+    {
+      "name": "QSOL-NEXUS",
+      "full_name": "QSOLKCB/QSOL-NEXUS",
+      "html_url": "https://github.com/QSOLKCB/QSOL-NEXUS",
+      "classification": [
+        "orchestration-control-infrastructure",
+        "ai-semantic-experiment"
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-NEXUS/blob/main/README.md",
+      "publication_dois": [
+        "10.5281/zenodo.21895577"
+      ],
+      "publication_sources": {
+        "10.5281/zenodo.21895577": "https://github.com/QSOLKCB/QSOL-NEXUS/blob/main/README.md"
+      }
+    },
+    {
+      "name": "QSOL-CONTROL",
+      "full_name": "QSOLKCB/QSOL-CONTROL",
+      "html_url": "https://github.com/QSOLKCB/QSOL-CONTROL",
+      "classification": [
+        "orchestration-control-infrastructure",
+        "compatibility-research"
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-CONTROL/blob/main/README.md",
+      "publication_dois": [],
+      "publication_sources": {}
+    },
+    {
+      "name": "GALAXY",
+      "full_name": "QSOLKCB/GALAXY",
+      "html_url": "https://github.com/QSOLKCB/GALAXY",
+      "classification": [
+        "empirical-simulation-laboratory",
+        "formalisation"
+      ],
+      "source": "https://github.com/QSOLKCB/GALAXY/blob/main/README.md",
+      "publication_dois": [
+        "10.5281/zenodo.22756969"
+      ],
+      "publication_sources": {
+        "10.5281/zenodo.22756969": "https://github.com/QSOLKCB/GALAXY/blob/main/README.md"
+      }
+    },
+    {
+      "name": "PSYCLE-LINUX",
+      "full_name": "QSOLKCB/PSYCLE-LINUX",
+      "html_url": "https://github.com/QSOLKCB/PSYCLE-LINUX",
+      "classification": [
+        "preservation-engineering",
+        "compatibility-research"
+      ],
+      "source": "https://github.com/QSOLKCB/PSYCLE-LINUX/blob/main/README.md",
+      "publication_dois": [],
+      "publication_sources": {}
+    },
+    {
+      "name": "RIVET",
+      "full_name": "QSOLKCB/RIVET",
+      "html_url": "https://github.com/QSOLKCB/RIVET",
+      "classification": [
+        "compatibility-research",
+        "minimal-systems-engineering"
+      ],
+      "source": "https://github.com/QSOLKCB/RIVET/blob/main/README.md",
+      "publication_dois": [],
+      "publication_sources": {}
+    },
+    {
+      "name": "COSMO",
+      "full_name": "QSOLKCB/COSMO",
+      "html_url": "https://github.com/QSOLKCB/COSMO",
+      "classification": [
+        "formalisation",
+        "hypothesis-laboratory"
+      ],
+      "source": "https://github.com/QSOLKCB/COSMO/blob/main/README.md",
+      "publication_dois": [],
+      "publication_sources": {}
+    },
+    {
+      "name": "QSOL-ARK",
+      "full_name": "QSOLKCB/QSOL-ARK",
+      "html_url": "https://github.com/QSOLKCB/QSOL-ARK",
+      "classification": [
+        "preservation-engineering",
+        "provenance-infrastructure"
+      ],
+      "source": "https://github.com/QSOLKCB/QSOL-ARK/blob/main/README.md",
+      "publication_dois": [],
+      "publication_sources": {}
+    },
+    {
+      "name": "LATTICE",
+      "full_name": "QSOLKCB/LATTICE",
+      "html_url": "https://github.com/QSOLKCB/LATTICE",
+      "classification": [
+        "formalisation",
+        "provenance-infrastructure"
+      ],
+      "source": "https://github.com/QSOLKCB/LATTICE/blob/main/README.md",
+      "publication_dois": [],
+      "publication_sources": {}
+    }
+  ],
+  "selected_count": 24
+}

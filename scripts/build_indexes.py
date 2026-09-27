@@ -200,6 +200,19 @@ def build(root: pathlib.Path) -> dict:
         project_id = project.get("id")
         if not isinstance(project_id, str) or not PROJECT_ID_RE.fullmatch(project_id):
             raise RuntimeError(f"invalid project ID namespace: {project_id!r}")
+        project_name = project.get("name")
+        purpose = project.get("purpose")
+        role = project.get("role")
+        if not isinstance(project_name, str) or not project_name.strip():
+            raise RuntimeError(f"project name must be a non-empty string: {project_id}")
+        if not isinstance(purpose, str) or not purpose.strip():
+            raise RuntimeError(f"project purpose must be a non-empty string: {project_id}")
+        if (
+            not isinstance(role, list)
+            or not role
+            or any(not isinstance(item, str) or not item for item in role)
+        ):
+            raise RuntimeError(f"project role must be a non-empty string list: {project_id}")
         project_themes = project.get("themes")
         if (
             not isinstance(project_themes, list)
@@ -283,8 +296,6 @@ def build(root: pathlib.Path) -> dict:
 
     for rel in relationships:
         relation_type = rel.get("relation_type")
-        if relation_type not in BILATERAL_RELATIONS:
-            continue
         source_id = rel.get("source")
         target_id = rel.get("target")
         source_project = project_by_id.get(source_id)
@@ -296,28 +307,57 @@ def build(root: pathlib.Path) -> dict:
             github_blob_identity(target_project.get("source")),
         }
         expected_sources.discard(None)
-        evidence_sources = {
+        evidence = rel.get("evidence")
+        if not isinstance(evidence, list) or not evidence:
+            raise RuntimeError(
+                f"relationship requires first-party GitHub evidence: "
+                f"{source_id} -> {target_id}"
+            )
+        raw_evidence_sources = [
             github_blob_identity(url)
-            for url in rel.get("evidence", [])
+            for url in evidence
             if isinstance(url, str)
-        }
-        evidence_sources.discard(None)
+        ]
+        if (
+            len(raw_evidence_sources) != len(evidence)
+            or any(identity not in expected_sources for identity in raw_evidence_sources)
+        ):
+            raise RuntimeError(
+                f"relationship evidence must match curated endpoint sources: "
+                f"{source_id} -> {target_id}"
+            )
+        evidence_sources = set(raw_evidence_sources)
         theme = rel.get("theme")
+        theme_supporting_sources = {
+            github_blob_identity(project.get("source"))
+            for project in (source_project, target_project)
+            if theme in set(project.get("themes", []))
+        }
+        theme_supporting_sources.discard(None)
         if (
             not isinstance(theme, str)
             or not THEME_NAME_RE.fullmatch(theme)
-            or theme not in set(source_project.get("themes", []))
-            or theme not in set(target_project.get("themes", []))
+            or not theme_supporting_sources
+            or evidence_sources.isdisjoint(theme_supporting_sources)
         ):
             raise RuntimeError(
-                f"bilateral relationship theme must be supported by both endpoints: "
+                f"relationship evidence must come from an endpoint supporting the theme: "
                 f"{source_id} -> {target_id}: {theme}"
             )
-        if evidence_sources != expected_sources:
-            raise RuntimeError(
-                f"bilateral relationship evidence must cover both endpoints: "
-                f"{source_id} -> {target_id}"
-            )
+        if relation_type in BILATERAL_RELATIONS:
+            if (
+                theme not in set(source_project.get("themes", []))
+                or theme not in set(target_project.get("themes", []))
+            ):
+                raise RuntimeError(
+                    f"bilateral relationship theme must be supported by both endpoints: "
+                    f"{source_id} -> {target_id}: {theme}"
+                )
+            if evidence_sources != expected_sources:
+                raise RuntimeError(
+                    f"bilateral relationship evidence must cover both endpoints: "
+                    f"{source_id} -> {target_id}"
+                )
 
     sources = []
     for project in projects:

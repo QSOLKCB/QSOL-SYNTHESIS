@@ -43,6 +43,16 @@ class ValidateSourcesRegressionTests(unittest.TestCase):
     def test_baseline_fixture_validates(self):
         self.assertEqual(validate_sources.validate(REPO_ROOT), [])
 
+    def test_project_id_requires_project_namespace(self):
+        root = self.fixture()
+        doc = self.read_json(root, "projects.json")
+        project = doc["projects"][0]
+        project["id"] = project["id"].removeprefix("project:")
+        self.write_json(root, "projects.json", doc)
+
+        errors = validate_sources.validate(root)
+        self.assert_has(errors, "project IDs must be non-empty strings in the project: namespace")
+
     def test_project_url_must_match_declared_repository(self):
         root = self.fixture()
         doc = self.read_json(root, "projects.json")
@@ -61,6 +71,15 @@ class ValidateSourcesRegressionTests(unittest.TestCase):
             validate_sources.validate(root),
             "curated GitHub registry repositories must match projects.json exactly",
         )
+
+    def test_non_string_curated_zenodo_doi_reports_error_without_crashing(self):
+        root = self.fixture()
+        doc = self.read_json(root, "zenodo-records.json")
+        doc["records"][0]["doi"] = 123
+        self.write_json(root, "zenodo-records.json", doc)
+
+        errors = validate_sources.validate(root)
+        self.assert_has(errors, "curated Zenodo DOI identifiers must be non-empty strings")
 
     def test_curated_zenodo_registry_must_match_publications(self):
         root = self.fixture()
@@ -392,7 +411,7 @@ class ValidateSourcesRegressionTests(unittest.TestCase):
         self.write_json(root, "projects.json", projects)
 
         errors = validate_sources.validate(root)
-        self.assert_has(errors, "project IDs must be non-null and unique")
+        self.assert_has(errors, "project IDs must be non-empty strings in the project: namespace")
 
     def test_substantive_paper_section_requires_source_reference(self):
         root = self.fixture()

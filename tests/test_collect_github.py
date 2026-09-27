@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import pathlib
 import tempfile
 import unittest
@@ -87,6 +88,26 @@ class CollectGithubRegressionTests(unittest.TestCase):
         self.assertEqual(len(row["releases"]), 100)
         self.assertFalse(row["releases_complete"])
         self.assertIn("rate limited", row["releases_error"])
+
+    def test_malformed_enrichment_json_is_preserved_as_uncertainty(self):
+        def fake(url, token, cache_dir, ttl_seconds):
+            if "/orgs/QSOLKCB/repos" in url:
+                return [self.repo()]
+            if "/releases?" in url:
+                raise json.JSONDecodeError("bad json", "not-json", 0)
+            if "/contents/" in url:
+                return {"sha": "abc"}
+            raise AssertionError(url)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            result = collect_github.collect_public_repositories(
+                "QSOLKCB", None, pathlib.Path(tmp), 0, True, request_fn=fake
+            )
+
+        row = result["repositories"][0]
+        self.assertEqual(row["releases"], [])
+        self.assertFalse(row["releases_complete"])
+        self.assertIn("bad json", row["releases_error"])
 
 
 if __name__ == "__main__":

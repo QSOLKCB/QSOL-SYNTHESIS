@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import datetime as dt
 import json
 import pathlib
 import re
@@ -14,6 +15,7 @@ DOI_SOURCE_RE = re.compile(r"^https://doi\.org/(10\.\d{4,9}/[-._;()/:A-Z0-9]+)$"
 ZENODO_DOI_RE = re.compile(r"^10\.5281/zenodo\.(\d+)$", re.IGNORECASE)
 PROJECT_ID_RE = re.compile(r"^project:[A-Za-z0-9._-]+$")
 PUBLICATION_ID_RE = re.compile(r"^publication:[A-Za-z0-9._-]+$")
+ZENODO_PUBLICATION_ID_RE = re.compile(r"^publication:zenodo-(\d+)$")
 
 
 def read_json(path: pathlib.Path):
@@ -24,6 +26,23 @@ def normalize_repository(value: str | None) -> str | None:
     if not isinstance(value, str) or not value:
         return None
     return value.casefold()
+
+
+def github_blob_identity(url: str | None) -> tuple[str, str, str] | None:
+    if not isinstance(url, str):
+        return None
+    match = GITHUB_BLOB_RE.fullmatch(url)
+    if not match:
+        return None
+    repository = normalize_repository(match.group(1))
+    if repository is None:
+        return None
+    return repository, match.group(2), match.group(3)
+
+
+def github_blob_source_matches(candidate: str | None, curated: str | None) -> bool:
+    candidate_identity = github_blob_identity(candidate)
+    return candidate_identity is not None and candidate_identity == github_blob_identity(curated)
 
 
 def parse_source(url: str | None) -> tuple[str, str | None, str | None, str]:
@@ -87,13 +106,24 @@ def build(root: pathlib.Path) -> dict:
     publications_doc = read_json(data / "publications.json")
     links_doc = read_json(data / "project-publication-links.json")
     github_doc = read_json(data / "github-repositories.json")
-    dates = {
-        projects_doc.get("generated_at"),
-        publications_doc.get("generated_at"),
-        links_doc.get("generated_at"),
-        github_doc.get("generated_at"),
+    dated_docs = {
+        "projects.json": projects_doc.get("generated_at"),
+        "publications.json": publications_doc.get("generated_at"),
+        "project-publication-links.json": links_doc.get("generated_at"),
+        "github-repositories.json": github_doc.get("generated_at"),
     }
-    dates.discard(None)
+    for name, value in dated_docs.items():
+        if not isinstance(value, str):
+            raise RuntimeError(f"{name} generated_at must be YYYY-MM-DD")
+        try:
+            parsed = dt.date.fromisoformat(value)
+        except ValueError as exc:
+            raise RuntimeError(f"{name} generated_at must be YYYY-MM-DD") from exc
+        if parsed.isoformat() != value:
+            raise RuntimeError(f"{name} generated_at must be YYYY-MM-DD")
+        if parsed > dt.date.today():
+            raise RuntimeError(f"{name} generated_at must not be in the future: {value}")
+    dates = set(dated_docs.values())
     if len(dates) != 1:
         raise RuntimeError(f"curated generated_at values disagree: {sorted(dates)}")
     generated_at = next(iter(dates))
@@ -122,6 +152,7 @@ def build(root: pathlib.Path) -> dict:
             raise RuntimeError(f"invalid project ID namespace: {project_id!r}")
 
     ownership_concept_by_publication: dict[str, str | None] = {}
+    ownership_link_by_publication: dict[str, dict] = {}
     for link in links:
         if link.get("relation") != "repository-associated-publication":
             continue
@@ -141,11 +172,17 @@ def build(root: pathlib.Path) -> dict:
                 f"{publication_id}"
             )
         ownership_concept_by_publication[publication_id] = expected_concept_doi
+        ownership_link_by_publication[publication_id] = link
 
     project_repo_by_id = {
         project.get("id"): project.get("repo")
         for project in projects
         if project.get("id") and project.get("repo")
+    }
+    project_by_id = {
+        project.get("id"): project
+        for project in projects
+        if project.get("id")
     }
 
     sources = []
@@ -196,6 +233,23 @@ def build(root: pathlib.Path) -> dict:
         publication_id = pub.get("id")
         if not isinstance(publication_id, str) or not PUBLICATION_ID_RE.fullmatch(publication_id):
             raise RuntimeError(f"invalid publication ID namespace: {publication_id!r}")
+        doi = pub.get("doi")
+        zenodo_id_match = ZENODO_PUBLICATION_ID_RE.fullmatch(publication_id)
+        zenodo_doi_match = ZENODO_DOI_RE.fullmatch(doi) if isinstance(doi, str) else None
+        if zenodo_id_match is not None:
+            if (
+                zenodo_doi_match is None
+                or zenodo_id_match.group(1) != zenodo_doi_match.group(1)
+            ):
+                raise RuntimeError(
+                    f"Zenodo publication ID must match declared DOI record: "
+                    f"{publication_id} -> {doi!r}"
+                )
+        elif zenodo_doi_match is not None:
+            raise RuntimeError(
+                f"Zenodo DOI publication must use matching publication:zenodo-* ID: "
+                f"{publication_id!r} -> {doi}"
+            )
         if publication_id not in ownership_concept_by_publication:
             raise RuntimeError(
                 f"publication requires a curated ownership concept binding: {publication_id}"
@@ -229,9 +283,48 @@ def build(root: pathlib.Path) -> dict:
 
         association = pub.get("repository_association")
         owner_repository = project_repo_by_id.get(association)
-        if owner_repository is None:
+        owner_project = project_by_id.get(association)
+        if owner_repository is None or owner_project is None:
             raise RuntimeError(
                 f"publication {pub.get('id')} requires a valid repository_association"
+            )
+        ownership_link = ownership_link_by_publication.get(publication_id)
+        if ownership_link is None or ownership_link.get("project_id") != association:
+            raise RuntimeError(
+                f"publication ownership link does not match asserted repository: "
+                f"{publication_id} -> {association}"
+            )
+        evidence = ownership_link.get("evidence")
+        if not isinstance(evidence, list) or not evidence:
+            raise RuntimeError(
+                f"publication ownership link requires evidence: {publication_id}"
+            )
+        owner_bound = any(
+            isinstance(url, str)
+            and (
+                github_blob_source_matches(url, owner_project.get("source"))
+                or (
+                    github_blob_source_matches(url, pub.get("source"))
+                    and normalize_repository(
+                        github_blob_identity(url)[0] if github_blob_identity(url) else None
+                    )
+                    == normalize_repository(owner_repository)
+                )
+            )
+            for url in evidence
+        )
+        publication_bound = any(
+            isinstance(url, str)
+            and (
+                github_blob_source_matches(url, pub.get("source"))
+                or publication_external_source_matches(pub, url)
+            )
+            for url in evidence
+        )
+        if not owner_bound or not publication_bound:
+            raise RuntimeError(
+                f"publication ownership evidence must bind both asserted project "
+                f"and selected publication: {publication_id}"
             )
 
         if kind == "external":

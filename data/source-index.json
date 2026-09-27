@@ -3,7 +3,8 @@
   "generated_from": [
     "data/projects.json",
     "data/publications.json",
-    "data/project-publication-links.json"
+    "data/project-publication-links.json",
+    "data/github-repositories.json"
   ],
   "sources": [
     {

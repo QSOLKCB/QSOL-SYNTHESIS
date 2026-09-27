@@ -106,11 +106,13 @@ def build(root: pathlib.Path) -> dict:
     publications_doc = read_json(data / "publications.json")
     links_doc = read_json(data / "project-publication-links.json")
     github_doc = read_json(data / "github-repositories.json")
+    relationships_doc = read_json(data / "relationships.json")
     dated_docs = {
         "projects.json": projects_doc.get("generated_at"),
         "publications.json": publications_doc.get("generated_at"),
         "project-publication-links.json": links_doc.get("generated_at"),
         "github-repositories.json": github_doc.get("generated_at"),
+        "relationships.json": relationships_doc.get("generated_at"),
     }
     for name, value in dated_docs.items():
         if not isinstance(value, str):
@@ -132,9 +134,11 @@ def build(root: pathlib.Path) -> dict:
     publications = publications_doc.get("publications", [])
     links = links_doc.get("links", [])
     github_rows = github_doc.get("repositories", [])
+    relationships = relationships_doc.get("relationships", [])
 
     curated_source_by_repo: dict[str, str] = {}
     curated_publication_dois_by_repo: dict[str, set[str]] = {}
+    curated_publication_sources_by_repo: dict[str, dict[str, str]] = {}
     for row in github_rows:
         full_name = row.get("full_name")
         source = row.get("source")
@@ -146,17 +150,43 @@ def build(root: pathlib.Path) -> dict:
         if not isinstance(source, str):
             raise RuntimeError(f"curated GitHub row requires source: {full_name}")
         publication_dois = row.get("publication_dois")
+        normalized_publication_dois = (
+            [doi.casefold() for doi in publication_dois]
+            if isinstance(publication_dois, list)
+            and all(isinstance(doi, str) and doi for doi in publication_dois)
+            else []
+        )
         if (
             not isinstance(publication_dois, list)
-            or any(not isinstance(doi, str) or not doi for doi in publication_dois)
-            or len(publication_dois) != len(set(publication_dois))
+            or len(normalized_publication_dois) != len(publication_dois)
+            or len(normalized_publication_dois) != len(set(normalized_publication_dois))
         ):
             raise RuntimeError(
                 f"curated GitHub row requires unique publication_dois: {full_name}"
             )
+        publication_sources = row.get("publication_sources")
+        if not isinstance(publication_sources, dict):
+            raise RuntimeError(
+                f"curated GitHub row requires publication_sources: {full_name}"
+            )
+        normalized_source_keys = [
+            key.casefold()
+            for key in publication_sources
+            if isinstance(key, str) and key
+        ]
+        if (
+            len(normalized_source_keys) != len(publication_sources)
+            or len(normalized_source_keys) != len(set(normalized_source_keys))
+            or any(not isinstance(url, str) or not url for url in publication_sources.values())
+        ):
+            raise RuntimeError(
+                f"curated GitHub row has invalid publication_sources: {full_name}"
+            )
         curated_source_by_repo[normalized_repo] = source
-        curated_publication_dois_by_repo[normalized_repo] = {
-            doi.casefold() for doi in publication_dois
+        curated_publication_dois_by_repo[normalized_repo] = set(normalized_publication_dois)
+        curated_publication_sources_by_repo[normalized_repo] = {
+            doi.casefold(): url
+            for doi, url in publication_sources.items()
         }
 
     for project in projects:
@@ -186,6 +216,23 @@ def build(root: pathlib.Path) -> dict:
             )
         ownership_concept_by_publication[publication_id] = expected_concept_doi
         ownership_link_by_publication[publication_id] = link
+
+    expected_lineage_links = {
+        (rel.get("target"), rel.get("publication_id"))
+        for rel in relationships
+        if rel.get("relation_type") == "historical-lineage"
+        and rel.get("publication_id") is not None
+    }
+    actual_lineage_links = {
+        (link.get("project_id"), link.get("publication_id"))
+        for link in links
+        if link.get("relation") == "lineage-reference"
+    }
+    if actual_lineage_links != expected_lineage_links:
+        raise RuntimeError(
+            f"lineage-reference links must exactly match historical-lineage declarations: "
+            f"expected={sorted(expected_lineage_links)} actual={sorted(actual_lineage_links)}"
+        )
 
     project_repo_by_id = {
         project.get("id"): project.get("repo")
@@ -362,6 +409,33 @@ def build(root: pathlib.Path) -> dict:
                 f"publication {pub.get('id')} source repository {repository!r} "
                 f"does not match associated repository {owner_repository!r}"
             )
+        else:
+            owner_source_map = curated_publication_sources_by_repo.get(
+                normalize_repository(owner_repository), {}
+            )
+            expected_source = (
+                owner_source_map.get(doi.casefold())
+                if isinstance(doi, str)
+                else None
+            )
+            if expected_source is None:
+                raise RuntimeError(
+                    f"publication {publication_id} missing independently curated source"
+                )
+            expected_kind, expected_repo, expected_branch, expected_path = parse_source(
+                expected_source
+            )
+            if (
+                expected_kind != "github"
+                or normalize_repository(expected_repo)
+                != normalize_repository(repository)
+                or expected_branch != branch
+                or expected_path != path
+            ):
+                raise RuntimeError(
+                    f"publication GitHub source does not match independently curated source: "
+                    f"{publication_id}"
+                )
 
         repository = owner_repository
         sources.append({
@@ -382,6 +456,7 @@ def build(root: pathlib.Path) -> dict:
             "data/publications.json",
             "data/project-publication-links.json",
             "data/github-repositories.json",
+            "data/relationships.json",
         ],
         "sources": sources,
     }

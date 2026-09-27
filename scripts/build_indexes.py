@@ -12,6 +12,7 @@ GITHUB_BLOB_RE = re.compile(r"^https://github\.com/([^/]+/[^/]+)/blob/([^/]+)/(.
 ZENODO_RECORD_RE = re.compile(r"^https://zenodo\.org/records/(\d+)/?$")
 DOI_SOURCE_RE = re.compile(r"^https://doi\.org/(10\.\d{4,9}/[-._;()/:A-Z0-9]+)$", re.IGNORECASE)
 ZENODO_DOI_RE = re.compile(r"^10\.5281/zenodo\.(\d+)$", re.IGNORECASE)
+PROJECT_ID_RE = re.compile(r"^project:[A-Za-z0-9._-]+$")
 
 
 def read_json(path: pathlib.Path):
@@ -45,6 +46,8 @@ def parse_source(url: str | None) -> tuple[str, str | None, str | None, str]:
 
 
 def project_source_id(project_id: str) -> str:
+    if not isinstance(project_id, str) or not PROJECT_ID_RE.fullmatch(project_id):
+        raise RuntimeError(f"invalid project ID namespace: {project_id!r}")
     return f"src:{project_id.removeprefix('project:')}:readme"
 
 
@@ -93,6 +96,11 @@ def build(root: pathlib.Path) -> dict:
     projects = projects_doc.get("projects", [])
     publications = publications_doc.get("publications", [])
     links = links_doc.get("links", [])
+
+    for project in projects:
+        project_id = project.get("id")
+        if not isinstance(project_id, str) or not PROJECT_ID_RE.fullmatch(project_id):
+            raise RuntimeError(f"invalid project ID namespace: {project_id!r}")
 
     ownership_concept_by_publication: dict[str, str | None] = {}
     for link in links:

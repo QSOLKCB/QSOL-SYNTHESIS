@@ -19,6 +19,10 @@ DOI_SOURCE_RE = re.compile(r"^https://doi\.org/(10\.\d{4,9}/[-._;()/:A-Z0-9]+)$"
 ZENODO_DOI_RE = re.compile(r"^10\.5281/zenodo\.(\d+)$", re.IGNORECASE)
 SOURCE_ID_RE = re.compile(r"\bsrc:[A-Za-z0-9._-]+(?::[A-Za-z0-9._-]+)*\b")
 PROJECT_ID_RE = re.compile(r"^project:[A-Za-z0-9._-]+$")
+PUBLICATION_ID_RE = re.compile(r"^publication:[A-Za-z0-9._-]+$")
+PROJECT_SUMMARY_REPO_RE = re.compile(
+    r"\*\*Repository:\*\*\s*\[[^\]]+\]\(https://github\.com/([^/]+/[^/)]+)\)"
+)
 
 ALLOWED_MATRIX_VALUES = {"documented", "partial", "not-found"}
 ALLOWED_LINK_RELATIONS = {"repository-associated-publication", "lineage-reference"}
@@ -279,10 +283,29 @@ def validate(root: pathlib.Path) -> list[str]:
             fail(f"curated GitHub project URL mismatch: {row.get('full_name')}")
         if row.get("classification") != project.get("role"):
             fail(f"curated GitHub classification mismatch: {row.get('full_name')}")
+        curated_source = row.get("source")
+        if not isinstance(curated_source, str) or not GITHUB_BLOB_RE.fullmatch(curated_source):
+            fail(f"curated GitHub source must be a traceable blob URL: {row.get('full_name')}")
+        elif not github_blob_source_matches(curated_source, project.get("source")):
+            fail(
+                f"project source must match independently curated GitHub source: "
+                f"{row.get('full_name')}"
+            )
 
     pub_ids = [p.get("id") for p in pubs]
-    if None in pub_ids or len(pub_ids) != len(set(pub_ids)):
-        fail("publication IDs must be non-null and unique")
+    invalid_pub_ids = [
+        publication_id
+        for publication_id in pub_ids
+        if not isinstance(publication_id, str)
+        or not PUBLICATION_ID_RE.fullmatch(publication_id)
+    ]
+    if invalid_pub_ids:
+        fail(
+            f"publication IDs must be non-empty strings in the publication: namespace: "
+            f"{invalid_pub_ids!r}"
+        )
+    if len(pub_ids) != len(set(pub_ids)):
+        fail("publication IDs must be unique")
     pub_set = set(pub_ids)
 
     doi_seen: dict[str, str] = {}
@@ -638,6 +661,39 @@ def validate(root: pathlib.Path) -> list[str]:
                 f"project={sorted(project_themes)} source={sorted(thematic_supports)}"
             )
 
+    for theme in themes:
+        theme_name = theme.get("name")
+        if not isinstance(theme_name, str):
+            continue
+        atomic_theme_path = root / "themes" / f"{theme_name.replace('_', '-')}.md"
+        if not atomic_theme_path.exists():
+            fail(f"atomic theme document missing: {atomic_theme_path.relative_to(root)}")
+            continue
+        atomic_text = atomic_theme_path.read_text(encoding="utf-8")
+        actual_members = {
+            source_ref
+            for source_ref in SOURCE_ID_RE.findall(atomic_text)
+            if source_ref in expected_project_summary_ids
+        }
+        expected_members = {
+            source_id_for_project(project.get("id"))
+            for project in projects
+            if theme_name in project.get("themes", [])
+        }
+        expected_members.discard(None)
+        if actual_members != expected_members:
+            fail(
+                f"atomic theme membership must match source support: {theme_name} "
+                f"expected={sorted(expected_members)} actual={sorted(actual_members)}"
+            )
+        for source_ref in actual_members:
+            supports = set(source_by_id.get(source_ref, {}).get("supports", []))
+            if theme_name not in supports:
+                fail(
+                    f"atomic theme member is not supported by source index: "
+                    f"{theme_name} -> {source_ref}"
+                )
+
     matrix_path = root / "evidence" / "project-theme-matrix.csv"
     with matrix_path.open("r", encoding="utf-8", newline="") as handle:
         reader = csv.DictReader(handle)
@@ -698,6 +754,21 @@ def validate(root: pathlib.Path) -> list[str]:
                     project_summary_counts[project_refs[0]] = (
                         project_summary_counts.get(project_refs[0], 0) + 1
                     )
+                    repo_match = PROJECT_SUMMARY_REPO_RE.search(text)
+                    summary_repo = normalize_repository(
+                        repo_match.group(1) if repo_match else None
+                    )
+                    summary_project = project_by_repo.get(summary_repo)
+                    expected_summary_source = (
+                        source_id_for_project(summary_project.get("id"))
+                        if summary_project is not None
+                        else None
+                    )
+                    if expected_summary_source != project_refs[0]:
+                        fail(
+                            f"project summary source does not match its repository: "
+                            f"{path.relative_to(root)} -> {project_refs[0]}"
+                        )
             for source_ref in source_refs:
                 if source_ref not in source_by_id:
                     fail(

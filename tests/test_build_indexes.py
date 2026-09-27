@@ -23,6 +23,7 @@ class BuildIndexesRegressionTests(unittest.TestCase):
             "publications.json",
             "project-publication-links.json",
             "github-repositories.json",
+            "relationships.json",
         ):
             shutil.copy2(REPO_ROOT / "data" / name, temp / "data" / name)
         return temp
@@ -200,12 +201,66 @@ class BuildIndexesRegressionTests(unittest.TestCase):
             "publications.json",
             "project-publication-links.json",
             "github-repositories.json",
+            "relationships.json",
         ):
             doc = self.read(root, name)
             doc["generated_at"] = "2999-01-01"
             self.write(root, name, doc)
 
         with self.assertRaisesRegex(RuntimeError, "must not be in the future"):
+            build_indexes.build(root)
+
+    def test_rejects_case_only_duplicate_curated_publication_dois(self):
+        root = self.fixture()
+        github = self.read(root, "github-repositories.json")
+        row = next(
+            row for row in github["repositories"]
+            if row.get("full_name") == "QSOLKCB/UFF"
+        )
+        row["publication_dois"].append("10.5281/ZENODO.22026554")
+        self.write(root, "github-repositories.json", github)
+
+        with self.assertRaisesRegex(RuntimeError, "unique publication_dois"):
+            build_indexes.build(root)
+
+    def test_rejects_fabricated_publication_github_path(self):
+        root = self.fixture()
+        publications = self.read(root, "publications.json")
+        links = self.read(root, "project-publication-links.json")
+        pub = next(
+            pub for pub in publications["publications"]
+            if pub["id"] == "publication:zenodo-22026554"
+        )
+        fabricated = "https://github.com/QSOLKCB/UFF/blob/main/DOES-NOT-EXIST.md"
+        pub["source"] = fabricated
+        link = next(
+            link for link in links["links"]
+            if link.get("relation") == "repository-associated-publication"
+            and link.get("publication_id") == pub["id"]
+        )
+        link["evidence"] = [fabricated]
+        self.write(root, "publications.json", publications)
+        self.write(root, "project-publication-links.json", links)
+
+        with self.assertRaisesRegex(
+            RuntimeError,
+            "publication GitHub source does not match independently curated source",
+        ):
+            build_indexes.build(root)
+
+    def test_rejects_missing_declared_lineage_link(self):
+        root = self.fixture()
+        links = self.read(root, "project-publication-links.json")
+        links["links"] = [
+            link for link in links["links"]
+            if link.get("relation") != "lineage-reference"
+        ]
+        self.write(root, "project-publication-links.json", links)
+
+        with self.assertRaisesRegex(
+            RuntimeError,
+            "lineage-reference links must exactly match historical-lineage declarations",
+        ):
             build_indexes.build(root)
 
     def test_generated_date_can_advance_without_old_index_state(self):
@@ -216,6 +271,7 @@ class BuildIndexesRegressionTests(unittest.TestCase):
             "publications.json",
             "project-publication-links.json",
             "github-repositories.json",
+            "relationships.json",
         ):
             doc = self.read(root, name)
             doc["generated_at"] = current_date

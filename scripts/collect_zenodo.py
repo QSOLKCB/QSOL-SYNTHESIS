@@ -110,7 +110,7 @@ def main() -> int:
                 "pages": pages,
                 "truncated": seen < reported_total,
             })
-        except (urllib.error.URLError, urllib.error.HTTPError) as exc:
+        except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError) as exc:
             result["errors"].append({"query": query, "error": str(exc)})
 
     pubs_path = pathlib.Path(args.publications)
@@ -129,7 +129,7 @@ def main() -> int:
                     for _, hits in query_all(f'doi:"{doi}"', args.per_page, 1):
                         for hit in hits:
                             merge_record(index, normalise(hit, f"exact-doi:{doi}"))
-            except (urllib.error.URLError, urllib.error.HTTPError) as exc:
+            except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError) as exc:
                 result["errors"].append({"doi": doi, "error": str(exc)})
 
     result["records"] = sorted(index.values(), key=lambda r: (r.get("record_id") or 0, r.get("doi") or ""))

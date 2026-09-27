@@ -79,10 +79,15 @@ def main() -> int:
             "updated_at": repo.get("updated_at"),
         }
         if args.include_enrichment:
-            row["releases"] = request(
-                f"{API}/repos/{args.org}/{name}/releases?per_page=20",
-                token, cache_dir, args.ttl_seconds
-            )
+            try:
+                row["releases"] = request(
+                    f"{API}/repos/{args.org}/{name}/releases?per_page=20",
+                    token, cache_dir, args.ttl_seconds
+                )
+            except RuntimeError as exc:
+                row["releases"] = None
+                row["releases_error"] = str(exc)
+
             row["first_party_files"] = {}
             for candidate in ("README.md", "CITATION.cff", ".zenodo.json"):
                 try:
@@ -91,8 +96,15 @@ def main() -> int:
                         token, cache_dir, args.ttl_seconds
                     )
                     row["first_party_files"][candidate] = {"exists": True, "sha": meta.get("sha")}
-                except RuntimeError:
-                    row["first_party_files"][candidate] = {"exists": False}
+                except RuntimeError as exc:
+                    message = str(exc)
+                    if "HTTP 404" in message:
+                        row["first_party_files"][candidate] = {"exists": False}
+                    else:
+                        row["first_party_files"][candidate] = {
+                            "exists": None,
+                            "error": message,
+                        }
         normalized.append(row)
 
     output = {

@@ -82,6 +82,9 @@ def main() -> int:
             if doi in doi_seen:
                 fail(f"duplicate DOI: {doi}")
             doi_seen.add(doi)
+        concept_doi = pub.get("concept_doi")
+        if concept_doi and not DOI_RE.match(concept_doi):
+            fail(f"invalid concept DOI syntax: {concept_doi}")
         assoc = pub.get("repository_association")
         if assoc and assoc not in project_set:
             fail(f"publication association missing project: {pub.get('id')} -> {assoc}")

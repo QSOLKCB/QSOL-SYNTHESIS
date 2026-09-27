@@ -17,6 +17,7 @@ GITHUB_BLOB_RE = re.compile(r"^https://github\.com/([^/]+/[^/]+)/blob/([^/]+)/(.
 ZENODO_RECORD_RE = re.compile(r"^https://zenodo\.org/records/(\d+)/?$")
 DOI_SOURCE_RE = re.compile(r"^https://doi\.org/(10\.\d{4,9}/[-._;()/:A-Z0-9]+)$", re.IGNORECASE)
 ZENODO_DOI_RE = re.compile(r"^10\.5281/zenodo\.(\d+)$", re.IGNORECASE)
+SOURCE_ID_RE = re.compile(r"\bsrc:[A-Za-z0-9._-]+(?::[A-Za-z0-9._-]+)*\b")
 
 ALLOWED_MATRIX_VALUES = {"documented", "partial", "not-found"}
 ALLOWED_LINK_RELATIONS = {"repository-associated-publication", "lineage-reference"}
@@ -56,6 +57,13 @@ def github_repository(url: str | None) -> str | None:
         return None
     match = GITHUB_REPO_RE.match(url)
     return match.group(1) if match else None
+
+
+def normalize_repository(value: str | None) -> str | None:
+    """Return the case-insensitive GitHub repository identity."""
+    if not isinstance(value, str) or not value:
+        return None
+    return value.casefold()
 
 
 def traceable_publication_source(url: str | None) -> bool:
@@ -106,29 +114,29 @@ def publication_link_evidence_is_valid(
 
     evidence_repo = github_repository(url)
 
+    owner_repo = repository_by_project.get(publication.get("repository_association"))
+
     if relation == "lineage-reference":
-        # A lineage assertion is about the referencing project, not merely the
-        # existence of the publication. Require the evidence to live in the
-        # project making the lineage assertion.
-        return (
-            isinstance(project_repo, str)
-            and evidence_repo is not None
-            and evidence_repo.casefold() == project_repo.casefold()
-        )
+        # A lineage assertion needs evidence from the referencing project and
+        # evidence that identifies the selected publication. Per-URL validation
+        # accepts only those two evidence classes; the link-level validator
+        # below requires that both classes are present.
+        if evidence_repo is not None:
+            evidence_identity = normalize_repository(evidence_repo)
+            return (
+                evidence_identity == normalize_repository(project_repo)
+                or (
+                    url == publication.get("source")
+                    and evidence_identity == normalize_repository(owner_repo)
+                )
+            )
+        return publication_external_source_matches(publication, url)
 
     if relation == "repository-associated-publication":
-        # Ownership may be established by the publication's canonical source,
-        # by first-party metadata in the owning project, or by an external
-        # DOI/Zenodo source that is itself bound to this publication.
-        if url == publication.get("source"):
-            return True
-
+        # Ownership may be established by first-party metadata in the owning
+        # project or by an external DOI/Zenodo source bound to this publication.
         if evidence_repo is not None:
-            owner_repo = repository_by_project.get(publication.get("repository_association"))
-            return (
-                isinstance(owner_repo, str)
-                and evidence_repo.casefold() == owner_repo.casefold()
-            )
+            return normalize_repository(evidence_repo) == normalize_repository(owner_repo)
 
         return publication_external_source_matches(publication, url)
 
@@ -182,18 +190,24 @@ def validate(root: pathlib.Path) -> list[str]:
     if None in project_ids or len(project_ids) != len(set(project_ids)):
         fail("project IDs must be non-null and unique")
     project_set = set(project_ids)
+    project_by_id = {p.get("id"): p for p in projects if p.get("id")}
 
     repos = [p.get("repo") for p in projects]
-    if None in repos or len(repos) != len(set(repos)):
-        fail("project repo identifiers must be non-null and unique")
-    repo_set = set(repos)
+    normalized_repos = [normalize_repository(repo) for repo in repos]
+    if None in normalized_repos or len(normalized_repos) != len(set(normalized_repos)):
+        fail("project repo identifiers must be non-null and unique ignoring case")
+    repo_normalized_set = {repo for repo in normalized_repos if repo is not None}
     repo_by_project = {p.get("id"): p.get("repo") for p in projects}
-    project_by_repo = {p.get("repo"): p for p in projects if p.get("repo")}
-    repo_casefold = {repo.casefold(): repo for repo in repo_set if isinstance(repo, str)}
+    project_by_repo = {
+        normalize_repository(p.get("repo")): p
+        for p in projects
+        if normalize_repository(p.get("repo")) is not None
+    }
 
     for project in projects:
         expected_url = f"https://github.com/{project.get('repo')}"
-        if project.get("url") != expected_url:
+        project_url = project.get("url")
+        if not isinstance(project_url, str) or project_url.casefold() != expected_url.casefold():
             fail(
                 f"project URL must match repository: {project.get('id')} "
                 f"expected {expected_url!r}, got {project.get('url')!r}"
@@ -202,14 +216,18 @@ def validate(root: pathlib.Path) -> list[str]:
         match = GITHUB_BLOB_RE.fullmatch(source or "")
         if not match:
             fail(f"project source must be a traceable GitHub blob URL: {project.get('id')}")
-        elif match.group(1) != project.get("repo"):
+        elif normalize_repository(match.group(1)) != normalize_repository(project.get("repo")):
             fail(f"project source repository mismatch: {project.get('id')} -> {match.group(1)}")
 
     github_rows = github_doc.get("repositories", [])
     github_full_names = [row.get("full_name") for row in github_rows]
-    if None in github_full_names or len(github_full_names) != len(set(github_full_names)):
-        fail("curated GitHub registry repository identifiers must be non-null and unique")
-    if set(github_full_names) != repo_set:
+    normalized_github_names = [normalize_repository(name) for name in github_full_names]
+    if (
+        None in normalized_github_names
+        or len(normalized_github_names) != len(set(normalized_github_names))
+    ):
+        fail("curated GitHub registry repository identifiers must be non-null and unique ignoring case")
+    if {name for name in normalized_github_names if name is not None} != repo_normalized_set:
         fail("curated GitHub registry repositories must match projects.json exactly")
     if github_doc.get("selected_count") != len(github_rows):
         fail("curated GitHub selected_count must equal repository row count")
@@ -218,12 +236,18 @@ def validate(root: pathlib.Path) -> list[str]:
         fail("curated GitHub total_count_observed must be an integer >= selected_count")
 
     for row in github_rows:
-        project = project_by_repo.get(row.get("full_name"))
+        project = project_by_repo.get(normalize_repository(row.get("full_name")))
         if project is None:
             continue
         if row.get("name") != project.get("name"):
             fail(f"curated GitHub project name mismatch: {row.get('full_name')}")
-        if row.get("html_url") != project.get("url"):
+        row_url = row.get("html_url")
+        project_url = project.get("url")
+        if (
+            not isinstance(row_url, str)
+            or not isinstance(project_url, str)
+            or row_url.casefold() != project_url.casefold()
+        ):
             fail(f"curated GitHub project URL mismatch: {row.get('full_name')}")
         if row.get("classification") != project.get("role"):
             fail(f"curated GitHub classification mismatch: {row.get('full_name')}")
@@ -236,7 +260,9 @@ def validate(root: pathlib.Path) -> list[str]:
     doi_seen: dict[str, str] = {}
     for pub in pubs:
         doi = pub.get("doi")
-        if doi:
+        if not isinstance(doi, str) or not doi.strip():
+            fail(f"publication DOI must be a non-empty identifier: {pub.get('id')}")
+        else:
             if not DOI_RE.fullmatch(doi):
                 fail(f"invalid DOI syntax: {doi}")
             normalized_doi = doi.casefold()
@@ -253,9 +279,16 @@ def validate(root: pathlib.Path) -> list[str]:
         if not traceable_publication_source(source_url):
             fail(f"publication requires a traceable source URL: {pub.get('id')}")
         source_repo = github_repository(source_url)
-        if source_repo and source_repo.casefold() not in repo_casefold:
+        if source_repo and normalize_repository(source_repo) not in repo_normalized_set:
             fail(f"publication source repository is outside the curated corpus: {pub.get('id')} -> {source_repo}")
-        if source_repo is None and traceable_publication_source(source_url):
+        if source_repo is not None:
+            owner_repo = repo_by_project.get(assoc)
+            if normalize_repository(source_repo) != normalize_repository(owner_repo):
+                fail(
+                    f"publication source repository must match associated repository: "
+                    f"{pub.get('id')} -> {source_repo}"
+                )
+        elif traceable_publication_source(source_url):
             if not publication_external_source_matches(pub, source_url):
                 fail(f"publication external source does not match DOI/concept DOI: {pub.get('id')}")
 
@@ -291,7 +324,9 @@ def validate(root: pathlib.Path) -> list[str]:
         pub = publication_by_doi.get(doi.casefold())
         if pub is None:
             continue
-        for field in ("title", "version", "resource_type", "repository_association"):
+        if "concept_doi" not in row:
+            fail(f"curated Zenodo concept_doi must be explicit for {doi}")
+        for field in ("title", "version", "resource_type", "repository_association", "concept_doi"):
             if row.get(field) != pub.get(field):
                 fail(f"curated Zenodo {field} mismatch for {doi}")
         if row.get("evidence") != pub.get("source"):
@@ -371,6 +406,26 @@ def validate(root: pathlib.Path) -> list[str]:
                         f"publication link evidence is not traceable to the linked project/publication: "
                         f"{link.get('project_id')} -> {link.get('publication_id')}: {url!r}"
                     )
+            if relation == "lineage-reference" and publication is not None:
+                project_bound = any(
+                    isinstance(url, str)
+                    and normalize_repository(github_repository(url))
+                    == normalize_repository(project_repo)
+                    for url in evidence
+                )
+                publication_bound = any(
+                    isinstance(url, str)
+                    and (
+                        url == publication.get("source")
+                        or publication_external_source_matches(publication, url)
+                    )
+                    for url in evidence
+                )
+                if not project_bound or not publication_bound:
+                    fail(
+                        f"lineage reference evidence must bind both referencing project and selected publication: "
+                        f"{link.get('project_id')} -> {link.get('publication_id')}"
+                    )
         link_keys.append((link.get("project_id"), link.get("publication_id"), relation))
     if len(link_keys) != len(set(link_keys)):
         fail("project-publication links must be unique")
@@ -410,11 +465,21 @@ def validate(root: pathlib.Path) -> list[str]:
         theme = rel.get("theme")
         if theme and f"theme:{theme}" not in theme_ids:
             fail(f"relationship theme missing: {theme}")
+        elif theme:
+            endpoint_theme_sets = [
+                set(project_by_id.get(endpoint_id, {}).get("themes", []))
+                for endpoint_id in (source_id, target_id)
+            ]
+            if not any(theme in themes_for_endpoint for themes_for_endpoint in endpoint_theme_sets):
+                fail(
+                    f"relationship theme is not supported by either endpoint: "
+                    f"{source_id} -> {target_id}: {theme}"
+                )
 
         evidence = rel.get("evidence")
         endpoint_repos = {
-            repo_by_project.get(source_id, "").casefold(),
-            repo_by_project.get(target_id, "").casefold(),
+            normalize_repository(repo_by_project.get(source_id)),
+            normalize_repository(repo_by_project.get(target_id)),
         }
         if not isinstance(evidence, list) or not evidence:
             fail(f"relationship requires first-party GitHub evidence: {source_id} -> {target_id}")
@@ -423,7 +488,7 @@ def validate(root: pathlib.Path) -> list[str]:
                 evidence_repo = github_repository(url)
                 if evidence_repo is None:
                     fail(f"relationship evidence must be a GitHub repository URL: {source_id} -> {target_id}: {url!r}")
-                elif evidence_repo.casefold() not in endpoint_repos:
+                elif normalize_repository(evidence_repo) not in endpoint_repos:
                     fail(
                         f"relationship evidence repository must match an endpoint: "
                         f"{source_id} -> {target_id}: {evidence_repo}"
@@ -445,7 +510,7 @@ def validate(root: pathlib.Path) -> list[str]:
             fail(f"unknown source type: {src.get('source_id')} -> {source_type}")
         if not isinstance(repository, str) or not repository:
             fail(f"source repository must be traceable: {src.get('source_id')}")
-        elif repository not in repo_set:
+        elif normalize_repository(repository) not in repo_normalized_set:
             fail(f"source repository is not a curated project repository: {src.get('source_id')} -> {repository}")
         if not isinstance(path, str) or not path:
             fail(f"source path must be traceable: {src.get('source_id')}")
@@ -471,7 +536,7 @@ def validate(root: pathlib.Path) -> list[str]:
         if not src:
             fail(f"project source missing from source index: {sid}")
             continue
-        if src.get("repository") != project.get("repo"):
+        if normalize_repository(src.get("repository")) != normalize_repository(project.get("repo")):
             fail(f"project source repository mismatch: {sid}")
         thematic_supports = set(src.get("supports", [])) & theme_set
         project_themes = set(project.get("themes", []))
@@ -516,6 +581,12 @@ def validate(root: pathlib.Path) -> list[str]:
             text = path.read_text(encoding="utf-8")
             if "Bootstrap placeholder" in text or "Draft section. This bootstrap" in text:
                 fail(f"placeholder prose remains: {path.relative_to(root)}")
+            for source_ref in sorted(set(SOURCE_ID_RE.findall(text))):
+                if source_ref not in source_by_id:
+                    fail(
+                        f"unknown source index reference in synthesis document: "
+                        f"{path.relative_to(root)} -> {source_ref}"
+                    )
 
     return errors
 

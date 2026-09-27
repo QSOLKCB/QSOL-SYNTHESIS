@@ -219,6 +219,113 @@ class ValidateSourcesRegressionTests(unittest.TestCase):
             "concept DOI must resolve to a curated concept-doi record",
         )
 
+    def test_lineage_reference_must_bind_selected_publication(self):
+        root = self.fixture()
+        links = self.read_json(root, "project-publication-links.json")
+        pubs = self.read_json(root, "publications.json")["publications"]
+        lineage = next(link for link in links["links"] if link.get("relation") == "lineage-reference")
+        original_publication_id = lineage["publication_id"]
+        lineage["publication_id"] = next(
+            pub["id"] for pub in pubs if pub["id"] != original_publication_id
+        )
+        self.write_json(root, "project-publication-links.json", links)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "lineage reference evidence must bind both referencing project and selected publication",
+        )
+
+    def test_concept_doi_must_match_exact_zenodo_deposit_mapping(self):
+        root = self.fixture()
+        pubs = self.read_json(root, "publications.json")
+        concept = next(
+            pub for pub in pubs["publications"]
+            if pub.get("resource_type") == "concept-doi"
+        )
+        version = next(
+            pub for pub in pubs["publications"]
+            if pub.get("repository_association") == concept.get("repository_association")
+            and pub.get("resource_type") != "concept-doi"
+        )
+        version["concept_doi"] = concept["doi"]
+        self.write_json(root, "publications.json", pubs)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "curated Zenodo concept_doi mismatch",
+        )
+
+    def test_repository_identity_uniqueness_is_case_insensitive(self):
+        root = self.fixture()
+        doc = self.read_json(root, "projects.json")
+        first, second = doc["projects"][:2]
+        first["repo"] = second["repo"].swapcase()
+        self.write_json(root, "projects.json", doc)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "project repo identifiers must be non-null and unique ignoring case",
+        )
+
+    def test_publication_github_source_must_match_associated_repository(self):
+        root = self.fixture()
+        doc = self.read_json(root, "publications.json")
+        target = doc["publications"][0]
+        target["source"] = "https://github.com/QSOLKCB/res-rag/blob/main/CITATION.cff"
+        self.write_json(root, "publications.json", doc)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "publication source repository must match associated repository",
+        )
+
+    def test_every_publication_requires_nonempty_doi(self):
+        root = self.fixture()
+        doc = self.read_json(root, "publications.json")
+        doc["publications"][0]["doi"] = None
+        self.write_json(root, "publications.json", doc)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "publication DOI must be a non-empty identifier",
+        )
+
+    def test_relationship_theme_must_be_supported_by_an_endpoint(self):
+        root = self.fixture()
+        rels = self.read_json(root, "relationships.json")
+        projects = {
+            project["id"]: project
+            for project in self.read_json(root, "projects.json")["projects"]
+        }
+        themes = [theme["name"] for theme in self.read_json(root, "themes.json")["themes"]]
+        rel = rels["relationships"][0]
+        endpoint_themes = (
+            set(projects[rel["source"]].get("themes", []))
+            | set(projects[rel["target"]].get("themes", []))
+        )
+        rel["theme"] = next(theme for theme in themes if theme not in endpoint_themes)
+        self.write_json(root, "relationships.json", rels)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "relationship theme is not supported by either endpoint",
+        )
+
+    def test_synthesis_document_source_ids_must_resolve(self):
+        root = self.fixture()
+        path = root / "projects" / "uff.md"
+        text = path.read_text(encoding="utf-8")
+        self.assertIn("src:uff:readme", text)
+        path.write_text(
+            text.replace("src:uff:readme", "src:fabricated:readme"),
+            encoding="utf-8",
+        )
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "unknown source index reference in synthesis document",
+        )
+
     def test_matrix_cannot_deny_declared_theme_support(self):
         root = self.fixture()
         projects = self.read_json(root, "projects.json")["projects"]

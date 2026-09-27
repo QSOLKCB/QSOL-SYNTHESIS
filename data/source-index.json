@@ -445,9 +445,9 @@
     },
     {
       "source_id": "src:zenodo-21404223",
-      "repository": "QSOLKCB/E8_MUSIC",
-      "path": "README.md",
-      "branch_or_commit": "main",
+      "repository": "QSOLKCB/SONIFICATION",
+      "path": "https://doi.org/10.5281/zenodo.21404223",
+      "branch_or_commit": null,
       "access_date": "2026-09-27",
       "source_type": "publication-metadata",
       "supports": [

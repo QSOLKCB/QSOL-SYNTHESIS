@@ -138,7 +138,7 @@
       "resource_type": "concept-doi",
       "version": null,
       "repository_association": "project:sonification",
-      "source": "https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md",
+      "source": "https://doi.org/10.5281/zenodo.21404223",
       "concept_doi": "10.5281/zenodo.21404223"
     },
     {

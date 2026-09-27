@@ -118,7 +118,7 @@
       "publication_id": "publication:zenodo-21404223",
       "relation": "repository-associated-publication",
       "evidence": [
-        "https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md"
+        "https://doi.org/10.5281/zenodo.21404223"
       ]
     },
     {
@@ -126,7 +126,8 @@
       "publication_id": "publication:zenodo-21404223",
       "relation": "lineage-reference",
       "evidence": [
-        "https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md"
+        "https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md",
+        "https://doi.org/10.5281/zenodo.21404223"
       ]
     }
   ]

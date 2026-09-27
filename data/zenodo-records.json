@@ -10,7 +10,8 @@
       "version": "5.3.0",
       "resource_type": "software",
       "repository_association": "project:uff",
-      "evidence": "https://github.com/QSOLKCB/UFF/blob/main/CITATION.cff"
+      "evidence": "https://github.com/QSOLKCB/UFF/blob/main/CITATION.cff",
+      "concept_doi": null
     },
     {
       "doi": "10.5281/zenodo.21917464",
@@ -19,7 +20,8 @@
       "version": "1.1.0",
       "resource_type": "preprint",
       "repository_association": "project:res-rag",
-      "evidence": "https://github.com/QSOLKCB/res-rag/blob/main/CITATION.cff"
+      "evidence": "https://github.com/QSOLKCB/res-rag/blob/main/CITATION.cff",
+      "concept_doi": null
     },
     {
       "doi": "10.5281/zenodo.21494678",
@@ -28,7 +30,8 @@
       "version": "3.0.1",
       "resource_type": "software",
       "repository_association": "project:sonification",
-      "evidence": "https://github.com/QSOLKCB/SONIFICATION/blob/main/CITATION.cff"
+      "evidence": "https://github.com/QSOLKCB/SONIFICATION/blob/main/CITATION.cff",
+      "concept_doi": null
     },
     {
       "doi": "10.5281/zenodo.21455181",
@@ -37,7 +40,8 @@
       "version": "3.0.0",
       "resource_type": "software",
       "repository_association": "project:sonification",
-      "evidence": "https://github.com/QSOLKCB/SONIFICATION/blob/main/CITATION.cff"
+      "evidence": "https://github.com/QSOLKCB/SONIFICATION/blob/main/CITATION.cff",
+      "concept_doi": null
     },
     {
       "doi": "10.5281/zenodo.21432511",
@@ -46,7 +50,8 @@
       "version": "2.0.0",
       "resource_type": "software",
       "repository_association": "project:sonification",
-      "evidence": "https://github.com/QSOLKCB/SONIFICATION/blob/main/CITATION.cff"
+      "evidence": "https://github.com/QSOLKCB/SONIFICATION/blob/main/CITATION.cff",
+      "concept_doi": null
     },
     {
       "doi": "10.5281/zenodo.22831753",
@@ -55,7 +60,8 @@
       "version": "2.0.0",
       "resource_type": "software",
       "repository_association": "project:sonification",
-      "evidence": "https://github.com/QSOLKCB/SONIFICATION/blob/main/README.md"
+      "evidence": "https://github.com/QSOLKCB/SONIFICATION/blob/main/README.md",
+      "concept_doi": null
     },
     {
       "doi": "10.5281/zenodo.21308248",
@@ -64,7 +70,8 @@
       "version": null,
       "resource_type": "dataset",
       "repository_association": "project:spectral",
-      "evidence": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md"
+      "evidence": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md",
+      "concept_doi": null
     },
     {
       "doi": "10.5281/zenodo.21293821",
@@ -73,7 +80,8 @@
       "version": "1.2",
       "resource_type": "dataset",
       "repository_association": "project:spectral",
-      "evidence": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md"
+      "evidence": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md",
+      "concept_doi": null
     },
     {
       "doi": "10.5281/zenodo.21292906",
@@ -82,7 +90,8 @@
       "version": "1.0",
       "resource_type": "dataset",
       "repository_association": "project:spectral",
-      "evidence": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md"
+      "evidence": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md",
+      "concept_doi": null
     },
     {
       "doi": "10.5281/zenodo.22756969",
@@ -91,7 +100,8 @@
       "version": "0.4.0",
       "resource_type": "software",
       "repository_association": "project:galaxy",
-      "evidence": "https://github.com/QSOLKCB/GALAXY/blob/main/README.md"
+      "evidence": "https://github.com/QSOLKCB/GALAXY/blob/main/README.md",
+      "concept_doi": null
     },
     {
       "doi": "10.5281/zenodo.21959180",
@@ -100,7 +110,8 @@
       "version": null,
       "resource_type": "software",
       "repository_association": "project:qsol-substrate",
-      "evidence": "https://github.com/QSOLKCB/QSOL-SUBSTRATE/blob/main/README.md"
+      "evidence": "https://github.com/QSOLKCB/QSOL-SUBSTRATE/blob/main/README.md",
+      "concept_doi": null
     },
     {
       "doi": "10.5281/zenodo.17520186",
@@ -109,7 +120,8 @@
       "version": null,
       "resource_type": "report",
       "repository_association": "project:qai-uft",
-      "evidence": "https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md"
+      "evidence": "https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md",
+      "concept_doi": null
     },
     {
       "doi": "10.5281/zenodo.17569256",
@@ -118,7 +130,8 @@
       "version": null,
       "resource_type": "unknown",
       "repository_association": "project:qai-uft",
-      "evidence": "https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md"
+      "evidence": "https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md",
+      "concept_doi": null
     },
     {
       "doi": "10.5281/zenodo.21404223",
@@ -127,7 +140,8 @@
       "version": null,
       "resource_type": "concept-doi",
       "repository_association": "project:sonification",
-      "evidence": "https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md"
+      "evidence": "https://doi.org/10.5281/zenodo.21404223",
+      "concept_doi": "10.5281/zenodo.21404223"
     },
     {
       "doi": "10.5281/zenodo.21895577",
@@ -136,7 +150,8 @@
       "version": "2.0.0",
       "resource_type": "software",
       "repository_association": "project:qsol-nexus",
-      "evidence": "https://github.com/QSOLKCB/QSOL-NEXUS/blob/main/README.md"
+      "evidence": "https://github.com/QSOLKCB/QSOL-NEXUS/blob/main/README.md",
+      "concept_doi": null
     }
   ],
   "notes": [

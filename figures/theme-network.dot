@@ -9,7 +9,7 @@ digraph QSOL_SYNTHESIS {
   "project:qsol-oracle" -> "project:qsol-nexus" [label="implementation-dependency\nauthority_partitioning"];
   "project:qsol-control" -> "project:qsol-oracle" [label="implementation-dependency\nprovenance"];
   "project:qsol-control" -> "project:qsol-nexus" [label="implementation-dependency\nauthority_partitioning"];
-  "project:galaxy" -> "project:uff" [label="shared-validation-architecture\noracle_candidate_parity"];
+  "project:galaxy" -> "project:uff" [label="shared-validation-architecture\nprovenance"];
   "project:psycle-linux" -> "project:rivet" [label="analogous-computational-structure\npreservation"];
   "project:qsol-semantic-relay" -> "project:qsol-substrate" [label="shared-methodological-principle\nexternal_state"];
   "project:lattice" -> "project:qsol-control" [label="implementation-dependency\nexternal_state"];

@@ -128,6 +128,21 @@ class CollectGithubRegressionTests(unittest.TestCase):
         self.assertTrue(all(item["exists"] is None for item in files.values()))
         self.assertTrue(all("unexpected GitHub contents response" in item["error"] for item in files.values()))
 
+    def test_malformed_release_entry_marks_collection_incomplete(self):
+        def fake(url, token, cache_dir, ttl_seconds):
+            if "/releases?" in url:
+                return [{"id": 1}, None]
+            raise AssertionError(url)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            releases, complete, error = collect_github.collect_release_pages(
+                "QSOLKCB", "TEST", None, pathlib.Path(tmp), 0, request_fn=fake
+            )
+
+        self.assertEqual(releases, [{"id": 1}])
+        self.assertFalse(complete)
+        self.assertEqual(error, "unexpected GitHub release entry")
+
 
 if __name__ == "__main__":
     unittest.main()

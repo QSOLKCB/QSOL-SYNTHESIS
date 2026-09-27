@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Collect raw Zenodo discovery metadata without promoting it into the curated corpus."""
 from __future__ import annotations
+
 import argparse
 import json
 import pathlib
@@ -12,6 +13,16 @@ import urllib.request
 
 API = "https://zenodo.org/api/records"
 ZENODO_DOI_RE = re.compile(r"^10\.5281/zenodo\.(\d+)$", re.IGNORECASE)
+
+
+def positive_int(value: str) -> int:
+    try:
+        number = int(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("must be an integer") from exc
+    if number <= 0:
+        raise argparse.ArgumentTypeError("must be greater than zero")
+    return number
 
 
 def get_json(url: str) -> dict:
@@ -48,6 +59,9 @@ def merge_record(index: dict[str, dict], rec: dict) -> None:
 
 
 def query_all(query: str, per_page: int, max_pages: int):
+    if per_page <= 0 or max_pages <= 0:
+        raise ValueError("per_page and max_pages must be positive")
+
     page = 1
     total = None
     while page <= max_pages:
@@ -64,7 +78,7 @@ def query_all(query: str, per_page: int, max_pages: int):
         page += 1
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", default="data/raw/zenodo-records.json")
     parser.add_argument("--queries", nargs="*", default=["Trent Slade", "QSOL-IMC", "QSOLKCB"])
@@ -72,9 +86,9 @@ def main() -> int:
                         help="Curated publication registry; its DOIs are looked up exactly when possible.")
     parser.add_argument("--projects", default="data/projects.json")
     parser.add_argument("--include-project-queries", action="store_true")
-    parser.add_argument("--per-page", type=int, default=100)
-    parser.add_argument("--max-pages", type=int, default=10)
-    args = parser.parse_args()
+    parser.add_argument("--per-page", type=positive_int, default=100)
+    parser.add_argument("--max-pages", type=positive_int, default=10)
+    args = parser.parse_args(argv)
 
     queries = list(args.queries)
     projects_path = pathlib.Path(args.projects)

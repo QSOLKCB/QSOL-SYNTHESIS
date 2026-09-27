@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Build or verify the deterministic source index from curated synthesis registries."""
 from __future__ import annotations
+
 import argparse
 import json
 import pathlib
@@ -8,19 +9,32 @@ import re
 import sys
 
 GITHUB_BLOB_RE = re.compile(r"^https://github\.com/([^/]+/[^/]+)/blob/([^/]+)/(.+)$")
+ZENODO_RECORD_RE = re.compile(r"^https://zenodo\.org/records/\d+/?$")
+DOI_SOURCE_RE = re.compile(r"^https://doi\.org/10\.\d{4,9}/[-._;()/:A-Z0-9]+$", re.IGNORECASE)
 
 
 def read_json(path: pathlib.Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def parse_source(url: str | None):
-    if not url:
-        return None, None, None
-    match = GITHUB_BLOB_RE.match(url)
-    if not match:
-        return None, None, url
-    return match.group(1), match.group(2), match.group(3)
+def parse_source(url: str | None) -> tuple[str, str | None, str | None, str]:
+    """Return (kind, repository, branch, path) for a traceable source.
+
+    Curated project sources must be GitHub blob URLs. Publication sources may
+    additionally use a Zenodo record URL or DOI URL. Unknown and empty values
+    are rejected rather than converted into evidence-free source rows.
+    """
+    if not isinstance(url, str) or not url.strip():
+        raise RuntimeError("source must be a non-empty traceable URL")
+
+    match = GITHUB_BLOB_RE.fullmatch(url)
+    if match:
+        return "github", match.group(1), match.group(2), match.group(3)
+
+    if ZENODO_RECORD_RE.fullmatch(url) or DOI_SOURCE_RE.fullmatch(url):
+        return "external", None, None, url
+
+    raise RuntimeError(f"unsupported source URL: {url}")
 
 
 def project_source_id(project_id: str) -> str:
@@ -41,21 +55,50 @@ def build(root: pathlib.Path) -> dict:
         raise RuntimeError(f"curated generated_at values disagree: {sorted(dates)}")
     generated_at = next(iter(dates))
 
+    projects = projects_doc.get("projects", [])
+    project_repo_by_id = {
+        project.get("id"): project.get("repo")
+        for project in projects
+        if project.get("id") and project.get("repo")
+    }
+
     sources = []
-    for project in projects_doc.get("projects", []):
-        _, branch, path = parse_source(project.get("source"))
+    for project in projects:
+        try:
+            kind, repository, branch, path = parse_source(project.get("source"))
+        except RuntimeError as exc:
+            raise RuntimeError(f"project {project.get('id')} has no traceable source: {exc}") from exc
+        if kind != "github":
+            raise RuntimeError(f"project {project.get('id')} source must be a GitHub blob URL")
+        if repository != project.get("repo"):
+            raise RuntimeError(
+                f"project {project.get('id')} source repository {repository!r} "
+                f"does not match {project.get('repo')!r}"
+            )
         sources.append({
             "source_id": project_source_id(project["id"]),
-            "repository": project.get("repo"),
-            "path": path or "README.md",
-            "branch_or_commit": branch or "main",
+            "repository": repository,
+            "path": path,
+            "branch_or_commit": branch,
             "access_date": generated_at,
             "source_type": "github-readme",
             "supports": sorted({"inventory", *project.get("themes", [])}),
         })
 
     for pub in publications_doc.get("publications", []):
-        repository, branch, path = parse_source(pub.get("source"))
+        try:
+            kind, repository, branch, path = parse_source(pub.get("source"))
+        except RuntimeError as exc:
+            raise RuntimeError(f"publication {pub.get('id')} has no traceable source: {exc}") from exc
+
+        if kind == "external":
+            association = pub.get("repository_association")
+            repository = project_repo_by_id.get(association)
+            if repository is None:
+                raise RuntimeError(
+                    f"publication {pub.get('id')} external source requires a valid repository_association"
+                )
+
         sources.append({
             "source_id": publication_source_id(pub["id"]),
             "repository": repository,

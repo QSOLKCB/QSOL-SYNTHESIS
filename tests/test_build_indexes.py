@@ -1,0 +1,70 @@
+from __future__ import annotations
+
+import json
+import pathlib
+import shutil
+import tempfile
+import unittest
+
+from scripts import build_indexes
+
+
+REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
+
+
+class BuildIndexesRegressionTests(unittest.TestCase):
+    def fixture(self) -> pathlib.Path:
+        temp = pathlib.Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, temp)
+        (temp / "data").mkdir()
+        for name in ("projects.json", "publications.json"):
+            shutil.copy2(REPO_ROOT / "data" / name, temp / "data" / name)
+        return temp
+
+    def read(self, root: pathlib.Path, name: str) -> dict:
+        return json.loads((root / "data" / name).read_text(encoding="utf-8"))
+
+    def write(self, root: pathlib.Path, name: str, doc: dict) -> None:
+        (root / "data" / name).write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
+
+    def test_rejects_publication_without_traceable_source(self):
+        root = self.fixture()
+        publications = self.read(root, "publications.json")
+        publications["publications"][0]["source"] = None
+        self.write(root, "publications.json", publications)
+
+        with self.assertRaisesRegex(RuntimeError, "publication .* no traceable source"):
+            build_indexes.build(root)
+
+    def test_rejects_unparseable_publication_source(self):
+        root = self.fixture()
+        publications = self.read(root, "publications.json")
+        publications["publications"][0]["source"] = "not-a-source"
+        self.write(root, "publications.json", publications)
+
+        with self.assertRaisesRegex(RuntimeError, "publication .* no traceable source"):
+            build_indexes.build(root)
+
+    def test_rejects_project_source_from_wrong_repository(self):
+        root = self.fixture()
+        projects = self.read(root, "projects.json")
+        projects["projects"][0]["source"] = "https://github.com/unrelated/repo/blob/main/README.md"
+        self.write(root, "projects.json", projects)
+
+        with self.assertRaisesRegex(RuntimeError, "source repository"):
+            build_indexes.build(root)
+
+    def test_generated_date_can_advance_without_old_index_state(self):
+        root = self.fixture()
+        for name in ("projects.json", "publications.json"):
+            doc = self.read(root, name)
+            doc["generated_at"] = "2099-01-02"
+            self.write(root, name, doc)
+
+        built = build_indexes.build(root)
+        self.assertEqual(built["generated_at"], "2099-01-02")
+        self.assertTrue(all(row["access_date"] == "2099-01-02" for row in built["sources"]))
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -142,7 +142,7 @@ class ValidateSourcesRegressionTests(unittest.TestCase):
 
         self.assert_has(
             validate_sources.validate(root),
-            "publication link evidence is not traceable to the linked project/publication",
+            "lineage reference evidence must bind both referencing project and selected publication",
         )
 
     def test_existing_lineage_reference_is_accepted(self):

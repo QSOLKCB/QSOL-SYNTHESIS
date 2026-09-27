@@ -158,6 +158,32 @@ class CollectGithubRegressionTests(unittest.TestCase):
                     "QSOLKCB", None, pathlib.Path(tmp), 0, False, request_fn=fake
                 )
 
+    def test_duplicate_repository_identity_across_pages_is_rejected(self):
+        page_one = []
+        for i in range(100):
+            row = self.repo()
+            row["name"] = f"TEST{i}"
+            row["full_name"] = f"QSOLKCB/TEST{i}"
+            row["html_url"] = f"https://github.com/QSOLKCB/TEST{i}"
+            page_one.append(row)
+
+        def fake(url, token, cache_dir, ttl_seconds):
+            if "page=1" in url:
+                return page_one
+            if "page=2" in url:
+                return [dict(page_one[-1])]
+            raise AssertionError(url)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaisesRegex(
+                RuntimeError,
+                "Duplicate GitHub repository inventory identity",
+            ):
+                collect_github.collect_public_repositories(
+                    "QSOLKCB", None, pathlib.Path(tmp), 0, False, request_fn=fake
+                )
+
+
 
 if __name__ == "__main__":
     unittest.main()

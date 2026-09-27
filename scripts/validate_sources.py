@@ -25,6 +25,10 @@ DOT_EDGE_RE = re.compile(
     r'^\s*"([^"]+)"\s*->\s*"([^"]+)"\s*\[label="([^"\\]+)\\n([^"]+)"\];\s*$',
     re.MULTILINE,
 )
+DOT_ANY_EDGE_RE = re.compile(
+    r'^\s*"([^"]+)"\s*->\s*"([^"]+)"(?:\s*\[[^\]]*\])?\s*;\s*$',
+    re.MULTILINE,
+)
 PROJECT_SUMMARY_REPO_RE = re.compile(
     r"\*\*Repository:\*\*\s*\[[^\]]+\]\(https://github\.com/([^/]+/[^/)]+)\)"
 )
@@ -42,6 +46,14 @@ SUMMARY_PUBLICATION_ROW_RE = re.compile(
     r"^- \*\*(?P<relation>[a-z0-9-]+)\*\* — "
     r"(?P<doi>10\.\d{4,9}/[-._;()/:A-Z0-9]+):",
     re.IGNORECASE | re.MULTILINE,
+)
+SUMMARY_THEMES_SECTION_RE = re.compile(
+    r"^## Documented recurring themes\s*$\n(?P<body>.*?)(?=^## |\Z)",
+    re.MULTILINE | re.DOTALL,
+)
+SUMMARY_THEME_ROW_RE = re.compile(
+    r"^- \[(?P<theme>[a-z0-9_]+)\]\(\.\./themes/(?P<slug>[a-z0-9-]+)\.md\)\s*$",
+    re.MULTILINE,
 )
 THEME_NAME_RE = re.compile(r"^[a-z0-9]+(?:_[a-z0-9]+)*$")
 
@@ -293,6 +305,20 @@ def validate(root: pathlib.Path) -> list[str]:
     }
 
     for project in projects:
+        project_id = project.get("id")
+        project_name = project.get("name")
+        purpose = project.get("purpose")
+        role = project.get("role")
+        if not isinstance(project_name, str) or not project_name.strip():
+            fail(f"project name must be a non-empty string: {project_id}")
+        if not isinstance(purpose, str) or not purpose.strip():
+            fail(f"project purpose must be a non-empty string: {project_id}")
+        if (
+            not isinstance(role, list)
+            or not role
+            or any(not isinstance(item, str) or not item for item in role)
+        ):
+            fail(f"project role must be a non-empty string list: {project_id}")
         expected_url = f"https://github.com/{project.get('repo')}"
         project_url = project.get("url")
         if not isinstance(project_url, str) or project_url.casefold() != expected_url.casefold():
@@ -900,6 +926,21 @@ def validate(root: pathlib.Path) -> list[str]:
                     )
                 else:
                     evidence_identities.add(identity)
+            theme_supporting_sources = {
+                github_blob_identity(project_by_id.get(endpoint_id, {}).get("source"))
+                for endpoint_id in (source_id, target_id)
+                if theme in set(project_by_id.get(endpoint_id, {}).get("themes", []))
+            }
+            theme_supporting_sources.discard(None)
+            if (
+                theme
+                and evidence_identities
+                and evidence_identities.isdisjoint(theme_supporting_sources)
+            ):
+                fail(
+                    f"relationship evidence must come from an endpoint supporting the theme: "
+                    f"{source_id} -> {target_id}: {theme}"
+                )
             if relation_type in BILATERAL_RELATIONS and evidence_identities != endpoint_sources:
                 fail(
                     f"bilateral relationship evidence must cover both endpoints: "
@@ -912,6 +953,10 @@ def validate(root: pathlib.Path) -> list[str]:
     graph_path = root / "figures" / "theme-network.dot"
     graph_text = graph_path.read_text(encoding="utf-8") if graph_path.exists() else ""
     graph_edges = DOT_EDGE_RE.findall(graph_text)
+    all_graph_edges = DOT_ANY_EDGE_RE.findall(graph_text)
+    edge_statement_count = sum(1 for line in graph_text.splitlines() if "->" in line)
+    if len(all_graph_edges) != edge_statement_count:
+        fail("relationship graph contains an unparsed edge statement")
     actual_graph_edges = set(graph_edges)
     expected_graph_edges = {
         (
@@ -922,6 +967,15 @@ def validate(root: pathlib.Path) -> list[str]:
         )
         for rel in rels
     }
+    expected_graph_pairs = sorted(
+        (rel.get("source"), rel.get("target"))
+        for rel in rels
+    )
+    if sorted(all_graph_edges) != expected_graph_pairs:
+        fail(
+            f"relationship graph edge endpoints must match data/relationships.json exactly: "
+            f"expected={expected_graph_pairs} actual={sorted(all_graph_edges)}"
+        )
     if len(graph_edges) != len(actual_graph_edges):
         fail("relationship graph contains duplicate edges")
     if actual_graph_edges != expected_graph_edges:
@@ -1136,6 +1190,29 @@ def validate(root: pathlib.Path) -> list[str]:
                             )
 
                         summary_project_id = summary_project_by_source.get("id")
+                        themes_match = SUMMARY_THEMES_SECTION_RE.search(text)
+                        themes_text = themes_match.group("body") if themes_match else ""
+                        actual_summary_themes = []
+                        malformed_theme_links = []
+                        for match in SUMMARY_THEME_ROW_RE.finditer(themes_text):
+                            theme_name = match.group("theme")
+                            actual_summary_themes.append(theme_name)
+                            if match.group("slug") != theme_name.replace("_", "-"):
+                                malformed_theme_links.append(theme_name)
+                        expected_summary_themes = sorted(
+                            summary_project_by_source.get("themes", [])
+                        )
+                        if (
+                            malformed_theme_links
+                            or len(actual_summary_themes) != len(set(actual_summary_themes))
+                            or sorted(actual_summary_themes) != expected_summary_themes
+                        ):
+                            fail(
+                                f"project summary themes must match curated project themes: "
+                                f"{actual_summary_path} expected={expected_summary_themes} "
+                                f"actual={sorted(actual_summary_themes)}"
+                            )
+
                         actual_connections = [
                             (
                                 match.group("arrow"),
@@ -1225,6 +1302,18 @@ def validate(root: pathlib.Path) -> list[str]:
                 fail(
                     f"substantive paper section requires source index references: "
                     f"{path.relative_to(root)}"
+                )
+
+    for path in root.rglob("*.md"):
+        if not path.is_file():
+            continue
+        relative = path.relative_to(root)
+        text = path.read_text(encoding="utf-8")
+        for source_ref in sorted(set(SOURCE_ID_RE.findall(text))):
+            if source_ref not in source_by_id:
+                fail(
+                    f"unknown source index reference in Markdown document: "
+                    f"{relative} -> {source_ref}"
                 )
 
     actual_project_summary_ids = set(project_summary_counts)

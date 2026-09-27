@@ -96,6 +96,7 @@ def publication_external_source_matches(pub: dict, source_url: str | None) -> bo
 
 def publication_link_evidence_is_valid(
     url: str,
+    relation: str,
     project_repo: str | None,
     publication: dict | None,
     repository_by_project: dict[str, str],
@@ -103,22 +104,35 @@ def publication_link_evidence_is_valid(
     if publication is None or not traceable_publication_source(url):
         return False
 
-    if url == publication.get("source"):
-        return True
-
     evidence_repo = github_repository(url)
-    if evidence_repo is not None:
-        allowed_repos = {
-            repo.casefold()
-            for repo in (
-                project_repo,
-                repository_by_project.get(publication.get("repository_association")),
-            )
-            if isinstance(repo, str) and repo
-        }
-        return evidence_repo.casefold() in allowed_repos
 
-    return publication_external_source_matches(publication, url)
+    if relation == "lineage-reference":
+        # A lineage assertion is about the referencing project, not merely the
+        # existence of the publication. Require the evidence to live in the
+        # project making the lineage assertion.
+        return (
+            isinstance(project_repo, str)
+            and evidence_repo is not None
+            and evidence_repo.casefold() == project_repo.casefold()
+        )
+
+    if relation == "repository-associated-publication":
+        # Ownership may be established by the publication's canonical source,
+        # by first-party metadata in the owning project, or by an external
+        # DOI/Zenodo source that is itself bound to this publication.
+        if url == publication.get("source"):
+            return True
+
+        if evidence_repo is not None:
+            owner_repo = repository_by_project.get(publication.get("repository_association"))
+            return (
+                isinstance(owner_repo, str)
+                and evidence_repo.casefold() == owner_repo.casefold()
+            )
+
+        return publication_external_source_matches(publication, url)
+
+    return False
 
 
 def validate(root: pathlib.Path) -> list[str]:
@@ -264,6 +278,12 @@ def validate(root: pathlib.Path) -> list[str]:
     if {doi.casefold() for doi in zenodo_dois if isinstance(doi, str)} != expected_zenodo_dois:
         fail("curated Zenodo DOI set must match Zenodo publications exactly")
 
+    zenodo_by_doi = {
+        row.get("doi").casefold(): row
+        for row in zenodo_rows
+        if isinstance(row.get("doi"), str) and row.get("doi")
+    }
+
     for row in zenodo_rows:
         doi = row.get("doi")
         if not isinstance(doi, str):
@@ -279,6 +299,29 @@ def validate(root: pathlib.Path) -> list[str]:
         match = ZENODO_DOI_RE.fullmatch(doi)
         if match and row.get("record_id") != int(match.group(1)):
             fail(f"curated Zenodo record_id mismatch for {doi}")
+
+    # A declared Zenodo concept DOI must resolve inside the curated Zenodo
+    # registry to a concept record associated with the same project. This
+    # prevents a syntactically valid DOI from borrowing another publication's
+    # identity or lineage.
+    for pub in pubs:
+        concept_doi = pub.get("concept_doi")
+        if not concept_doi:
+            continue
+        concept_row = zenodo_by_doi.get(concept_doi.casefold())
+        if concept_row is None:
+            fail(f"concept DOI missing curated Zenodo record: {pub.get('id')} -> {concept_doi}")
+            continue
+        if concept_row.get("repository_association") != pub.get("repository_association"):
+            fail(
+                f"concept DOI repository association mismatch: "
+                f"{pub.get('id')} -> {concept_doi}"
+            )
+        if concept_row.get("resource_type") != "concept-doi":
+            fail(
+                f"concept DOI must resolve to a curated concept-doi record: "
+                f"{pub.get('id')} -> {concept_doi}"
+            )
 
     theme_names = [t.get("name") for t in themes]
     if None in theme_names or len(theme_names) != len(set(theme_names)):
@@ -322,7 +365,7 @@ def validate(root: pathlib.Path) -> list[str]:
             project_repo = repo_by_project.get(link.get("project_id"))
             for url in evidence:
                 if not isinstance(url, str) or not publication_link_evidence_is_valid(
-                    url, project_repo, publication, repo_by_project
+                    url, relation, project_repo, publication, repo_by_project
                 ):
                     fail(
                         f"publication link evidence is not traceable to the linked project/publication: "
@@ -331,6 +374,24 @@ def validate(root: pathlib.Path) -> list[str]:
         link_keys.append((link.get("project_id"), link.get("publication_id"), relation))
     if len(link_keys) != len(set(link_keys)):
         fail("project-publication links must be unique")
+
+    expected_ownership_links = {
+        (pub.get("repository_association"), pub.get("id"))
+        for pub in pubs
+        if pub.get("repository_association")
+    }
+    actual_ownership_links = {
+        (link.get("project_id"), link.get("publication_id"))
+        for link in links
+        if link.get("relation") == "repository-associated-publication"
+    }
+    if actual_ownership_links != expected_ownership_links:
+        missing = sorted(expected_ownership_links - actual_ownership_links)
+        extra = sorted(actual_ownership_links - expected_ownership_links)
+        fail(
+            "repository-associated-publication links must exactly match publication associations: "
+            f"missing={missing} extra={extra}"
+        )
 
     relationship_keys = []
     for rel in rels:

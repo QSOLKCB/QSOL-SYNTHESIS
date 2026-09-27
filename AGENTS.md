@@ -9,6 +9,7 @@ Guidance for contributors and coding agents working in QSOL-SYNTHESIS.
 - Preserve uncertainty explicitly.
 - Raw API discovery is not curated evidence.
 - Add a deterministic regression for every correctness or evidence-integrity bug fixed in `scripts/`.
+- Treat publication ownership, lineage, DOI/concept-DOI identity, and duplicate curated registries as cross-file invariants; a local field check is not sufficient.
 - Before finalizing edits, run:
   - `python -m unittest discover -s tests -v`
   - `python scripts/build_indexes.py --check`

@@ -83,6 +83,71 @@ class ValidateSourcesRegressionTests(unittest.TestCase):
 
         self.assert_has(validate_sources.validate(root), "evidence repository must match an endpoint")
 
+    def test_every_publication_association_requires_an_ownership_link(self):
+        root = self.fixture()
+        doc = self.read_json(root, "project-publication-links.json")
+        ownership_index = next(
+            i for i, link in enumerate(doc["links"])
+            if link.get("relation") == "repository-associated-publication"
+        )
+        doc["links"].pop(ownership_index)
+        self.write_json(root, "project-publication-links.json", doc)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "repository-associated-publication links must exactly match publication associations",
+        )
+
+    def test_extra_ownership_link_without_matching_association_is_rejected(self):
+        root = self.fixture()
+        pubs = self.read_json(root, "publications.json")
+        links = self.read_json(root, "project-publication-links.json")
+        pub = pubs["publications"][0]
+        wrong_project = next(
+            project["id"]
+            for project in self.read_json(root, "projects.json")["projects"]
+            if project["id"] != pub["repository_association"]
+        )
+        links["links"].append({
+            "project_id": wrong_project,
+            "publication_id": pub["id"],
+            "relation": "repository-associated-publication",
+            "evidence": [pub["source"]],
+        })
+        self.write_json(root, "project-publication-links.json", links)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "repository-associated-publication links must exactly match publication associations",
+        )
+
+    def test_lineage_evidence_must_come_from_referencing_project(self):
+        root = self.fixture()
+        pubs = self.read_json(root, "publications.json")
+        projects = self.read_json(root, "projects.json")["projects"]
+        links = self.read_json(root, "project-publication-links.json")
+        pub = pubs["publications"][0]
+        wrong_project = next(
+            project for project in projects
+            if project["id"] != pub["repository_association"]
+            and project["repo"] != validate_sources.github_repository(pub["source"])
+        )
+        links["links"].append({
+            "project_id": wrong_project["id"],
+            "publication_id": pub["id"],
+            "relation": "lineage-reference",
+            "evidence": [pub["source"]],
+        })
+        self.write_json(root, "project-publication-links.json", links)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "publication link evidence is not traceable to the linked project/publication",
+        )
+
+    def test_existing_lineage_reference_is_accepted(self):
+        self.assertEqual(validate_sources.validate(REPO_ROOT), [])
+
     def test_publication_link_evidence_must_be_traceable(self):
         root = self.fixture()
         doc = self.read_json(root, "project-publication-links.json")
@@ -103,6 +168,56 @@ class ValidateSourcesRegressionTests(unittest.TestCase):
         self.assert_has(
             validate_sources.validate(root),
             "publication external source does not match DOI/concept DOI",
+        )
+
+    def test_concept_doi_cannot_borrow_unrelated_publication_identity(self):
+        root = self.fixture()
+        pubs = self.read_json(root, "publications.json")
+        first = pubs["publications"][0]
+        unrelated = next(
+            pub for pub in pubs["publications"][1:]
+            if pub.get("repository_association") != first.get("repository_association")
+            and pub.get("doi")
+        )
+        first["concept_doi"] = unrelated["doi"]
+        self.write_json(root, "publications.json", pubs)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "concept DOI repository association mismatch",
+        )
+
+    def test_concept_doi_requires_curated_zenodo_record(self):
+        root = self.fixture()
+        pubs = self.read_json(root, "publications.json")
+        pubs["publications"][0]["concept_doi"] = "10.5281/zenodo.99999999"
+        self.write_json(root, "publications.json", pubs)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "concept DOI missing curated Zenodo record",
+        )
+
+    def test_concept_doi_must_point_to_concept_record(self):
+        root = self.fixture()
+        pubs = self.read_json(root, "publications.json")
+        target = next(
+            pub for pub in pubs["publications"]
+            if pub.get("resource_type") != "concept-doi"
+            and pub.get("doi")
+        )
+        owner = target.get("repository_association")
+        other = next(
+            pub for pub in pubs["publications"]
+            if pub.get("repository_association") == owner
+            and pub.get("id") != target.get("id")
+        )
+        other["concept_doi"] = target["doi"]
+        self.write_json(root, "publications.json", pubs)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "concept DOI must resolve to a curated concept-doi record",
         )
 
     def test_matrix_cannot_deny_declared_theme_support(self):

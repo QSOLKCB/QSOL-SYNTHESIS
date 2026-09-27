@@ -2,7 +2,8 @@
   "generated_at": "2026-09-27",
   "generated_from": [
     "data/projects.json",
-    "data/publications.json"
+    "data/publications.json",
+    "data/project-publication-links.json"
   ],
   "sources": [
     {

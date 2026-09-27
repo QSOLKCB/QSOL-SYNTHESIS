@@ -624,6 +624,64 @@ class ValidateSourcesRegressionTests(unittest.TestCase):
         self.assert_has(errors, "generated_at must not be in the future")
         self.assert_has(errors, "source access_date must not be in the future")
 
+    def test_curated_publication_dois_reject_case_only_duplicates(self):
+        root = self.fixture()
+        doc = self.read_json(root, "github-repositories.json")
+        row = next(
+            row for row in doc["repositories"]
+            if row.get("full_name") == "QSOLKCB/UFF"
+        )
+        row["publication_dois"].append("10.5281/ZENODO.22026554")
+        self.write_json(root, "github-repositories.json", doc)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "curated GitHub publication_dois must be a unique string list",
+        )
+
+    def test_publication_github_source_must_match_independent_manifest(self):
+        root = self.fixture()
+        pubs = self.read_json(root, "publications.json")
+        zenodo = self.read_json(root, "zenodo-records.json")
+        links = self.read_json(root, "project-publication-links.json")
+
+        pub = next(p for p in pubs["publications"] if p["id"] == "publication:zenodo-22026554")
+        fabricated = "https://github.com/QSOLKCB/UFF/blob/main/DOES-NOT-EXIST.md"
+        pub["source"] = fabricated
+
+        row = next(r for r in zenodo["records"] if r.get("doi") == pub["doi"])
+        row["evidence"] = fabricated
+
+        link = next(
+            link for link in links["links"]
+            if link.get("relation") == "repository-associated-publication"
+            and link.get("publication_id") == pub["id"]
+        )
+        link["evidence"] = [fabricated]
+
+        self.write_json(root, "publications.json", pubs)
+        self.write_json(root, "zenodo-records.json", zenodo)
+        self.write_json(root, "project-publication-links.json", links)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "publication GitHub source must match independently curated source",
+        )
+
+    def test_declared_historical_lineage_requires_lineage_link(self):
+        root = self.fixture()
+        links = self.read_json(root, "project-publication-links.json")
+        links["links"] = [
+            link for link in links["links"]
+            if link.get("relation") != "lineage-reference"
+        ]
+        self.write_json(root, "project-publication-links.json", links)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "lineage-reference links must exactly match historical-lineage declarations",
+        )
+
     def test_matrix_cannot_deny_declared_theme_support(self):
         root = self.fixture()
         projects = self.read_json(root, "projects.json")["projects"]

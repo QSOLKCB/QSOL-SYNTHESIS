@@ -127,10 +127,23 @@ def collect_public_repositories(
                         cache_dir,
                         ttl_seconds,
                     )
-                    row["first_party_files"][candidate] = {
-                        "exists": True,
-                        "sha": meta.get("sha") if isinstance(meta, dict) else None,
-                    }
+                    if not isinstance(meta, dict):
+                        row["first_party_files"][candidate] = {
+                            "exists": None,
+                            "error": "unexpected GitHub contents response",
+                        }
+                    else:
+                        sha = meta.get("sha")
+                        if not isinstance(sha, str) or not sha:
+                            row["first_party_files"][candidate] = {
+                                "exists": None,
+                                "error": "GitHub contents response missing file sha",
+                            }
+                        else:
+                            row["first_party_files"][candidate] = {
+                                "exists": True,
+                                "sha": sha,
+                            }
                 except (RuntimeError, json.JSONDecodeError, UnicodeDecodeError) as exc:
                     message = str(exc)
                     if "HTTP 404" in message:

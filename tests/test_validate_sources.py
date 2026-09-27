@@ -18,6 +18,8 @@ CURATED_JSON = (
     "relationships.json",
     "project-publication-links.json",
     "source-index.json",
+    "github-repositories.json",
+    "zenodo-records.json",
 )
 
 
@@ -41,6 +43,36 @@ class ValidateSourcesRegressionTests(unittest.TestCase):
     def test_baseline_fixture_validates(self):
         self.assertEqual(validate_sources.validate(REPO_ROOT), [])
 
+    def test_project_url_must_match_declared_repository(self):
+        root = self.fixture()
+        doc = self.read_json(root, "projects.json")
+        doc["projects"][0]["url"] = "https://github.com/unrelated/fabricated"
+        self.write_json(root, "projects.json", doc)
+
+        self.assert_has(validate_sources.validate(root), "project URL must match repository")
+
+    def test_curated_github_registry_must_match_project_registry(self):
+        root = self.fixture()
+        doc = self.read_json(root, "github-repositories.json")
+        doc["repositories"][0]["full_name"] = "QSOLKCB/FABRICATED"
+        self.write_json(root, "github-repositories.json", doc)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "curated GitHub registry repositories must match projects.json exactly",
+        )
+
+    def test_curated_zenodo_registry_must_match_publications(self):
+        root = self.fixture()
+        doc = self.read_json(root, "zenodo-records.json")
+        doc["records"][0]["doi"] = "10.5281/zenodo.99999999"
+        self.write_json(root, "zenodo-records.json", doc)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "curated Zenodo DOI set must match Zenodo publications exactly",
+        )
+
     def test_relationship_evidence_must_reference_an_endpoint_repository(self):
         root = self.fixture()
         doc = self.read_json(root, "relationships.json")
@@ -50,6 +82,28 @@ class ValidateSourcesRegressionTests(unittest.TestCase):
         self.write_json(root, "relationships.json", doc)
 
         self.assert_has(validate_sources.validate(root), "evidence repository must match an endpoint")
+
+    def test_publication_link_evidence_must_be_traceable(self):
+        root = self.fixture()
+        doc = self.read_json(root, "project-publication-links.json")
+        doc["links"][0]["evidence"] = ["fabricated-evidence"]
+        self.write_json(root, "project-publication-links.json", doc)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "publication link evidence is not traceable to the linked project/publication",
+        )
+
+    def test_publication_external_source_must_match_declared_doi(self):
+        root = self.fixture()
+        doc = self.read_json(root, "publications.json")
+        doc["publications"][0]["source"] = "https://doi.org/10.5281/zenodo.99999999"
+        self.write_json(root, "publications.json", doc)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "publication external source does not match DOI/concept DOI",
+        )
 
     def test_matrix_cannot_deny_declared_theme_support(self):
         root = self.fixture()

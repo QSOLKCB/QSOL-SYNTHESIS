@@ -14,8 +14,9 @@ DOI_RE = re.compile(r"^10\.\d{4,9}/[-._;()/:A-Z0-9]+$", re.IGNORECASE)
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 GITHUB_REPO_RE = re.compile(r"^https://github\.com/([^/]+/[^/#?]+)(?:/|$)")
 GITHUB_BLOB_RE = re.compile(r"^https://github\.com/([^/]+/[^/]+)/blob/([^/]+)/(.+)$")
-ZENODO_RECORD_RE = re.compile(r"^https://zenodo\.org/records/\d+/?$")
-DOI_SOURCE_RE = re.compile(r"^https://doi\.org/10\.\d{4,9}/[-._;()/:A-Z0-9]+$", re.IGNORECASE)
+ZENODO_RECORD_RE = re.compile(r"^https://zenodo\.org/records/(\d+)/?$")
+DOI_SOURCE_RE = re.compile(r"^https://doi\.org/(10\.\d{4,9}/[-._;()/:A-Z0-9]+)$", re.IGNORECASE)
+ZENODO_DOI_RE = re.compile(r"^10\.5281/zenodo\.(\d+)$", re.IGNORECASE)
 
 ALLOWED_MATRIX_VALUES = {"documented", "partial", "not-found"}
 ALLOWED_LINK_RELATIONS = {"repository-associated-publication", "lineage-reference"}
@@ -67,6 +68,59 @@ def traceable_publication_source(url: str | None) -> bool:
     )
 
 
+def publication_external_source_matches(pub: dict, source_url: str | None) -> bool:
+    if not isinstance(source_url, str):
+        return False
+
+    identifiers = {
+        value.casefold()
+        for value in (pub.get("doi"), pub.get("concept_doi"))
+        if isinstance(value, str) and value
+    }
+
+    doi_match = DOI_SOURCE_RE.fullmatch(source_url)
+    if doi_match:
+        return doi_match.group(1).casefold() in identifiers
+
+    record_match = ZENODO_RECORD_RE.fullmatch(source_url)
+    if record_match:
+        allowed_record_ids = set()
+        for identifier in identifiers:
+            zenodo_match = ZENODO_DOI_RE.fullmatch(identifier)
+            if zenodo_match:
+                allowed_record_ids.add(zenodo_match.group(1))
+        return record_match.group(1) in allowed_record_ids
+
+    return False
+
+
+def publication_link_evidence_is_valid(
+    url: str,
+    project_repo: str | None,
+    publication: dict | None,
+    repository_by_project: dict[str, str],
+) -> bool:
+    if publication is None or not traceable_publication_source(url):
+        return False
+
+    if url == publication.get("source"):
+        return True
+
+    evidence_repo = github_repository(url)
+    if evidence_repo is not None:
+        allowed_repos = {
+            repo.casefold()
+            for repo in (
+                project_repo,
+                repository_by_project.get(publication.get("repository_association")),
+            )
+            if isinstance(repo, str) and repo
+        }
+        return evidence_repo.casefold() in allowed_repos
+
+    return publication_external_source_matches(publication, url)
+
+
 def validate(root: pathlib.Path) -> list[str]:
     data = root / "data"
     errors: list[str] = []
@@ -80,6 +134,8 @@ def validate(root: pathlib.Path) -> list[str]:
     relationships_doc = read_json(data / "relationships.json")
     links_doc = read_json(data / "project-publication-links.json")
     sources_doc = read_json(data / "source-index.json")
+    github_doc = read_json(data / "github-repositories.json")
+    zenodo_doc = read_json(data / "zenodo-records.json")
 
     curated_docs = {
         "projects.json": projects_doc,
@@ -88,6 +144,8 @@ def validate(root: pathlib.Path) -> list[str]:
         "relationships.json": relationships_doc,
         "project-publication-links.json": links_doc,
         "source-index.json": sources_doc,
+        "github-repositories.json": github_doc,
+        "zenodo-records.json": zenodo_doc,
     }
     date_values = []
     for name, doc in curated_docs.items():
@@ -116,15 +174,45 @@ def validate(root: pathlib.Path) -> list[str]:
         fail("project repo identifiers must be non-null and unique")
     repo_set = set(repos)
     repo_by_project = {p.get("id"): p.get("repo") for p in projects}
+    project_by_repo = {p.get("repo"): p for p in projects if p.get("repo")}
     repo_casefold = {repo.casefold(): repo for repo in repo_set if isinstance(repo, str)}
 
     for project in projects:
+        expected_url = f"https://github.com/{project.get('repo')}"
+        if project.get("url") != expected_url:
+            fail(
+                f"project URL must match repository: {project.get('id')} "
+                f"expected {expected_url!r}, got {project.get('url')!r}"
+            )
         source = project.get("source")
         match = GITHUB_BLOB_RE.fullmatch(source or "")
         if not match:
             fail(f"project source must be a traceable GitHub blob URL: {project.get('id')}")
         elif match.group(1) != project.get("repo"):
             fail(f"project source repository mismatch: {project.get('id')} -> {match.group(1)}")
+
+    github_rows = github_doc.get("repositories", [])
+    github_full_names = [row.get("full_name") for row in github_rows]
+    if None in github_full_names or len(github_full_names) != len(set(github_full_names)):
+        fail("curated GitHub registry repository identifiers must be non-null and unique")
+    if set(github_full_names) != repo_set:
+        fail("curated GitHub registry repositories must match projects.json exactly")
+    if github_doc.get("selected_count") != len(github_rows):
+        fail("curated GitHub selected_count must equal repository row count")
+    total_count = github_doc.get("total_count_observed")
+    if not isinstance(total_count, int) or isinstance(total_count, bool) or total_count < len(github_rows):
+        fail("curated GitHub total_count_observed must be an integer >= selected_count")
+
+    for row in github_rows:
+        project = project_by_repo.get(row.get("full_name"))
+        if project is None:
+            continue
+        if row.get("name") != project.get("name"):
+            fail(f"curated GitHub project name mismatch: {row.get('full_name')}")
+        if row.get("html_url") != project.get("url"):
+            fail(f"curated GitHub project URL mismatch: {row.get('full_name')}")
+        if row.get("classification") != project.get("role"):
+            fail(f"curated GitHub classification mismatch: {row.get('full_name')}")
 
     pub_ids = [p.get("id") for p in pubs]
     if None in pub_ids or len(pub_ids) != len(set(pub_ids)):
@@ -147,11 +235,50 @@ def validate(root: pathlib.Path) -> list[str]:
         assoc = pub.get("repository_association")
         if assoc and assoc not in project_set:
             fail(f"publication association missing project: {pub.get('id')} -> {assoc}")
-        if not traceable_publication_source(pub.get("source")):
+        source_url = pub.get("source")
+        if not traceable_publication_source(source_url):
             fail(f"publication requires a traceable source URL: {pub.get('id')}")
-        source_repo = github_repository(pub.get("source"))
+        source_repo = github_repository(source_url)
         if source_repo and source_repo.casefold() not in repo_casefold:
             fail(f"publication source repository is outside the curated corpus: {pub.get('id')} -> {source_repo}")
+        if source_repo is None and traceable_publication_source(source_url):
+            if not publication_external_source_matches(pub, source_url):
+                fail(f"publication external source does not match DOI/concept DOI: {pub.get('id')}")
+
+    publication_by_id = {pub.get("id"): pub for pub in pubs}
+    publication_by_doi = {
+        pub.get("doi").casefold(): pub
+        for pub in pubs
+        if isinstance(pub.get("doi"), str) and pub.get("doi")
+    }
+
+    zenodo_rows = zenodo_doc.get("records", [])
+    zenodo_dois = [row.get("doi") for row in zenodo_rows]
+    if None in zenodo_dois or len({doi.casefold() for doi in zenodo_dois}) != len(zenodo_dois):
+        fail("curated Zenodo DOI identifiers must be non-null and unique")
+    expected_zenodo_dois = {
+        doi
+        for doi in publication_by_doi
+        if ZENODO_DOI_RE.fullmatch(doi)
+    }
+    if {doi.casefold() for doi in zenodo_dois if isinstance(doi, str)} != expected_zenodo_dois:
+        fail("curated Zenodo DOI set must match Zenodo publications exactly")
+
+    for row in zenodo_rows:
+        doi = row.get("doi")
+        if not isinstance(doi, str):
+            continue
+        pub = publication_by_doi.get(doi.casefold())
+        if pub is None:
+            continue
+        for field in ("title", "version", "resource_type", "repository_association"):
+            if row.get(field) != pub.get(field):
+                fail(f"curated Zenodo {field} mismatch for {doi}")
+        if row.get("evidence") != pub.get("source"):
+            fail(f"curated Zenodo evidence/source mismatch for {doi}")
+        match = ZENODO_DOI_RE.fullmatch(doi)
+        if match and row.get("record_id") != int(match.group(1)):
+            fail(f"curated Zenodo record_id mismatch for {doi}")
 
     theme_names = [t.get("name") for t in themes]
     if None in theme_names or len(theme_names) != len(set(theme_names)):
@@ -190,6 +317,17 @@ def validate(root: pathlib.Path) -> list[str]:
         evidence = link.get("evidence")
         if not isinstance(evidence, list) or not evidence:
             fail(f"publication link requires evidence: {link.get('project_id')} -> {link.get('publication_id')}")
+        else:
+            publication = publication_by_id.get(link.get("publication_id"))
+            project_repo = repo_by_project.get(link.get("project_id"))
+            for url in evidence:
+                if not isinstance(url, str) or not publication_link_evidence_is_valid(
+                    url, project_repo, publication, repo_by_project
+                ):
+                    fail(
+                        f"publication link evidence is not traceable to the linked project/publication: "
+                        f"{link.get('project_id')} -> {link.get('publication_id')}: {url!r}"
+                    )
         link_keys.append((link.get("project_id"), link.get("publication_id"), relation))
     if len(link_keys) != len(set(link_keys)):
         fail("project-publication links must be unique")

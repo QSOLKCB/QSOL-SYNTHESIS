@@ -54,6 +54,15 @@ class BuildIndexesRegressionTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "source repository"):
             build_indexes.build(root)
 
+    def test_rejects_external_publication_source_with_unrelated_doi(self):
+        root = self.fixture()
+        publications = self.read(root, "publications.json")
+        publications["publications"][0]["source"] = "https://doi.org/10.5281/zenodo.99999999"
+        self.write(root, "publications.json", publications)
+
+        with self.assertRaisesRegex(RuntimeError, "external source does not match"):
+            build_indexes.build(root)
+
     def test_generated_date_can_advance_without_old_index_state(self):
         root = self.fixture()
         for name in ("projects.json", "publications.json"):

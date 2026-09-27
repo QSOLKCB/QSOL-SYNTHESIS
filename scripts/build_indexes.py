@@ -9,8 +9,9 @@ import re
 import sys
 
 GITHUB_BLOB_RE = re.compile(r"^https://github\.com/([^/]+/[^/]+)/blob/([^/]+)/(.+)$")
-ZENODO_RECORD_RE = re.compile(r"^https://zenodo\.org/records/\d+/?$")
-DOI_SOURCE_RE = re.compile(r"^https://doi\.org/10\.\d{4,9}/[-._;()/:A-Z0-9]+$", re.IGNORECASE)
+ZENODO_RECORD_RE = re.compile(r"^https://zenodo\.org/records/(\d+)/?$")
+DOI_SOURCE_RE = re.compile(r"^https://doi\.org/(10\.\d{4,9}/[-._;()/:A-Z0-9]+)$", re.IGNORECASE)
+ZENODO_DOI_RE = re.compile(r"^10\.5281/zenodo\.(\d+)$", re.IGNORECASE)
 
 
 def read_json(path: pathlib.Path):
@@ -43,6 +44,29 @@ def project_source_id(project_id: str) -> str:
 
 def publication_source_id(publication_id: str) -> str:
     return f"src:{publication_id.removeprefix('publication:')}"
+
+
+def publication_external_source_matches(pub: dict, source_url: str) -> bool:
+    identifiers = {
+        value.casefold()
+        for value in (pub.get("doi"), pub.get("concept_doi"))
+        if isinstance(value, str) and value
+    }
+
+    doi_match = DOI_SOURCE_RE.fullmatch(source_url)
+    if doi_match:
+        return doi_match.group(1).casefold() in identifiers
+
+    record_match = ZENODO_RECORD_RE.fullmatch(source_url)
+    if record_match:
+        allowed_record_ids = set()
+        for identifier in identifiers:
+            zenodo_match = ZENODO_DOI_RE.fullmatch(identifier)
+            if zenodo_match:
+                allowed_record_ids.add(zenodo_match.group(1))
+        return record_match.group(1) in allowed_record_ids
+
+    return False
 
 
 def build(root: pathlib.Path) -> dict:
@@ -92,6 +116,10 @@ def build(root: pathlib.Path) -> dict:
             raise RuntimeError(f"publication {pub.get('id')} has no traceable source: {exc}") from exc
 
         if kind == "external":
+            if not publication_external_source_matches(pub, path):
+                raise RuntimeError(
+                    f"publication {pub.get('id')} external source does not match its DOI/concept DOI"
+                )
             association = pub.get("repository_association")
             repository = project_repo_by_id.get(association)
             if repository is None:

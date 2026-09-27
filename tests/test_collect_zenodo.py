@@ -62,6 +62,45 @@ class CollectZenodoRegressionTests(unittest.TestCase):
             self.assertTrue(doc["errors"])
             self.assertEqual(doc["errors"][0]["query"], "probe")
 
+    def test_exact_doi_search_discards_nonmatching_hits(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            output = root / "zenodo.json"
+            publications = root / "publications.json"
+            publications.write_text(
+                json.dumps({"publications": [{"doi": "10.1234/wanted"}]}),
+                encoding="utf-8",
+            )
+
+            unrelated_hit = {
+                "id": 99,
+                "doi": "10.1234/unrelated",
+                "conceptdoi": "10.1234/also-unrelated",
+                "metadata": {"title": "Unrelated", "resource_type": {}},
+                "links": {},
+            }
+
+            def fake_query_all(query, per_page, max_pages):
+                self.assertEqual(query, 'doi:"10.1234/wanted"')
+                yield 1, [unrelated_hit]
+
+            with mock.patch.object(collect_zenodo, "query_all", side_effect=fake_query_all):
+                rc = collect_zenodo.main([
+                    "--queries",
+                    "--publications", str(publications),
+                    "--projects", str(root / "missing-projects.json"),
+                    "--output", str(output),
+                ])
+
+            self.assertEqual(rc, 0)
+            doc = json.loads(output.read_text(encoding="utf-8"))
+            self.assertEqual(doc["records"], [])
+            self.assertTrue(any(
+                error.get("doi") == "10.1234/wanted"
+                and "no matching DOI or concept DOI" in error.get("error", "")
+                for error in doc["errors"]
+            ))
+
 
 if __name__ == "__main__":
     unittest.main()

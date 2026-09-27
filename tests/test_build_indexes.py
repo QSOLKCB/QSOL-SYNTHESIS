@@ -302,6 +302,53 @@ class BuildIndexesRegressionTests(unittest.TestCase):
         ):
             build_indexes.build(root)
 
+    def test_rejects_non_string_publication_title(self):
+        root = self.fixture()
+        publications = self.read(root, "publications.json")
+        publications["publications"][0]["title"] = 123
+        self.write(root, "publications.json", publications)
+
+        with self.assertRaisesRegex(
+            RuntimeError,
+            "publication title must be a non-empty string",
+        ):
+            build_indexes.build(root)
+
+    def test_rejects_non_atomic_project_theme_slug(self):
+        root = self.fixture()
+        projects = self.read(root, "projects.json")
+        project = next(
+            project for project in projects["projects"]
+            if project.get("id") == "project:res-rag-viz"
+        )
+        project["themes"] = [
+            "../projects/res-rag-viz" if theme == "visualisation" else theme
+            for theme in project["themes"]
+        ]
+        self.write(root, "projects.json", projects)
+
+        with self.assertRaisesRegex(
+            RuntimeError,
+            "project themes must use the atomic theme slug namespace",
+        ):
+            build_indexes.build(root)
+
+    def test_rejects_bilateral_theme_not_supported_by_both_endpoints(self):
+        root = self.fixture()
+        projects = self.read(root, "projects.json")
+        uff = next(
+            project for project in projects["projects"]
+            if project.get("id") == "project:uff"
+        )
+        uff["themes"] = [theme for theme in uff["themes"] if theme != "provenance"]
+        self.write(root, "projects.json", projects)
+
+        with self.assertRaisesRegex(
+            RuntimeError,
+            "bilateral relationship theme must be supported by both endpoints",
+        ):
+            build_indexes.build(root)
+
     def test_generated_date_can_advance_without_old_index_state(self):
         root = self.fixture()
         current_date = dt.date.today().isoformat()

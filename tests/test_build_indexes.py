@@ -367,6 +367,43 @@ class BuildIndexesRegressionTests(unittest.TestCase):
         self.assertEqual(built["generated_at"], current_date)
         self.assertTrue(all(row["access_date"] == current_date for row in built["sources"]))
 
+    def test_rejects_non_string_project_name(self):
+        root = self.fixture()
+        projects = self.read(root, "projects.json")
+        project = next(
+            project for project in projects["projects"]
+            if project.get("id") == "project:uft-id-3-0"
+        )
+        project["name"] = 123
+        self.write(root, "projects.json", projects)
+
+        with self.assertRaisesRegex(
+            RuntimeError,
+            "project name must be a non-empty string",
+        ):
+            build_indexes.build(root)
+
+    def test_rejects_relationship_evidence_from_endpoint_without_theme(self):
+        root = self.fixture()
+        relationships = self.read(root, "relationships.json")
+        rel = next(
+            rel for rel in relationships["relationships"]
+            if rel.get("source") == "project:qsol-qec-bridge"
+            and rel.get("target") == "project:qsolqec"
+            and rel.get("theme") == "provenance"
+        )
+        rel["evidence"] = [
+            "https://github.com/QSOLKCB/QSOLQEC/blob/main/README.md"
+        ]
+        self.write(root, "relationships.json", relationships)
+
+        with self.assertRaisesRegex(
+            RuntimeError,
+            "relationship evidence must come from an endpoint supporting the theme",
+        ):
+            build_indexes.build(root)
+
+
 
 if __name__ == "__main__":
     unittest.main()

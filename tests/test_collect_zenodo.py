@@ -231,6 +231,34 @@ class CollectZenodoRegressionTests(unittest.TestCase):
                 doc["errors"][0]["error"],
             )
 
+    def test_identityless_hit_is_recorded_as_uncertainty(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            output = root / "zenodo.json"
+            with mock.patch.object(
+                collect_zenodo,
+                "get_json",
+                return_value={
+                    "hits": {
+                        "total": 1,
+                        "hits": [{"metadata": {}, "links": {}}],
+                    }
+                },
+            ):
+                rc = collect_zenodo.main([
+                    "--queries", "probe",
+                    "--publications", str(root / "missing-publications.json"),
+                    "--projects", str(root / "missing-projects.json"),
+                    "--output", str(output),
+                ])
+
+            self.assertEqual(rc, 0)
+            doc = json.loads(output.read_text(encoding="utf-8"))
+            self.assertEqual(doc["records"], [])
+            self.assertTrue(doc["errors"])
+            self.assertIn("missing stable identity", doc["errors"][0]["error"])
+
+
 
 if __name__ == "__main__":
     unittest.main()

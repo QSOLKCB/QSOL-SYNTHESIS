@@ -210,7 +210,11 @@ def build(root: pathlib.Path) -> dict:
     sources.sort(key=lambda row: row["source_id"])
     return {
         "generated_at": generated_at,
-        "generated_from": ["data/projects.json", "data/publications.json"],
+        "generated_from": [
+            "data/projects.json",
+            "data/publications.json",
+            "data/project-publication-links.json",
+        ],
         "sources": sources,
     }
 

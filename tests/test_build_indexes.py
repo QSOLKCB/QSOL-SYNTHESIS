@@ -45,6 +45,15 @@ class BuildIndexesRegressionTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "publication .* no traceable source"):
             build_indexes.build(root)
 
+    def test_rejects_project_id_outside_namespace(self):
+        root = self.fixture()
+        projects = self.read(root, "projects.json")
+        projects["projects"][0]["id"] = projects["projects"][0]["id"].removeprefix("project:")
+        self.write(root, "projects.json", projects)
+
+        with self.assertRaisesRegex(RuntimeError, "invalid project ID namespace"):
+            build_indexes.build(root)
+
     def test_rejects_project_source_from_wrong_repository(self):
         root = self.fixture()
         projects = self.read(root, "projects.json")

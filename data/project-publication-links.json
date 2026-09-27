@@ -132,6 +132,7 @@
       "publication_id": "publication:zenodo-21404223",
       "relation": "repository-associated-publication",
       "evidence": [
+        "https://github.com/QSOLKCB/SONIFICATION/blob/main/README.md",
         "https://doi.org/10.5281/zenodo.21404223"
       ],
       "concept_doi": "10.5281/zenodo.21404223"

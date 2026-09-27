@@ -17,7 +17,12 @@ class BuildIndexesRegressionTests(unittest.TestCase):
         temp = pathlib.Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, temp)
         (temp / "data").mkdir()
-        for name in ("projects.json", "publications.json", "project-publication-links.json"):
+        for name in (
+            "projects.json",
+            "publications.json",
+            "project-publication-links.json",
+            "github-repositories.json",
+        ):
             shutil.copy2(REPO_ROOT / "data" / name, temp / "data" / name)
         return temp
 
@@ -52,6 +57,36 @@ class BuildIndexesRegressionTests(unittest.TestCase):
         self.write(root, "projects.json", projects)
 
         with self.assertRaisesRegex(RuntimeError, "invalid project ID namespace"):
+            build_indexes.build(root)
+
+    def test_rejects_publication_id_outside_namespace(self):
+        root = self.fixture()
+        publications = self.read(root, "publications.json")
+        links = self.read(root, "project-publication-links.json")
+        publication = publications["publications"][0]
+        old_id = publication["id"]
+        new_id = old_id.removeprefix("publication:")
+        publication["id"] = new_id
+        for link in links["links"]:
+            if link.get("publication_id") == old_id:
+                link["publication_id"] = new_id
+        self.write(root, "publications.json", publications)
+        self.write(root, "project-publication-links.json", links)
+
+        with self.assertRaisesRegex(RuntimeError, "invalid publication ID namespace"):
+            build_indexes.build(root)
+
+    def test_rejects_project_source_path_outside_curated_binding(self):
+        root = self.fixture()
+        projects = self.read(root, "projects.json")
+        project = next(
+            project for project in projects["projects"]
+            if project.get("id") == "project:qsol-ark"
+        )
+        project["source"] = "https://github.com/QSOLKCB/QSOL-ARK/blob/main/DOES-NOT-EXIST.md"
+        self.write(root, "projects.json", projects)
+
+        with self.assertRaisesRegex(RuntimeError, "does not match independently curated source"):
             build_indexes.build(root)
 
     def test_rejects_project_source_from_wrong_repository(self):
@@ -108,7 +143,12 @@ class BuildIndexesRegressionTests(unittest.TestCase):
 
     def test_generated_date_can_advance_without_old_index_state(self):
         root = self.fixture()
-        for name in ("projects.json", "publications.json", "project-publication-links.json"):
+        for name in (
+            "projects.json",
+            "publications.json",
+            "project-publication-links.json",
+            "github-repositories.json",
+        ):
             doc = self.read(root, name)
             doc["generated_at"] = "2099-01-02"
             self.write(root, name, doc)

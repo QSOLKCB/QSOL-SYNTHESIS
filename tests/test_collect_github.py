@@ -109,6 +109,25 @@ class CollectGithubRegressionTests(unittest.TestCase):
         self.assertFalse(row["releases_complete"])
         self.assertIn("bad json", row["releases_error"])
 
+    def test_non_object_content_response_is_unknown(self):
+        def fake(url, token, cache_dir, ttl_seconds):
+            if "/orgs/QSOLKCB/repos" in url:
+                return [self.repo()]
+            if "/releases?" in url:
+                return []
+            if "/contents/" in url:
+                return []
+            raise AssertionError(url)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            result = collect_github.collect_public_repositories(
+                "QSOLKCB", None, pathlib.Path(tmp), 0, True, request_fn=fake
+            )
+
+        files = result["repositories"][0]["first_party_files"]
+        self.assertTrue(all(item["exists"] is None for item in files.values()))
+        self.assertTrue(all("unexpected GitHub contents response" in item["error"] for item in files.values()))
+
 
 if __name__ == "__main__":
     unittest.main()

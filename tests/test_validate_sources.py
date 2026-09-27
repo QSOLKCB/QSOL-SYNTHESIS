@@ -201,18 +201,17 @@ class ValidateSourcesRegressionTests(unittest.TestCase):
     def test_concept_doi_must_point_to_concept_record(self):
         root = self.fixture()
         pubs = self.read_json(root, "publications.json")
-        target = next(
+
+        same_owner_versions = [
             pub for pub in pubs["publications"]
-            if pub.get("resource_type") != "concept-doi"
+            if pub.get("repository_association") == "project:sonification"
+            and pub.get("resource_type") != "concept-doi"
             and pub.get("doi")
-        )
-        owner = target.get("repository_association")
-        other = next(
-            pub for pub in pubs["publications"]
-            if pub.get("repository_association") == owner
-            and pub.get("id") != target.get("id")
-        )
-        other["concept_doi"] = target["doi"]
+        ]
+        self.assertGreaterEqual(len(same_owner_versions), 2)
+
+        source_record, mutated_record = same_owner_versions[:2]
+        mutated_record["concept_doi"] = source_record["doi"]
         self.write_json(root, "publications.json", pubs)
 
         self.assert_has(

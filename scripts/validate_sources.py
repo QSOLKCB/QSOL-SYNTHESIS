@@ -313,6 +313,39 @@ def validate(root: pathlib.Path) -> list[str]:
                 f"project source must match independently curated GitHub source: "
                 f"{row.get('full_name')}"
             )
+        curated_publication_dois = row.get("publication_dois")
+        if (
+            not isinstance(curated_publication_dois, list)
+            or any(
+                not isinstance(doi, str) or not doi
+                for doi in curated_publication_dois
+            )
+            or len(curated_publication_dois) != len(set(curated_publication_dois))
+        ):
+            fail(
+                f"curated GitHub publication_dois must be a unique string list: "
+                f"{row.get('full_name')}"
+            )
+        else:
+            expected_publication_dois = {
+                pub.get("doi").casefold()
+                for pub in pubs
+                if (
+                    pub.get("repository_association") == project.get("id")
+                    and isinstance(pub.get("doi"), str)
+                    and pub.get("doi")
+                )
+            }
+            actual_publication_dois = {
+                doi.casefold()
+                for doi in curated_publication_dois
+            }
+            if actual_publication_dois != expected_publication_dois:
+                fail(
+                    f"curated GitHub publication ownership mismatch: "
+                    f"{row.get('full_name')} expected={sorted(expected_publication_dois)} "
+                    f"actual={sorted(actual_publication_dois)}"
+                )
 
     pub_ids = [p.get("id") for p in pubs]
     invalid_pub_ids = [

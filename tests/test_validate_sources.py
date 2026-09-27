@@ -470,6 +470,67 @@ class ValidateSourcesRegressionTests(unittest.TestCase):
             "project summaries must cover projects.json exactly",
         )
 
+    def test_publication_id_requires_publication_namespace(self):
+        root = self.fixture()
+        pubs = self.read_json(root, "publications.json")
+        links = self.read_json(root, "project-publication-links.json")
+        publication = pubs["publications"][0]
+        old_id = publication["id"]
+        new_id = old_id.removeprefix("publication:")
+        publication["id"] = new_id
+        for link in links["links"]:
+            if link.get("publication_id") == old_id:
+                link["publication_id"] = new_id
+        self.write_json(root, "publications.json", pubs)
+        self.write_json(root, "project-publication-links.json", links)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "publication IDs must be non-empty strings in the publication: namespace",
+        )
+
+    def test_project_summary_source_must_match_its_repository(self):
+        root = self.fixture()
+        uff = root / "projects" / "uff.md"
+        galaxy = root / "projects" / "galaxy.md"
+        uff_text = uff.read_text(encoding="utf-8")
+        galaxy_text = galaxy.read_text(encoding="utf-8")
+        marker = "src:temporary:swap"
+        uff_text = uff_text.replace("src:uff:readme", marker)
+        galaxy_text = galaxy_text.replace("src:galaxy:readme", "src:uff:readme")
+        uff_text = uff_text.replace(marker, "src:galaxy:readme")
+        uff.write_text(uff_text, encoding="utf-8")
+        galaxy.write_text(galaxy_text, encoding="utf-8")
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "project summary source does not match its repository",
+        )
+
+    def test_atomic_theme_members_must_have_matching_source_support(self):
+        root = self.fixture()
+        path = root / "themes" / "visualisation.md"
+        text = path.read_text(encoding="utf-8")
+        text = text.replace("src:res-rag-viz:readme", "src:uff:readme")
+        path.write_text(text, encoding="utf-8")
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "atomic theme membership must match source support",
+        )
+
+    def test_project_source_path_must_match_curated_github_registry(self):
+        root = self.fixture()
+        projects = self.read_json(root, "projects.json")
+        project = next(p for p in projects["projects"] if p.get("id") == "project:qsol-ark")
+        project["source"] = "https://github.com/QSOLKCB/QSOL-ARK/blob/main/DOES-NOT-EXIST.md"
+        self.write_json(root, "projects.json", projects)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "project source must match independently curated GitHub source",
+        )
+
     def test_matrix_cannot_deny_declared_theme_support(self):
         root = self.fixture()
         projects = self.read_json(root, "projects.json")["projects"]

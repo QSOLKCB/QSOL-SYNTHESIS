@@ -135,7 +135,12 @@ def main(argv: list[str] | None = None) -> int:
                 "pages": pages,
                 "truncated": seen < reported_total,
             })
-        except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError) as exc:
+        except (
+            urllib.error.URLError,
+            urllib.error.HTTPError,
+            TimeoutError,
+            json.JSONDecodeError,
+        ) as exc:
             result["errors"].append({"query": query, "error": str(exc)})
 
     pubs_path = pathlib.Path(args.publications)
@@ -164,7 +169,12 @@ def main(argv: list[str] | None = None) -> int:
                         "doi": doi,
                         "error": "exact DOI lookup returned no matching DOI or concept DOI",
                     })
-            except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError) as exc:
+            except (
+                urllib.error.URLError,
+                urllib.error.HTTPError,
+                TimeoutError,
+                json.JSONDecodeError,
+            ) as exc:
                 result["errors"].append({"doi": doi, "error": str(exc)})
 
     result["records"] = sorted(index.values(), key=lambda r: (r.get("record_id") or 0, r.get("doi") or ""))

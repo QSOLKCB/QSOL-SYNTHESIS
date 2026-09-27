@@ -27,7 +27,7 @@ class ValidateSourcesRegressionTests(unittest.TestCase):
     def fixture(self) -> pathlib.Path:
         root = pathlib.Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, root)
-        for directory in ("data", "evidence", "paper", "themes", "projects"):
+        for directory in ("data", "evidence", "paper", "themes", "projects", "figures"):
             shutil.copytree(REPO_ROOT / directory, root / directory)
         return root
 
@@ -530,6 +530,99 @@ class ValidateSourcesRegressionTests(unittest.TestCase):
             validate_sources.validate(root),
             "project source must match independently curated GitHub source",
         )
+
+    def test_ownership_reassignment_requires_repository_bound_evidence(self):
+        root = self.fixture()
+        pubs = self.read_json(root, "publications.json")
+        zenodo = self.read_json(root, "zenodo-records.json")
+        links = self.read_json(root, "project-publication-links.json")
+
+        pub = next(p for p in pubs["publications"] if p["id"] == "publication:zenodo-22026554")
+        pub["repository_association"] = "project:galaxy"
+        pub["source"] = "https://doi.org/10.5281/zenodo.22026554"
+
+        row = next(r for r in zenodo["records"] if r["doi"] == "10.5281/zenodo.22026554")
+        row["repository_association"] = "project:galaxy"
+        row["evidence"] = "https://doi.org/10.5281/zenodo.22026554"
+
+        link = next(
+            link for link in links["links"]
+            if link.get("publication_id") == pub["id"]
+            and link.get("relation") == "repository-associated-publication"
+        )
+        link["project_id"] = "project:galaxy"
+        link["evidence"] = ["https://doi.org/10.5281/zenodo.22026554"]
+
+        self.write_json(root, "publications.json", pubs)
+        self.write_json(root, "zenodo-records.json", zenodo)
+        self.write_json(root, "project-publication-links.json", links)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "curated GitHub publication ownership mismatch",
+        )
+
+    def test_project_summary_must_match_canonical_filename(self):
+        root = self.fixture()
+        uff = root / "projects" / "uff.md"
+        galaxy = root / "projects" / "galaxy.md"
+        uff_text = uff.read_text(encoding="utf-8")
+        galaxy_text = galaxy.read_text(encoding="utf-8")
+        uff.write_text(galaxy_text, encoding="utf-8")
+        galaxy.write_text(uff_text, encoding="utf-8")
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "project summary path does not match curated summary_path",
+        )
+
+    def test_zenodo_publication_id_must_match_doi_record(self):
+        root = self.fixture()
+        pubs = self.read_json(root, "publications.json")
+        links = self.read_json(root, "project-publication-links.json")
+        pub = next(p for p in pubs["publications"] if p["id"] == "publication:zenodo-22026554")
+        old_id = pub["id"]
+        pub["id"] = "publication:zenodo-99999999"
+        for link in links["links"]:
+            if link.get("publication_id") == old_id:
+                link["publication_id"] = pub["id"]
+        self.write_json(root, "publications.json", pubs)
+        self.write_json(root, "project-publication-links.json", links)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "Zenodo publication ID must match declared DOI record",
+        )
+
+    def test_relationship_graph_must_match_registry(self):
+        root = self.fixture()
+        graph = root / "figures" / "theme-network.dot"
+        text = graph.read_text(encoding="utf-8")
+        text = text.replace(
+            '"project:qsolqec" -> "project:qsol-qec-bridge"',
+            '"project:qsolqec" -> "project:uff"',
+            1,
+        )
+        graph.write_text(text, encoding="utf-8")
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "relationship graph must match data/relationships.json exactly",
+        )
+
+    def test_future_curated_snapshot_dates_are_rejected(self):
+        root = self.fixture()
+        for name in CURATED_JSON:
+            doc = self.read_json(root, name)
+            doc["generated_at"] = "2999-01-01"
+            if name == "source-index.json":
+                for source in doc.get("sources", []):
+                    source["access_date"] = "2999-01-01"
+            self.write_json(root, name, doc)
+
+        errors = validate_sources.validate(root)
+        self.assert_has(errors, "generated_at must not be in the future")
+        self.assert_has(errors, "source access_date must not be in the future")
 
     def test_matrix_cannot_deny_declared_theme_support(self):
         root = self.fixture()

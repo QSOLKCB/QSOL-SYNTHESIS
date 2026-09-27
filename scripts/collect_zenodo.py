@@ -32,8 +32,23 @@ def get_json(url: str) -> dict:
 
 
 def normalise(hit: dict, discovered_by: str) -> dict:
-    metadata = hit.get("metadata") or {}
+    if not isinstance(hit, dict):
+        raise RuntimeError("unexpected Zenodo hit: expected object")
+    metadata = hit.get("metadata")
+    if not isinstance(metadata, dict):
+        raise RuntimeError("unexpected Zenodo hit metadata: expected object")
     resource = metadata.get("resource_type") or {}
+    if not isinstance(resource, dict):
+        raise RuntimeError("unexpected Zenodo resource_type: expected object")
+    creators = metadata.get("creators") or []
+    if (
+        not isinstance(creators, list)
+        or any(not isinstance(creator, dict) for creator in creators)
+    ):
+        raise RuntimeError("unexpected Zenodo creators: expected object list")
+    links = hit.get("links") or {}
+    if not isinstance(links, dict):
+        raise RuntimeError("unexpected Zenodo links: expected object")
     return {
         "record_id": hit.get("id"),
         "doi": hit.get("doi"),
@@ -42,8 +57,8 @@ def normalise(hit: dict, discovered_by: str) -> dict:
         "publication_date": metadata.get("publication_date"),
         "resource_type": resource.get("type"),
         "version": metadata.get("version"),
-        "creators": [c.get("name") for c in metadata.get("creators", []) if isinstance(c, dict)],
-        "url": (hit.get("links") or {}).get("self_html"),
+        "creators": [creator.get("name") for creator in creators],
+        "url": links.get("self_html"),
         "discovered_by": [discovered_by],
     }
 

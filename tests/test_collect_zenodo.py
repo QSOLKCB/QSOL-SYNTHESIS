@@ -201,6 +201,36 @@ class CollectZenodoRegressionTests(unittest.TestCase):
             self.assertEqual(doc["errors"][0]["query"], "probe")
             self.assertIn("hit must be an object", doc["errors"][0]["error"])
 
+    def test_nested_malformed_hit_metadata_is_recorded(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            output = root / "zenodo.json"
+            with mock.patch.object(
+                collect_zenodo,
+                "get_json",
+                return_value={
+                    "hits": {
+                        "total": 1,
+                        "hits": [{"id": 1, "metadata": ["bad"]}],
+                    }
+                },
+            ):
+                rc = collect_zenodo.main([
+                    "--queries", "probe",
+                    "--publications", str(root / "missing-publications.json"),
+                    "--projects", str(root / "missing-projects.json"),
+                    "--output", str(output),
+                ])
+
+            self.assertEqual(rc, 0)
+            doc = json.loads(output.read_text(encoding="utf-8"))
+            self.assertEqual(doc["records"], [])
+            self.assertTrue(doc["errors"])
+            self.assertIn(
+                "unexpected Zenodo hit metadata",
+                doc["errors"][0]["error"],
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

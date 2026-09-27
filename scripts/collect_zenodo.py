@@ -48,6 +48,17 @@ def normalise(hit: dict, discovered_by: str) -> dict:
     }
 
 
+def hit_matches_requested_doi(hit: dict, requested_doi: str) -> bool:
+    if not isinstance(requested_doi, str) or not requested_doi:
+        return False
+    requested = requested_doi.casefold()
+    identifiers = (hit.get("doi"), hit.get("conceptdoi"))
+    return any(
+        isinstance(identifier, str) and identifier.casefold() == requested
+        for identifier in identifiers
+    )
+
+
 def merge_record(index: dict[str, dict], rec: dict) -> None:
     key = str(rec.get("record_id") or rec.get("doi") or rec.get("title"))
     if key in index:
@@ -136,13 +147,23 @@ def main(argv: list[str] | None = None) -> int:
                 continue
             m = ZENODO_DOI_RE.match(doi)
             try:
+                matched = 0
                 if m:
                     hit = get_json(f"{API}/{m.group(1)}")
-                    merge_record(index, normalise(hit, f"exact-doi:{doi}"))
+                    if hit_matches_requested_doi(hit, doi):
+                        merge_record(index, normalise(hit, f"exact-doi:{doi}"))
+                        matched += 1
                 else:
                     for _, hits in query_all(f'doi:"{doi}"', args.per_page, 1):
                         for hit in hits:
-                            merge_record(index, normalise(hit, f"exact-doi:{doi}"))
+                            if hit_matches_requested_doi(hit, doi):
+                                merge_record(index, normalise(hit, f"exact-doi:{doi}"))
+                                matched += 1
+                if matched == 0:
+                    result["errors"].append({
+                        "doi": doi,
+                        "error": "exact DOI lookup returned no matching DOI or concept DOI",
+                    })
             except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError) as exc:
                 result["errors"].append({"doi": doi, "error": str(exc)})
 

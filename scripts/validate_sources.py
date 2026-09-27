@@ -661,6 +661,12 @@ def validate(root: pathlib.Path) -> list[str]:
                 f"project={sorted(project_themes)} source={sorted(thematic_supports)}"
             )
 
+    atomic_project_source_ids = {
+        sid
+        for project in projects
+        if (sid := source_id_for_project(project.get("id"))) is not None
+    }
+
     for theme in themes:
         theme_name = theme.get("name")
         if not isinstance(theme_name, str):
@@ -673,7 +679,7 @@ def validate(root: pathlib.Path) -> list[str]:
         actual_members = {
             source_ref
             for source_ref in SOURCE_ID_RE.findall(atomic_text)
-            if source_ref in expected_project_summary_ids
+            if source_ref in atomic_project_source_ids
         }
         expected_members = {
             source_id_for_project(project.get("id"))

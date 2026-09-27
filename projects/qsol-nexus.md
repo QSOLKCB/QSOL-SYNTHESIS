@@ -16,8 +16,9 @@ This summary does not treat structural similarity as evidence of shared physical
 external_state, authority_partitioning, provenance, nonclaims
 
 ## Connections
-- `implementation-dependency` with `project:qsol-oracle` (authority_partitioning); mechanism_claim=false
-- `implementation-dependency` with `project:qsol-control` (authority_partitioning); mechanism_claim=false
+Connections list both outgoing and incoming relationship edges:
+- `project:qsol-oracle -> project:qsol-nexus` `implementation-dependency` (authority_partitioning); mechanism_claim=false
+- `project:qsol-control -> project:qsol-nexus` `implementation-dependency` (authority_partitioning); mechanism_claim=false
 
 ## Publications
 - 10.5281/zenodo.21895577 (QSOL-NEXUS v2.0.0 DOI release)

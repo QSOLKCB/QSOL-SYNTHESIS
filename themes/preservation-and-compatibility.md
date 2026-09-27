@@ -1,7 +1,7 @@
 # Preservation And Compatibility
 
 ## 1) Definition
-Preservation engineering appears strongly in PSYCLE-LINUX, RIVET, ARK.
+Preservation engineering appears strongly in PSYCLE-LINUX, RIVET, QSOL-ARK.
 
 ## 2) Where it appears
 See `data/projects.json` theme tags and `evidence/project-theme-matrix.csv`.

@@ -16,7 +16,8 @@ This summary does not treat structural similarity as evidence of shared physical
 external_state, preservation, authority_partitioning, nonclaims
 
 ## Connections
-- `implementation-dependency` with `project:qsol-control` (external_state); mechanism_claim=false
+Connections list both outgoing and incoming relationship edges:
+- `project:lattice -> project:qsol-control` `implementation-dependency` (external_state); mechanism_claim=false
 
 ## Publications
 - No verified DOI link yet.

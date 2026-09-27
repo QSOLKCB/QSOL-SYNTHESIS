@@ -16,8 +16,9 @@ This summary does not treat structural similarity as evidence of shared physical
 representation, sonification, nonclaims, provenance
 
 ## Connections
-- `historical-lineage` with `project:e8-music` (sonification); mechanism_claim=false
-- `shared-methodological-principle` with `project:spectral` (provenance); mechanism_claim=false
+Connections list both outgoing and incoming relationship edges:
+- `project:sonification -> project:e8-music` `historical-lineage` (sonification); mechanism_claim=false
+- `project:spectral -> project:sonification` `shared-methodological-principle` (provenance); mechanism_claim=false
 
 ## Publications
 - 10.5281/zenodo.21494678 (ETQ-303 v3: Exact 303-State Root-Indexed Event Protocol)

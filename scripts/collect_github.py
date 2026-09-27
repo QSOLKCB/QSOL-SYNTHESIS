@@ -43,34 +43,49 @@ def main() -> int:
     parser.add_argument("--cache-dir", default="data/cache/github")
     parser.add_argument("--ttl-seconds", type=int, default=86400)
     parser.add_argument("--token-env", default="GITHUB_TOKEN")
+    parser.add_argument("--include-enrichment", action="store_true", help="Fetch releases and first-party file metadata per repository")
     args = parser.parse_args()
 
     token = os.environ.get(args.token_env)
     cache_dir = pathlib.Path(args.cache_dir)
 
-    repos = _request(f"{API}/orgs/{args.org}/repos?per_page=100&type=public", token, cache_dir, args.ttl_seconds)
-    if not isinstance(repos, list):
-        raise RuntimeError("Unexpected GitHub repos response format")
+    repos: list[dict] = []
+    page = 1
+    while True:
+        batch = _request(
+            f"{API}/orgs/{args.org}/repos?per_page=100&type=public&page={page}",
+            token,
+            cache_dir,
+            args.ttl_seconds,
+        )
+        if not isinstance(batch, list):
+            raise RuntimeError("Unexpected GitHub repos response format")
+        repos.extend(batch)
+        if len(batch) < 100:
+            break
+        page += 1
 
     normalized: list[dict] = []
     for repo in repos:
         name = repo.get("name")
         if not name:
             continue
-        releases_url = f"{API}/repos/{args.org}/{name}/releases?per_page=5"
-        try:
-            releases = _request(releases_url, token, cache_dir, args.ttl_seconds)
-        except RuntimeError:
-            releases = []
-
+        releases = []
         first_party_files = {}
-        for candidate in ["README.md", "CITATION.cff", ".zenodo.json"]:
-            url = f"{API}/repos/{args.org}/{name}/contents/{candidate}"
+        if args.include_enrichment:
+            releases_url = f"{API}/repos/{args.org}/{name}/releases?per_page=5"
             try:
-                meta = _request(url, token, cache_dir, args.ttl_seconds)
-                first_party_files[candidate] = {"exists": True, "sha": meta.get("sha")}
+                releases = _request(releases_url, token, cache_dir, args.ttl_seconds)
             except RuntimeError:
-                first_party_files[candidate] = {"exists": False}
+                releases = []
+
+            for candidate in ["README.md", "CITATION.cff", ".zenodo.json"]:
+                url = f"{API}/repos/{args.org}/{name}/contents/{candidate}"
+                try:
+                    meta = _request(url, token, cache_dir, args.ttl_seconds)
+                    first_party_files[candidate] = {"exists": True, "sha": meta.get("sha")}
+                except RuntimeError:
+                    first_party_files[candidate] = {"exists": False}
 
         normalized.append(
             {

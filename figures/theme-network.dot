@@ -1,14 +1,17 @@
 digraph ThemeNetwork {
   rankdir=LR;
   node [shape=ellipse];
-  representation -> observation;
-  observation -> validation;
-  validation -> recovery;
-  recovery -> provenance;
-  provenance -> interpretation;
+  observation -> falsification;
+  representation -> interpretation;
+  representation -> visualisation;
+  simulation -> nonclaims;
+  formal_verification -> nonclaims;
+  recovery -> preservation;
+  provenance -> replay;
   external_state -> semantic_transport;
   authority_partitioning -> evidence_promotion;
-  simulation -> nonclaims;
+  oracle_candidate_parity -> recovery;
   sonification -> representation;
-  formal_verification -> nonclaims;
+  minimal_sufficient_systems -> preservation;
+  representation -> observation;
 }

@@ -16,7 +16,8 @@ This summary does not treat structural similarity as evidence of shared physical
 representation, observation, falsification, nonclaims
 
 ## Connections
-- `shared-methodological-principle` with `project:uft-id-3-0` (falsification); mechanism_claim=false
+Connections list both outgoing and incoming relationship edges:
+- `project:qsol-geo-reason -> project:uft-id-3-0` `shared-methodological-principle` (falsification); mechanism_claim=false
 
 ## Publications
 - No verified DOI link yet.

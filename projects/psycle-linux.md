@@ -16,7 +16,8 @@ This summary does not treat structural similarity as evidence of shared physical
 preservation, recovery, provenance, replay
 
 ## Connections
-- `analogous-computational-structure` with `project:rivet` (preservation); mechanism_claim=false
+Connections list both outgoing and incoming relationship edges:
+- `project:psycle-linux -> project:rivet` `analogous-computational-structure` (preservation); mechanism_claim=false
 
 ## Publications
 - No verified DOI link yet.

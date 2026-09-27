@@ -9,10 +9,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "representation",
-        "observation",
-        "recovery",
-        "provenance"
+        "inventory"
       ]
     },
     {
@@ -23,10 +20,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "observation",
-        "simulation",
-        "provenance",
-        "replay"
+        "inventory"
       ]
     },
     {
@@ -37,9 +31,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "representation",
-        "sonification",
-        "interpretation"
+        "inventory"
       ]
     },
     {
@@ -50,10 +42,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "observation",
-        "provenance",
-        "replay",
-        "falsification"
+        "inventory"
       ]
     },
     {
@@ -64,10 +53,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "observation",
-        "sonification",
-        "visualisation",
-        "provenance"
+        "inventory"
       ]
     },
     {
@@ -78,10 +64,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "simulation",
-        "observation",
-        "recovery",
-        "oracle_candidate_parity"
+        "inventory"
       ]
     },
     {
@@ -92,10 +75,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "provenance",
-        "replay",
-        "recovery",
-        "preservation"
+        "inventory"
       ]
     },
     {
@@ -106,10 +86,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "representation",
-        "sonification",
-        "nonclaims",
-        "provenance"
+        "inventory"
       ]
     },
     {
@@ -120,10 +97,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "representation",
-        "observation",
-        "sonification",
-        "provenance"
+        "inventory"
       ]
     },
     {
@@ -134,10 +108,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "sonification",
-        "representation",
-        "provenance",
-        "replay"
+        "inventory"
       ]
     },
     {
@@ -148,10 +119,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "representation",
-        "observation",
-        "external_state",
-        "nonclaims"
+        "inventory"
       ]
     },
     {
@@ -162,10 +130,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "representation",
-        "observation",
-        "falsification",
-        "nonclaims"
+        "inventory"
       ]
     },
     {
@@ -176,10 +141,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "semantic_transport",
-        "external_state",
-        "falsification",
-        "provenance"
+        "inventory"
       ]
     },
     {
@@ -190,10 +152,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "external_state",
-        "provenance",
-        "semantic_transport",
-        "authority_partitioning"
+        "inventory"
       ]
     },
     {
@@ -204,10 +163,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "evidence_promotion",
-        "authority_partitioning",
-        "provenance",
-        "replay"
+        "inventory"
       ]
     },
     {
@@ -218,10 +174,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "external_state",
-        "authority_partitioning",
-        "provenance",
-        "nonclaims"
+        "inventory"
       ]
     },
     {
@@ -232,10 +185,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "authority_partitioning",
-        "provenance",
-        "replay",
-        "external_state"
+        "inventory"
       ]
     },
     {
@@ -246,10 +196,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "simulation",
-        "observation",
-        "oracle_candidate_parity",
-        "provenance"
+        "inventory"
       ]
     },
     {
@@ -260,10 +207,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "preservation",
-        "recovery",
-        "provenance",
-        "replay"
+        "inventory"
       ]
     },
     {
@@ -274,9 +218,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "preservation",
-        "minimal_sufficient_systems",
-        "external_state"
+        "inventory"
       ]
     },
     {
@@ -287,9 +229,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "representation",
-        "formal_verification",
-        "nonclaims"
+        "inventory"
       ]
     },
     {
@@ -300,10 +240,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "preservation",
-        "recovery",
-        "provenance",
-        "external_state"
+        "inventory"
       ]
     },
     {
@@ -314,10 +251,7 @@
       "access_date": "2026-09-27",
       "source_type": "github-readme",
       "supports": [
-        "external_state",
-        "preservation",
-        "authority_partitioning",
-        "nonclaims"
+        "inventory"
       ]
     },
     {
@@ -328,8 +262,7 @@
       "access_date": "2026-09-27",
       "source_type": "publication-metadata",
       "supports": [
-        "provenance",
-        "doi-linking"
+        "publication-linking"
       ]
     },
     {
@@ -340,8 +273,7 @@
       "access_date": "2026-09-27",
       "source_type": "publication-metadata",
       "supports": [
-        "provenance",
-        "doi-linking"
+        "publication-linking"
       ]
     },
     {
@@ -352,8 +284,7 @@
       "access_date": "2026-09-27",
       "source_type": "publication-metadata",
       "supports": [
-        "provenance",
-        "doi-linking"
+        "publication-linking"
       ]
     },
     {
@@ -364,8 +295,7 @@
       "access_date": "2026-09-27",
       "source_type": "publication-metadata",
       "supports": [
-        "provenance",
-        "doi-linking"
+        "publication-linking"
       ]
     },
     {
@@ -376,8 +306,7 @@
       "access_date": "2026-09-27",
       "source_type": "publication-metadata",
       "supports": [
-        "provenance",
-        "doi-linking"
+        "publication-linking"
       ]
     },
     {
@@ -388,8 +317,7 @@
       "access_date": "2026-09-27",
       "source_type": "publication-metadata",
       "supports": [
-        "provenance",
-        "doi-linking"
+        "publication-linking"
       ]
     },
     {
@@ -400,8 +328,7 @@
       "access_date": "2026-09-27",
       "source_type": "publication-metadata",
       "supports": [
-        "provenance",
-        "doi-linking"
+        "publication-linking"
       ]
     },
     {
@@ -412,8 +339,7 @@
       "access_date": "2026-09-27",
       "source_type": "publication-metadata",
       "supports": [
-        "provenance",
-        "doi-linking"
+        "publication-linking"
       ]
     },
     {
@@ -424,8 +350,7 @@
       "access_date": "2026-09-27",
       "source_type": "publication-metadata",
       "supports": [
-        "provenance",
-        "doi-linking"
+        "publication-linking"
       ]
     },
     {
@@ -436,8 +361,7 @@
       "access_date": "2026-09-27",
       "source_type": "publication-metadata",
       "supports": [
-        "provenance",
-        "doi-linking"
+        "publication-linking"
       ]
     },
     {
@@ -448,8 +372,7 @@
       "access_date": "2026-09-27",
       "source_type": "publication-metadata",
       "supports": [
-        "provenance",
-        "doi-linking"
+        "publication-linking"
       ]
     },
     {
@@ -460,8 +383,7 @@
       "access_date": "2026-09-27",
       "source_type": "publication-metadata",
       "supports": [
-        "provenance",
-        "doi-linking"
+        "publication-linking"
       ]
     },
     {
@@ -472,8 +394,7 @@
       "access_date": "2026-09-27",
       "source_type": "publication-metadata",
       "supports": [
-        "provenance",
-        "doi-linking"
+        "publication-linking"
       ]
     },
     {
@@ -484,8 +405,7 @@
       "access_date": "2026-09-27",
       "source_type": "publication-metadata",
       "supports": [
-        "provenance",
-        "doi-linking"
+        "publication-linking"
       ]
     },
     {
@@ -496,8 +416,7 @@
       "access_date": "2026-09-27",
       "source_type": "publication-metadata",
       "supports": [
-        "provenance",
-        "doi-linking"
+        "publication-linking"
       ]
     }
   ]

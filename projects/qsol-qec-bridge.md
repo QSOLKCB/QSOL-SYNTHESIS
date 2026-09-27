@@ -16,8 +16,9 @@ This summary does not treat structural similarity as evidence of shared physical
 provenance, replay, recovery, preservation
 
 ## Connections
-- `formal-dependency` with `project:qsolqec` (recovery); mechanism_claim=false
-- `evidence-dependency` with `project:qsolqec` (provenance); mechanism_claim=false
+Connections list both outgoing and incoming relationship edges:
+- `project:qsolqec -> project:qsol-qec-bridge` `formal-dependency` (recovery); mechanism_claim=false
+- `project:qsol-qec-bridge -> project:qsolqec` `evidence-dependency` (provenance); mechanism_claim=false
 
 ## Publications
 - No verified DOI link yet.

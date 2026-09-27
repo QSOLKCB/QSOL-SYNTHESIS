@@ -16,9 +16,10 @@ This summary does not treat structural similarity as evidence of shared physical
 evidence_promotion, authority_partitioning, provenance, replay, nonclaims
 
 ## Connections
-- `shared-provenance-architecture` with `project:qsol-substrate` (authority_partitioning); mechanism_claim=false
-- `implementation-dependency` with `project:qsol-nexus` (authority_partitioning); mechanism_claim=false
-- `implementation-dependency` with `project:qsol-control` (provenance); mechanism_claim=false
+Connections list both outgoing and incoming relationship edges:
+- `project:qsol-substrate -> project:qsol-oracle` `shared-provenance-architecture` (authority_partitioning); mechanism_claim=false
+- `project:qsol-oracle -> project:qsol-nexus` `implementation-dependency` (authority_partitioning); mechanism_claim=false
+- `project:qsol-control -> project:qsol-oracle` `implementation-dependency` (provenance); mechanism_claim=false
 
 ## Publications
 - No verified DOI link yet.

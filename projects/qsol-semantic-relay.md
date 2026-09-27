@@ -16,7 +16,8 @@ This summary does not treat structural similarity as evidence of shared physical
 semantic_transport, external_state, falsification, provenance
 
 ## Connections
-- `shared-methodological-principle` with `project:qsol-substrate` (external_state); mechanism_claim=false
+Connections list both outgoing and incoming relationship edges:
+- `project:qsol-semantic-relay -> project:qsol-substrate` `shared-methodological-principle` (external_state); mechanism_claim=false
 
 ## Publications
 - No verified DOI link yet.

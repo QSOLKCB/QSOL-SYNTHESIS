@@ -57,7 +57,7 @@ def main() -> int:
                     "url": hit.get("links", {}).get("self_html"),
                     "query": q,
                 }
-                key = doi or str(rec["record_id"])
+                key = str(rec["record_id"]) if rec.get("record_id") is not None else (doi or f"query:{q}:{len(index)}")
                 if key not in index:
                     index[key] = rec
         except (urllib.error.URLError, urllib.error.HTTPError) as exc:

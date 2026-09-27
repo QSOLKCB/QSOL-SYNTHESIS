@@ -16,7 +16,8 @@ This summary does not treat structural similarity as evidence of shared physical
 sonification, representation, provenance, replay
 
 ## Connections
-- `shared-methodological-principle` with `project:sonification` (provenance); mechanism_claim=false
+Connections list both outgoing and incoming relationship edges:
+- `project:spectral -> project:sonification` `shared-methodological-principle` (provenance); mechanism_claim=false
 
 ## Publications
 - 10.5281/zenodo.21308248 (Spectral Algebraics: Audible Geometry via E8-Inspired Signal Synthesis and 3D Visualization)

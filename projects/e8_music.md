@@ -16,7 +16,8 @@ This summary does not treat structural similarity as evidence of shared physical
 representation, observation, sonification, provenance, nonclaims
 
 ## Connections
-- `historical-lineage` with `project:sonification` (sonification); mechanism_claim=false
+Connections list both outgoing and incoming relationship edges:
+- `project:sonification -> project:e8-music` `historical-lineage` (sonification); mechanism_claim=false
 
 ## Publications
 - 10.5281/zenodo.21404223 (SONIFICATION Zenodo concept DOI referenced by E8_MUSIC)

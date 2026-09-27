@@ -16,7 +16,8 @@ This summary does not treat structural similarity as evidence of shared physical
 simulation, observation, oracle_candidate_parity, provenance, nonclaims
 
 ## Connections
-- `shared-validation-architecture` with `project:uff` (oracle_candidate_parity); mechanism_claim=false
+Connections list both outgoing and incoming relationship edges:
+- `project:galaxy -> project:uff` `shared-validation-architecture` (oracle_candidate_parity); mechanism_claim=false
 
 ## Publications
 - 10.5281/zenodo.22756969 (GALAXY v0.4.0: Deterministic Native CPU Runtime and Scaling Evidence)

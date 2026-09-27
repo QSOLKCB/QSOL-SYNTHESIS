@@ -49,6 +49,38 @@ def main() -> int:
             fail(errors, f"invalid DOI syntax: {doi}")
 
     theme_ids = {t.get("id") for t in themes}
+    theme_names = {t.get("name") for t in themes if t.get("name")}
+
+    for project in projects:
+        for theme_name in project.get("themes", []):
+            if theme_name not in theme_names:
+                fail(errors, f"project theme not present in themes registry: {project.get('id')} -> {theme_name}")
+
+    theme_dir = root / "themes"
+    for theme_name in theme_names:
+        expected = theme_dir / f"{theme_name.replace('_', '-')}.md"
+        if not expected.exists():
+            fail(errors, f"missing theme documentation file: {expected.relative_to(root)}")
+    allowed_composite_theme_pages = {
+        "representation-and-referent",
+        "observation-and-measurement",
+        "determinism-and-truth",
+        "recovery-under-transformation",
+        "provenance-and-replay",
+        "evidence-and-authority",
+        "externalised-state",
+        "oracle-candidate-parity",
+        "falsification-and-nonclaims",
+        "preservation-and-compatibility",
+        "minimal-sufficient-systems",
+    }
+    for theme_file in theme_dir.glob("*.md"):
+        normalized = theme_file.stem.replace("-", "_")
+        if normalized in theme_names:
+            continue
+        if theme_file.stem in allowed_composite_theme_pages:
+            continue
+        fail(errors, f"theme file not represented in themes registry or allowed composite set: themes/{theme_file.name}")
 
     endpoint_ids = set(project_ids)
     for rel in rels:
@@ -71,10 +103,24 @@ def main() -> int:
         supports = src.get("supports")
         if not isinstance(supports, list):
             fail(errors, f"source index supports must be list: {src.get('source_id')}")
+            continue
+        allowed_support_tags = {"inventory", "publication-linking", "doi-linking"}
+        for support in supports:
+            if support in allowed_support_tags:
+                continue
+            if support not in theme_names:
+                fail(errors, f"source index support tag is neither registered theme nor known support tag: {src.get('source_id')} -> {support}")
 
     matrix = root / "evidence" / "project-theme-matrix.csv"
     with matrix.open("r", encoding="utf-8", newline="") as f:
         reader = csv.DictReader(f)
+        matrix_columns = [c for c in (reader.fieldnames or []) if c and c != "project_id"]
+        for col in matrix_columns:
+            if col not in theme_names:
+                fail(errors, f"matrix column not present in themes registry: {col}")
+        for registered in theme_names:
+            if registered not in matrix_columns:
+                fail(errors, f"themes registry value missing from matrix columns: {registered}")
         for row in reader:
             if row.get("project_id") not in endpoint_ids:
                 fail(errors, f"matrix project_id missing from projects registry: {row.get('project_id')}")
@@ -82,6 +128,8 @@ def main() -> int:
     doi_seen = {}
     for pub in pubs:
         doi = pub.get("doi")
+        if not doi:
+            continue
         if doi in doi_seen:
             fail(errors, f"duplicate DOI in publications.json: {doi}")
         doi_seen[doi] = pub.get("id")

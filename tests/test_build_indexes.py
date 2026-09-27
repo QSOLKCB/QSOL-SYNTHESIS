@@ -94,7 +94,11 @@ class BuildIndexesRegressionTests(unittest.TestCase):
     def test_rejects_project_source_from_wrong_repository(self):
         root = self.fixture()
         projects = self.read(root, "projects.json")
-        projects["projects"][0]["source"] = "https://github.com/unrelated/repo/blob/main/README.md"
+        project = next(
+            project for project in projects["projects"]
+            if project.get("id") == "project:qec"
+        )
+        project["source"] = "https://github.com/unrelated/repo/blob/main/README.md"
         self.write(root, "projects.json", projects)
 
         with self.assertRaisesRegex(RuntimeError, "source repository"):

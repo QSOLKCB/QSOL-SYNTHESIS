@@ -1,9 +1,19 @@
 {
   "generated_at": "2026-09-27",
-  "source": "github-mcp search_repositories query=\"org:QSOLKCB\"",
-  "total_count_observed": 75,
-  "notes": "Snapshot retained from GitHub search API via MCP because direct unauthenticated api.github.com calls returned 403 in this environment.",
+  "source": "maintainer-curated high-relevance subset derived from the public QSOLKCB inventory and first-party repository documentation",
+  "total_count_observed": 78,
+  "notes": "This file is a curated synthesis input, not the raw output of scripts/collect_github.py. Raw discovery snapshots belong under data/raw/.",
   "repositories": [
+    {
+      "name": "QEC",
+      "full_name": "QSOLKCB/QEC",
+      "html_url": "https://github.com/QSOLKCB/QEC",
+      "classification": [
+        "quantum-error-correction-research",
+        "evidence-infrastructure",
+        "deterministic-proof-stack"
+      ]
+    },
     {
       "name": "UFT-ID-3.0",
       "full_name": "QSOLKCB/UFT-ID-3.0",
@@ -216,5 +226,6 @@
         "provenance-infrastructure"
       ]
     }
-  ]
+  ],
+  "selected_count": 24
 }

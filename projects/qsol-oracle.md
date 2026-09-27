@@ -1,28 +1,39 @@
 # QSOL-ORACLE
 
+**Repository:** [QSOLKCB/QSOL-ORACLE](https://github.com/QSOLKCB/QSOL-ORACLE)
+
 ## Purpose
 Witness/attestation membrane recording what evidence permits without promoting observation into truth.
 
-## Core research question
-Derived from first-party README language; refine as dedicated deep-reads proceed.
+## Research role
 
-## Method / architecture
-Current classification roles: evidence-infrastructure, provenance-infrastructure, authority-partitioning-infrastructure.
+- evidence-infrastructure
+- provenance-infrastructure
+- authority-partitioning-infrastructure
 
-## Major claim boundaries
-This summary does not treat structural similarity as evidence of shared physical mechanism.
+## Documented recurring themes
 
-## Recurring themes
-evidence_promotion, authority_partitioning, provenance, replay, nonclaims
+- [evidence_promotion](../themes/evidence-promotion.md)
+- [authority_partitioning](../themes/authority-partitioning.md)
+- [provenance](../themes/provenance.md)
+- [replay](../themes/replay.md)
+- [nonclaims](../themes/nonclaims.md)
 
-## Connections
-Connections list both outgoing and incoming relationship edges:
-- `project:qsol-substrate -> project:qsol-oracle` `shared-provenance-architecture` (authority_partitioning); mechanism_claim=false
-- `project:qsol-oracle -> project:qsol-nexus` `implementation-dependency` (authority_partitioning); mechanism_claim=false
-- `project:qsol-control -> project:qsol-oracle` `implementation-dependency` (provenance); mechanism_claim=false
+## Cross-project connections
 
-## Publications
-- No verified DOI link yet.
+- → **project:qsol-nexus** — implementation-dependency; theme: authority_partitioning; mechanism_claim=false. ORACLE positions itself as evidentiary membrane around NEXUS and three-pillar stack.
+- ← **project:qsol-substrate** — shared-provenance-architecture; theme: authority_partitioning; mechanism_claim=false. SUBSTRATE and ORACLE both separate observation/provenance from authority and truth claims.
+- ← **project:qsol-control** — implementation-dependency; theme: provenance; mechanism_claim=false. CONTROL defines read-only ORACLE adapter and provenance boundaries.
+
+## Publications and archival records
+
+- No curated publication link is registered yet.
+
+## Claim discipline
+
+This project summary records first-party project framing and synthesis relationships. A theme or relationship tag does not establish a shared physical mechanism, common ontology, or empirical confirmation.
 
 ## Sources
-- https://github.com/QSOLKCB/QSOL-ORACLE/blob/main/README.md
+
+- [First-party project source](https://github.com/QSOLKCB/QSOL-ORACLE/blob/main/README.md)
+- Source index key: **src:qsol-oracle:readme**

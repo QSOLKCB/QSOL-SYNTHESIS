@@ -1,26 +1,35 @@
 # PSYCLE-LINUX
 
+**Repository:** [QSOLKCB/PSYCLE-LINUX](https://github.com/QSOLKCB/PSYCLE-LINUX)
+
 ## Purpose
 Compatibility-first Linux revival of Psycle using provenance-gated parity evidence.
 
-## Core research question
-Derived from first-party README language; refine as dedicated deep-reads proceed.
+## Research role
 
-## Method / architecture
-Current classification roles: preservation-engineering, compatibility-research.
+- preservation-engineering
+- compatibility-research
 
-## Major claim boundaries
-This summary does not treat structural similarity as evidence of shared physical mechanism.
+## Documented recurring themes
 
-## Recurring themes
-preservation, recovery, provenance, replay
+- [preservation](../themes/preservation.md)
+- [recovery](../themes/recovery.md)
+- [provenance](../themes/provenance.md)
+- [replay](../themes/replay.md)
 
-## Connections
-Connections list both outgoing and incoming relationship edges:
-- `project:psycle-linux -> project:rivet` `analogous-computational-structure` (preservation); mechanism_claim=false
+## Cross-project connections
 
-## Publications
-- No verified DOI link yet.
+- → **project:rivet** — analogous-computational-structure; theme: preservation; mechanism_claim=false. Both prioritize compatibility/preservation over reinvention and use evidence-gated portability claims.
+
+## Publications and archival records
+
+- No curated publication link is registered yet.
+
+## Claim discipline
+
+This project summary records first-party project framing and synthesis relationships. A theme or relationship tag does not establish a shared physical mechanism, common ontology, or empirical confirmation.
 
 ## Sources
-- https://github.com/QSOLKCB/PSYCLE-LINUX/blob/main/README.md
+
+- [First-party project source](https://github.com/QSOLKCB/PSYCLE-LINUX/blob/main/README.md)
+- Source index key: **src:psycle-linux:readme**

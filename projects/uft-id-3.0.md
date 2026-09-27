@@ -1,26 +1,42 @@
 # UFT-ID-3.0
 
+**Repository:** [QSOLKCB/UFT-ID-3.0](https://github.com/QSOLKCB/UFT-ID-3.0)
+
 ## Purpose
 Constraint-governed information-dynamics programme separating formal, empirical, interpretive, and speculative layers.
 
-## Core research question
-Derived from first-party README language; refine as dedicated deep-reads proceed.
+## Documented research question
 
-## Method / architecture
-Current classification roles: foundational-theory, formalisation, falsification-lab.
+> When an informational description changes, what changed?
 
-## Major claim boundaries
-This summary does not treat structural similarity as evidence of shared physical mechanism.
+## Research role
 
-## Recurring themes
-representation, observation, recovery, provenance, nonclaims, falsification
+- foundational-theory
+- formalisation
+- falsification-lab
 
-## Connections
-Connections list both outgoing and incoming relationship edges:
-- `project:qsol-geo-reason -> project:uft-id-3-0` `shared-methodological-principle` (falsification); mechanism_claim=false
+## Documented recurring themes
 
-## Publications
-- No verified DOI link yet.
+- [representation](../themes/representation.md)
+- [observation](../themes/observation.md)
+- [recovery](../themes/recovery.md)
+- [provenance](../themes/provenance.md)
+- [nonclaims](../themes/nonclaims.md)
+- [falsification](../themes/falsification.md)
+
+## Cross-project connections
+
+- ← **project:qsol-geo-reason** — shared-methodological-principle; theme: falsification; mechanism_claim=false. Both explicitly separate formal/simulation layers from empirical truth and enforce nonclaim boundaries.
+
+## Publications and archival records
+
+- No curated publication link is registered yet.
+
+## Claim discipline
+
+This project summary records first-party project framing and synthesis relationships. A theme or relationship tag does not establish a shared physical mechanism, common ontology, or empirical confirmation.
 
 ## Sources
-- https://github.com/QSOLKCB/UFT-ID-3.0/blob/main/README.md
+
+- [First-party project source](https://github.com/QSOLKCB/UFT-ID-3.0/blob/main/README.md)
+- Source index key: **src:uft-id-3-0:readme**

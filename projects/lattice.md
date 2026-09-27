@@ -1,26 +1,35 @@
 # LATTICE
 
+**Repository:** [QSOLKCB/LATTICE](https://github.com/QSOLKCB/LATTICE)
+
 ## Purpose
 Reference 3x3x3 structural memory protocol separating address structure from authority/truth claims.
 
-## Core research question
-Derived from first-party README language; refine as dedicated deep-reads proceed.
+## Research role
 
-## Method / architecture
-Current classification roles: formalisation, provenance-infrastructure.
+- formalisation
+- provenance-infrastructure
 
-## Major claim boundaries
-This summary does not treat structural similarity as evidence of shared physical mechanism.
+## Documented recurring themes
 
-## Recurring themes
-external_state, preservation, authority_partitioning, nonclaims
+- [external_state](../themes/external-state.md)
+- [preservation](../themes/preservation.md)
+- [authority_partitioning](../themes/authority-partitioning.md)
+- [nonclaims](../themes/nonclaims.md)
 
-## Connections
-Connections list both outgoing and incoming relationship edges:
-- `project:lattice -> project:qsol-control` `implementation-dependency` (external_state); mechanism_claim=false
+## Cross-project connections
 
-## Publications
-- No verified DOI link yet.
+- → **project:qsol-control** — implementation-dependency; theme: external_state; mechanism_claim=false. CONTROL references LATTICE structural memory semantics while separating authority.
+
+## Publications and archival records
+
+- No curated publication link is registered yet.
+
+## Claim discipline
+
+This project summary records first-party project framing and synthesis relationships. A theme or relationship tag does not establish a shared physical mechanism, common ontology, or empirical confirmation.
 
 ## Sources
-- https://github.com/QSOLKCB/LATTICE/blob/main/README.md
+
+- [First-party project source](https://github.com/QSOLKCB/LATTICE/blob/main/README.md)
+- Source index key: **src:lattice:readme**

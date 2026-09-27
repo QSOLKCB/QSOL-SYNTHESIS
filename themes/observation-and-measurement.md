@@ -1,23 +1,11 @@
-# Observation And Measurement
+# Observation and Measurement
 
-## 1) Definition
-Observation layers are repeatedly separated from underlying state models.
+Observation is repeatedly modeled as part of the research system rather than a transparent window onto an underlying state.
 
-## 2) Where it appears
-See `data/projects.json` theme tags and `evidence/project-theme-matrix.csv`.
+In UFT-ID, the observation/coarse-graining map is explicitly distinct from the underlying dynamics. QSOL-MAP freezes deterministic acoustic observation profiles before learned or semantic layers are introduced. E8_MUSIC distinguishes source-forced canonical receivers from interpretive musical receivers. QSOL-GEO-REASON specifies which hidden-state representation is captured before geometric quantities are computed. UFF separates catalogue/model computation, replay admission, calibration, and physical interpretation.
 
-## 3) Cross-domain variation
-The same structural idea appears in different domains (physics modeling, AI protocol design, sonification, preservation engineering) with different evidential ceilings.
+Across these projects, an observation has at least three questions attached to it: **what source was observed, what transformation produced the observable, and what stronger claims remain unwarranted?**
 
-## 4) Exact relationship vs analogy
-Only explicit dependencies are treated as exact; cross-domain echoes remain analogical unless source text states stronger linkage.
+This is one reason the “trustworthy transformations” synthesis is useful: the observation operator is itself a transformation whose design can preserve, distort, discard, or introduce structure.
 
-## 5) Counterexamples / limits
-Not all repositories foreground this theme, and presence in README language does not guarantee implementation maturity.
-
-## 6) What this recurrence does not prove
-It does not prove a shared physical mechanism or single unified ontology.
-
-## 7) Sources
-- `data/source-index.json`
-- project README/CITATION links indexed there.
+Primary sources: src:uft-id-3-0:readme, src:qsol-map:readme, src:e8-music:readme, src:qsol-geo-reason:readme, src:uff:readme.

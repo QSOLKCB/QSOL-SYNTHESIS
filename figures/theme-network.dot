@@ -1,17 +1,18 @@
-digraph ThemeNetwork {
-  rankdir=LR;
-  node [shape=ellipse];
-  observation -> falsification;
-  representation -> interpretation;
-  representation -> visualisation;
-  simulation -> nonclaims;
-  formal_verification -> nonclaims;
-  recovery -> preservation;
-  provenance -> replay;
-  external_state -> semantic_transport;
-  authority_partitioning -> evidence_promotion;
-  oracle_candidate_parity -> recovery;
-  sonification -> representation;
-  minimal_sufficient_systems -> preservation;
-  representation -> observation;
+digraph QSOL_SYNTHESIS {
+  rankdir="LR";
+  graph [label="QSOL-SYNTHESIS curated relationship graph", labelloc="t"];
+  "project:qsolqec" -> "project:qsol-qec-bridge" [label="promotion-dependency\nevidence_promotion"];
+  "project:qsol-qec-bridge" -> "project:qsolqec" [label="evidence-dependency\nprovenance"];
+  "project:sonification" -> "project:e8-music" [label="historical-lineage\nsonification"];
+  "project:spectral" -> "project:sonification" [label="shared-methodological-principle\nprovenance"];
+  "project:qsol-substrate" -> "project:qsol-oracle" [label="shared-provenance-architecture\nauthority_partitioning"];
+  "project:qsol-oracle" -> "project:qsol-nexus" [label="implementation-dependency\nauthority_partitioning"];
+  "project:qsol-control" -> "project:qsol-oracle" [label="implementation-dependency\nprovenance"];
+  "project:qsol-control" -> "project:qsol-nexus" [label="implementation-dependency\nauthority_partitioning"];
+  "project:galaxy" -> "project:uff" [label="shared-validation-architecture\noracle_candidate_parity"];
+  "project:psycle-linux" -> "project:rivet" [label="analogous-computational-structure\npreservation"];
+  "project:qsol-semantic-relay" -> "project:qsol-substrate" [label="shared-methodological-principle\nexternal_state"];
+  "project:lattice" -> "project:qsol-control" [label="implementation-dependency\nexternal_state"];
+  "project:qsol-geo-reason" -> "project:uft-id-3-0" [label="shared-methodological-principle\nfalsification"];
+  "project:qsol-qec-bridge" -> "project:qec" [label="promotion-dependency\nevidence_promotion"];
 }

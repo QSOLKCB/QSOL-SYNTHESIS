@@ -1,35 +1,52 @@
 # Methodology
 
-## Repository discovery
+## 1. Discover
 
-1. Enumerate public `QSOLKCB` repositories.
-2. Prioritize research-heavy repositories using first-party descriptions.
-3. Extract candidate publication metadata from README, `CITATION.cff`, and `.zenodo.json`.
+Raw collectors enumerate public repositories and candidate Zenodo records. Discovery outputs are stored separately from the curated synthesis.
 
-## Relationship classification
+## 2. Curate
 
-Relationship edges are labelled by type (formal, implementation, historical, methodological, provenance, analogy). Analogical edges default to `mechanism_claim=false`.
+A project enters data/projects.json only after a first-party source establishes its purpose and relevance. A publication enters data/publications.json only when its identifier and project relationship are supported by first-party or verified publication metadata.
 
-## DOI handling
+## 3. Classify relationships
 
-- DOI strings are preserved exactly as observed.
-- DOI syntax is validated.
-- Concept/version distinction is stored when explicit source evidence exists.
-- No DOI metadata is invented when Zenodo lookup cannot be completed.
+Current relationship classes include:
 
-## Uncertainty policy
+- implementation-dependency
+- evidence-dependency
+- promotion-dependency
+- historical-lineage
+- shared-methodological-principle
+- shared-provenance-architecture
+- shared-validation-architecture
+- analogous-computational-structure
 
-When sources conflict or are incomplete, records are marked as unresolved rather than normalized away.
+All current classes are non-mechanism relationships. mechanism_claim must therefore be false.
 
-## Refresh process
+## 4. Tag themes
 
-Run:
+Project theme tags are backed by the indexed first-party project source. build_indexes.py places those theme names in the corresponding source-index supports list.
 
-```bash
+The project-theme matrix is generated from the curated project registry and validated against those source supports.
+
+## 5. Synthesize
+
+Theme essays and paper sections compare documented structures across domains. Comparisons must name the level of similarity: formal, implementation, evidence, historical, methodological, or analogical.
+
+## 6. Search for disconfirming cases
+
+The central “trustworthy transformations” thesis is not assumed universal. Counterexamples, weak fits, creative projects, and projects without oracle/replay structures are useful tests of whether the thesis is too broad.
+
+## 7. Reproduce the curated index
+
+~~~bash
+python scripts/build_indexes.py --check
+python scripts/validate_sources.py
+~~~
+
+Raw network refreshes are optional and non-authoritative:
+
+~~~bash
 python scripts/collect_github.py
 python scripts/collect_zenodo.py
-python scripts/build_indexes.py
-python scripts/validate_sources.py
-```
-
-Then review diffs manually before updating synthesis prose.
+~~~

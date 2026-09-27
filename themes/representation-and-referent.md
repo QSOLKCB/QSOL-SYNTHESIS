@@ -1,23 +1,11 @@
-# Representation And Referent
+# Representation and Referent
 
-## 1) Definition
-Representation artifacts are treated as declared mappings rather than direct identity claims.
+A recurring discipline across the corpus is refusal to identify a representation with the thing represented.
 
-## 2) Where it appears
-See `data/projects.json` theme tags and `evidence/project-theme-matrix.csv`.
+UFT-ID makes this explicit by separating total state, admissible state, evolution, recovery, observation, transport, information functional, and constraints. The model is useful only after those roles are declared; the abstract tuple is not automatically physical reality. QSOL-GEO-REASON applies the same caution to hidden-state trajectories: geometric quantities are measurements of a selected representation, not automatically mechanisms of reasoning. QSOL-MAP separates source signal, deterministic acoustic observation, learned tokenization, semantic interpretation, and human report into distinct layers. E8_MUSIC and SPECTRAL similarly treat audio and graphics as receivers for source structure rather than evidence that the source itself is literally acoustic or visual.
 
-## 3) Cross-domain variation
-The same structural idea appears in different domains (physics modeling, AI protocol design, sonification, preservation engineering) with different evidential ceilings.
+The recurring idea is therefore stronger than “models are imperfect.” The representation is treated as an explicit transformation with its own parameters, losses, invariants, and claim ceiling.
 
-## 4) Exact relationship vs analogy
-Only explicit dependencies are treated as exact; cross-domain echoes remain analogical unless source text states stronger linkage.
+This recurrence supports a methodological comparison. It does **not** establish that the represented domains share a common ontology or physical mechanism.
 
-## 5) Counterexamples / limits
-Not all repositories foreground this theme, and presence in README language does not guarantee implementation maturity.
-
-## 6) What this recurrence does not prove
-It does not prove a shared physical mechanism or single unified ontology.
-
-## 7) Sources
-- `data/source-index.json`
-- project README/CITATION links indexed there.
+Primary synthesis sources: src:uft-id-3-0:readme, src:qsol-geo-reason:readme, src:qsol-map:readme, src:e8-music:readme, src:spectral:readme.

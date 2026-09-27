@@ -1,23 +1,13 @@
 # Oracle Candidate Parity
 
-## 1) Definition
-Oracle/candidate/parity ladders appear in QEC and GALAXY-style workflows.
+Retention of a trusted/reference path while a candidate implementation proves behavioural parity.
 
-## 2) Where it appears
-See `data/projects.json` theme tags and `evidence/project-theme-matrix.csv`.
+## Projects currently documented with this theme
 
-## 3) Cross-domain variation
-The same structural idea appears in different domains (physics modeling, AI protocol design, sonification, preservation engineering) with different evidential ceilings.
+- [QSOLQEC](../projects/qsolqec.md) — source: src:qsolqec:readme
+- [QEC](../projects/qec.md) — source: src:qec:readme
+- [GALAXY](../projects/galaxy.md) — source: src:galaxy:readme
 
-## 4) Exact relationship vs analogy
-Only explicit dependencies are treated as exact; cross-domain echoes remain analogical unless source text states stronger linkage.
+## Interpretation rule
 
-## 5) Counterexamples / limits
-Not all repositories foreground this theme, and presence in README language does not guarantee implementation maturity.
-
-## 6) What this recurrence does not prove
-It does not prove a shared physical mechanism or single unified ontology.
-
-## 7) Sources
-- `data/source-index.json`
-- project README/CITATION links indexed there.
+Theme membership is descriptive. It records that the indexed first-party source supports this motif; it does not imply common mechanism, maturity, quality, or scientific confirmation.

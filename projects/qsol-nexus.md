@@ -1,27 +1,36 @@
 # QSOL-NEXUS
 
+**Repository:** [QSOLKCB/QSOL-NEXUS](https://github.com/QSOLKCB/QSOL-NEXUS)
+
 ## Purpose
 Persistent multi-actor world with separated governance, evidence, and model adapters.
 
-## Core research question
-Derived from first-party README language; refine as dedicated deep-reads proceed.
+## Research role
 
-## Method / architecture
-Current classification roles: orchestration-control-infrastructure, ai-semantic-experiment.
+- orchestration-control-infrastructure
+- ai-semantic-experiment
 
-## Major claim boundaries
-This summary does not treat structural similarity as evidence of shared physical mechanism.
+## Documented recurring themes
 
-## Recurring themes
-external_state, authority_partitioning, provenance, nonclaims
+- [external_state](../themes/external-state.md)
+- [authority_partitioning](../themes/authority-partitioning.md)
+- [provenance](../themes/provenance.md)
+- [nonclaims](../themes/nonclaims.md)
 
-## Connections
-Connections list both outgoing and incoming relationship edges:
-- `project:qsol-oracle -> project:qsol-nexus` `implementation-dependency` (authority_partitioning); mechanism_claim=false
-- `project:qsol-control -> project:qsol-nexus` `implementation-dependency` (authority_partitioning); mechanism_claim=false
+## Cross-project connections
 
-## Publications
-- 10.5281/zenodo.21895577 (QSOL-NEXUS v2.0.0 DOI release)
+- ← **project:qsol-oracle** — implementation-dependency; theme: authority_partitioning; mechanism_claim=false. ORACLE positions itself as evidentiary membrane around NEXUS and three-pillar stack.
+- ← **project:qsol-control** — implementation-dependency; theme: authority_partitioning; mechanism_claim=false. CONTROL invokes NEXUS council adapters while preserving governance authority separation.
+
+## Publications and archival records
+
+- **repository-associated-publication** — 10.5281/zenodo.21895577: QSOL-NEXUS v2.0.0 DOI release
+
+## Claim discipline
+
+This project summary records first-party project framing and synthesis relationships. A theme or relationship tag does not establish a shared physical mechanism, common ontology, or empirical confirmation.
 
 ## Sources
-- https://github.com/QSOLKCB/QSOL-NEXUS/blob/main/README.md
+
+- [First-party project source](https://github.com/QSOLKCB/QSOL-NEXUS/blob/main/README.md)
+- Source index key: **src:qsol-nexus:readme**

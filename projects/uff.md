@@ -1,26 +1,39 @@
 # UFF
 
+**Repository:** [QSOLKCB/UFF](https://github.com/QSOLKCB/UFF)
+
 ## Purpose
 Reproducible astrophysics laboratory with replay gates, Lean assurance, and explicit nonclaim calibration.
 
-## Core research question
-Derived from first-party README language; refine as dedicated deep-reads proceed.
+## Research role
 
-## Method / architecture
-Current classification roles: empirical-simulation-laboratory, formalisation, provenance-infrastructure.
+- empirical-simulation-laboratory
+- formalisation
+- provenance-infrastructure
 
-## Major claim boundaries
-This summary does not treat structural similarity as evidence of shared physical mechanism.
+## Documented recurring themes
 
-## Recurring themes
-observation, simulation, provenance, replay, nonclaims, falsification
+- [observation](../themes/observation.md)
+- [simulation](../themes/simulation.md)
+- [provenance](../themes/provenance.md)
+- [replay](../themes/replay.md)
+- [nonclaims](../themes/nonclaims.md)
+- [falsification](../themes/falsification.md)
+- [formal_verification](../themes/formal-verification.md)
 
-## Connections
-Connections list both outgoing and incoming relationship edges:
-- `project:galaxy -> project:uff` `shared-validation-architecture` (oracle_candidate_parity); mechanism_claim=false
+## Cross-project connections
 
-## Publications
-- 10.5281/zenodo.22026554 (QSOL UFF v5.3.0: Nonclaim Calibration and Evidence-Scope Discipline for Reproducible Astrophysics)
+- ← **project:galaxy** — shared-validation-architecture; theme: oracle_candidate_parity; mechanism_claim=false. Both emphasize deterministic runtime, parity checks, replay evidence, and explicit claim boundaries.
+
+## Publications and archival records
+
+- **repository-associated-publication** — 10.5281/zenodo.22026554: QSOL UFF v5.3.0: Nonclaim Calibration and Evidence-Scope Discipline for Reproducible Astrophysics
+
+## Claim discipline
+
+This project summary records first-party project framing and synthesis relationships. A theme or relationship tag does not establish a shared physical mechanism, common ontology, or empirical confirmation.
 
 ## Sources
-- https://github.com/QSOLKCB/UFF/blob/main/README.md
+
+- [First-party project source](https://github.com/QSOLKCB/UFF/blob/main/README.md)
+- Source index key: **src:uff:readme**

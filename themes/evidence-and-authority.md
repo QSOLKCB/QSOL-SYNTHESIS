@@ -1,23 +1,9 @@
-# Evidence And Authority
+# Evidence and Authority
 
-## 1) Definition
-Evidence recording and decision authority are often partitioned deliberately.
+A second major cross-project motif is deliberate partitioning of epistemic and operational authority.
 
-## 2) Where it appears
-See `data/projects.json` theme tags and `evidence/project-theme-matrix.csv`.
+QSOL-SUBSTRATE exposes bounded public context and treats omissions as unavailable rather than false. QSOL-ORACLE records observations and unknown/conflict states without promoting them into truth. QSOL-NEXUS reasons across persistent evidence while stating that consensus is not evidence. QSOL-CONTROL operates the machinery while explicitly denying itself scientific truth authority. QSOL-QEC-BRIDGE can make a candidate eligible for QEC review but cannot adopt it into QEC.
 
-## 3) Cross-domain variation
-The same structural idea appears in different domains (physics modeling, AI protocol design, sonification, preservation engineering) with different evidential ceilings.
+This architecture prevents a useful subsystem from silently gaining powers it was never meant to have. Retrieval does not become truth; verification does not become governance; execution does not become evidence; evidence does not become interpretation.
 
-## 4) Exact relationship vs analogy
-Only explicit dependencies are treated as exact; cross-domain echoes remain analogical unless source text states stronger linkage.
-
-## 5) Counterexamples / limits
-Not all repositories foreground this theme, and presence in README language does not guarantee implementation maturity.
-
-## 6) What this recurrence does not prove
-It does not prove a shared physical mechanism or single unified ontology.
-
-## 7) Sources
-- `data/source-index.json`
-- project README/CITATION links indexed there.
+Primary sources: src:qsol-substrate:readme, src:qsol-oracle:readme, src:qsol-nexus:readme, src:qsol-control:readme, src:qsol-qec-bridge:readme.

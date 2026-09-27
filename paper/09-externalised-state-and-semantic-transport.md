@@ -1,5 +1,13 @@
-# Externalised State And Semantic Transport
+# Externalised State and Semantic Transport
 
-Draft section. This bootstrap uses first-party repository metadata and conservative relationship labels.
+Externalised state connects the AI-oriented projects with the wider provenance architecture.
 
-Key rule: structural analogy is documented as analogy unless evidence supports a stronger relation type.
+QSOL-SEMANTIC-RELAY asks a deliberately narrow experimental question: can task-relevant semantic state pass from a writer to a fresh reader when their only shared state is an external artifact? Controls distinguish a real artifact from empty, shuffled and random alternatives. A positive result would support semantic transfer through the artifact, not consciousness or collective agency.
+
+QSOL-SUBSTRATE generalizes external context in another direction. It provides a public, provenance-aware context layer and treats missing information as unavailable rather than false. The external substrate is intended to improve consistency without pretending to be private memory.
+
+NEXUS places multiple heterogeneous machine actors in one persistent computational world. Crucially, the models do not own the world, evidence, governance, geometry or persistence rules. This makes persistence a shared substrate property rather than a property of one model session.
+
+CONTROL adds operator-facing storage, replay and coordination surfaces, while LATTICE contributes persistent structural addressing and memory concepts used elsewhere.
+
+The recurring question is therefore about continuity across context boundaries: what can persist, what identity does it have, who may modify it, and what authority does persistence grant? The mature answer is consistently conservative: persistence enables continuity, not truth.

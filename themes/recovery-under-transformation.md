@@ -1,23 +1,13 @@
 # Recovery Under Transformation
 
-## 1) Definition
-Many projects encode repair/recovery workflows after disturbance or translation.
+Recovery appears in several domains, but with different semantics.
 
-## 2) Where it appears
-See `data/projects.json` theme tags and `evidence/project-theme-matrix.csv`.
+UFT-ID includes deterministic recovery as a distinct operation from proposed evolution. QEC studies error-correction and decoder governance around logical information. QSOL-QEC-BRIDGE defines an evidence-gated translation path from experimental QSOLQEC candidates toward canonical QEC review. PSYCLE-LINUX measures a candidate Linux engine against historical behaviour and closes demonstrated compatibility gaps. RIVET attempts to preserve application semantics while platform capabilities vary.
 
-## 3) Cross-domain variation
-The same structural idea appears in different domains (physics modeling, AI protocol design, sonification, preservation engineering) with different evidential ceilings.
+The shared structure can be written abstractly as:
 
-## 4) Exact relationship vs analogy
-Only explicit dependencies are treated as exact; cross-domain echoes remain analogical unless source text states stronger linkage.
+SOURCE STATE → TRANSFORMATION / DISTURBANCE → OBSERVATION → CONSTRAINED CORRECTION → PARITY OR REJECTION
 
-## 5) Counterexamples / limits
-Not all repositories foreground this theme, and presence in README language does not guarantee implementation maturity.
+That structural similarity is useful for comparing how each project defines invariants, oracles, admissibility and failure. It does not mean software compatibility repair is physically equivalent to quantum error correction, nor that UFT-ID recovery supplies a mechanism for either.
 
-## 6) What this recurrence does not prove
-It does not prove a shared physical mechanism or single unified ontology.
-
-## 7) Sources
-- `data/source-index.json`
-- project README/CITATION links indexed there.
+Primary sources: src:uft-id-3-0:readme, src:qec:readme, src:qsol-qec-bridge:readme, src:psycle-linux:readme, src:rivet:readme.

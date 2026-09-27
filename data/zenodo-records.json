@@ -1,7 +1,7 @@
 {
   "generated_at": "2026-09-27",
-  "source": "First-party repository metadata (README/CITATION/.zenodo.json); Zenodo API lookup unavailable from this environment.",
-  "api_lookup_status": "unavailable_dns",
+  "source": "Curated first-party repository metadata (README/CITATION/.zenodo.json); use scripts/collect_zenodo.py for raw API discovery.",
+  "api_lookup_status": "not-required-for-curated-baseline",
   "records": [
     {
       "doi": "10.5281/zenodo.22026554",
@@ -122,11 +122,11 @@
     },
     {
       "doi": "10.5281/zenodo.21404223",
-      "title": "SONIFICATION Zenodo concept DOI referenced by E8_MUSIC",
+      "title": "SONIFICATION model-lineage concept DOI referenced by E8_MUSIC",
       "record_id": 21404223,
       "version": null,
       "resource_type": "concept-doi",
-      "repository_association": "project:e8-music",
+      "repository_association": "project:sonification",
       "evidence": "https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md"
     },
     {
@@ -138,5 +138,9 @@
       "repository_association": "project:qsol-nexus",
       "evidence": "https://github.com/QSOLKCB/QSOL-NEXUS/blob/main/README.md"
     }
+  ],
+  "notes": [
+    "This curated file records publication identifiers supported by first-party repository metadata.",
+    "Raw Zenodo API discovery is separate and does not automatically promote records into the curated publication registry."
   ]
 }

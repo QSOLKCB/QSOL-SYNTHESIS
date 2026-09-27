@@ -1,26 +1,35 @@
 # QAI-UFT
 
+**Repository:** [QSOLKCB/QAI-UFT](https://github.com/QSOLKCB/QAI-UFT)
+
 ## Purpose
 Early resonance-oriented framework linking frequency mappings and symbolic encodings.
 
-## Core research question
-Derived from first-party README language; refine as dedicated deep-reads proceed.
+## Research role
 
-## Method / architecture
-Current classification roles: historical-exploratory-precursor, creative-interpretive-experiment.
+- historical-exploratory-precursor
+- creative-interpretive-experiment
 
-## Major claim boundaries
-This summary does not treat structural similarity as evidence of shared physical mechanism.
+## Documented recurring themes
 
-## Recurring themes
-representation, sonification, interpretation
+- [representation](../themes/representation.md)
+- [sonification](../themes/sonification.md)
+- [interpretation](../themes/interpretation.md)
 
-## Connections
-- No explicit edges recorded in bootstrap graph yet.
+## Cross-project connections
 
-## Publications
-- 10.5281/zenodo.17520186 (QSOL Unified Field Framework: Resonance as Embodied Physics)
-- 10.5281/zenodo.17569256 (QAI-UFT badge-linked Zenodo record (metadata unresolved))
+- No curated relationship edge is registered yet. This means unindexed, not unrelated.
+
+## Publications and archival records
+
+- **repository-associated-publication** — 10.5281/zenodo.17520186: QSOL Unified Field Framework: Resonance as Embodied Physics
+- **repository-associated-publication** — 10.5281/zenodo.17569256: QAI-UFT badge-linked Zenodo record (metadata unresolved)
+
+## Claim discipline
+
+This project summary records first-party project framing and synthesis relationships. A theme or relationship tag does not establish a shared physical mechanism, common ontology, or empirical confirmation.
 
 ## Sources
-- https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md
+
+- [First-party project source](https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md)
+- Source index key: **src:qai-uft:readme**

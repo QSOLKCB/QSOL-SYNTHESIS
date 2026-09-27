@@ -1,26 +1,34 @@
 # RIVET
 
+**Repository:** [QSOLKCB/RIVET](https://github.com/QSOLKCB/RIVET)
+
 ## Purpose
 Capability-driven runtime targeting long-lived software portability and minimal sufficient implementations.
 
-## Core research question
-Derived from first-party README language; refine as dedicated deep-reads proceed.
+## Research role
 
-## Method / architecture
-Current classification roles: compatibility-research, minimal-systems-engineering.
+- compatibility-research
+- minimal-systems-engineering
 
-## Major claim boundaries
-This summary does not treat structural similarity as evidence of shared physical mechanism.
+## Documented recurring themes
 
-## Recurring themes
-preservation, minimal_sufficient_systems, external_state
+- [preservation](../themes/preservation.md)
+- [minimal_sufficient_systems](../themes/minimal-sufficient-systems.md)
+- [external_state](../themes/external-state.md)
 
-## Connections
-Connections list both outgoing and incoming relationship edges:
-- `project:psycle-linux -> project:rivet` `analogous-computational-structure` (preservation); mechanism_claim=false
+## Cross-project connections
 
-## Publications
-- No verified DOI link yet.
+- ← **project:psycle-linux** — analogous-computational-structure; theme: preservation; mechanism_claim=false. Both prioritize compatibility/preservation over reinvention and use evidence-gated portability claims.
+
+## Publications and archival records
+
+- No curated publication link is registered yet.
+
+## Claim discipline
+
+This project summary records first-party project framing and synthesis relationships. A theme or relationship tag does not establish a shared physical mechanism, common ontology, or empirical confirmation.
 
 ## Sources
-- https://github.com/QSOLKCB/RIVET/blob/main/README.md
+
+- [First-party project source](https://github.com/QSOLKCB/RIVET/blob/main/README.md)
+- Source index key: **src:rivet:readme**

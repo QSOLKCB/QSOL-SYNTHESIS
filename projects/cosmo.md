@@ -1,25 +1,34 @@
 # COSMO
 
+**Repository:** [QSOLKCB/COSMO](https://github.com/QSOLKCB/COSMO)
+
 ## Purpose
 Symbolic-computational project separating formal/computational claims from scientific and symbolic interpretation classes.
 
-## Core research question
-Derived from first-party README language; refine as dedicated deep-reads proceed.
+## Research role
 
-## Method / architecture
-Current classification roles: formalisation, hypothesis-laboratory.
+- formalisation
+- hypothesis-laboratory
 
-## Major claim boundaries
-This summary does not treat structural similarity as evidence of shared physical mechanism.
+## Documented recurring themes
 
-## Recurring themes
-representation, formal_verification, nonclaims
+- [representation](../themes/representation.md)
+- [formal_verification](../themes/formal-verification.md)
+- [nonclaims](../themes/nonclaims.md)
 
-## Connections
-- No explicit edges recorded in bootstrap graph yet.
+## Cross-project connections
 
-## Publications
-- No verified DOI link yet.
+- No curated relationship edge is registered yet. This means unindexed, not unrelated.
+
+## Publications and archival records
+
+- No curated publication link is registered yet.
+
+## Claim discipline
+
+This project summary records first-party project framing and synthesis relationships. A theme or relationship tag does not establish a shared physical mechanism, common ontology, or empirical confirmation.
 
 ## Sources
-- https://github.com/QSOLKCB/COSMO/blob/main/README.md
+
+- [First-party project source](https://github.com/QSOLKCB/COSMO/blob/main/README.md)
+- Source index key: **src:cosmo:readme**

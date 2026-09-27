@@ -1,26 +1,41 @@
 # QSOL-GEO-REASON
 
+**Repository:** [QSOLKCB/QSOL-GEO-REASON](https://github.com/QSOLKCB/QSOL-GEO-REASON)
+
 ## Purpose
 Framework for measuring and perturbing geometric reasoning trajectories with explicit evidence-class contracts.
 
-## Core research question
-Derived from first-party README language; refine as dedicated deep-reads proceed.
+## Documented research question
 
-## Method / architecture
-Current classification roles: hypothesis-laboratory, formalisation, falsification-lab.
+> Can reasoning capability in local language models be identified, measured, perturbed, and eventually induced as reproducible structure in representation-space trajectories?
 
-## Major claim boundaries
-This summary does not treat structural similarity as evidence of shared physical mechanism.
+## Research role
 
-## Recurring themes
-representation, observation, falsification, nonclaims
+- hypothesis-laboratory
+- formalisation
+- falsification-lab
 
-## Connections
-Connections list both outgoing and incoming relationship edges:
-- `project:qsol-geo-reason -> project:uft-id-3-0` `shared-methodological-principle` (falsification); mechanism_claim=false
+## Documented recurring themes
 
-## Publications
-- No verified DOI link yet.
+- [representation](../themes/representation.md)
+- [observation](../themes/observation.md)
+- [falsification](../themes/falsification.md)
+- [nonclaims](../themes/nonclaims.md)
+- [formal_verification](../themes/formal-verification.md)
+
+## Cross-project connections
+
+- → **project:uft-id-3-0** — shared-methodological-principle; theme: falsification; mechanism_claim=false. Both explicitly separate formal/simulation layers from empirical truth and enforce nonclaim boundaries.
+
+## Publications and archival records
+
+- No curated publication link is registered yet.
+
+## Claim discipline
+
+This project summary records first-party project framing and synthesis relationships. A theme or relationship tag does not establish a shared physical mechanism, common ontology, or empirical confirmation.
 
 ## Sources
-- https://github.com/QSOLKCB/QSOL-GEO-REASON/blob/main/README.md
+
+- [First-party project source](https://github.com/QSOLKCB/QSOL-GEO-REASON/blob/main/README.md)
+- Source index key: **src:qsol-geo-reason:readme**

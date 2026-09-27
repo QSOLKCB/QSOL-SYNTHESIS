@@ -4,10 +4,10 @@
     {
       "source": "project:qsolqec",
       "target": "project:qsol-qec-bridge",
-      "relation_type": "formal-dependency",
-      "theme": "recovery",
+      "relation_type": "promotion-dependency",
+      "theme": "evidence_promotion",
       "mechanism_claim": false,
-      "summary": "Bridge is defined as promotion airlock for QSOLQEC candidates before QEC canonical integration.",
+      "summary": "QSOLQEC states that candidates intended for canonical integration must pass through QSOL-QEC-BRIDGE.",
       "evidence": [
         "https://github.com/QSOLKCB/QSOL-QEC-BRIDGE/blob/main/README.md"
       ]
@@ -149,6 +149,17 @@
       "evidence": [
         "https://github.com/QSOLKCB/QSOL-GEO-REASON/blob/main/README.md",
         "https://github.com/QSOLKCB/UFT-ID-3.0/blob/main/README.md"
+      ]
+    },
+    {
+      "source": "project:qsol-qec-bridge",
+      "target": "project:qec",
+      "relation_type": "promotion-dependency",
+      "theme": "evidence_promotion",
+      "mechanism_claim": false,
+      "summary": "The bridge emits bounded integration artifacts for QEC review; bridge success means eligibility for review, not canonical adoption.",
+      "evidence": [
+        "https://github.com/QSOLKCB/QSOL-QEC-BRIDGE/blob/main/README.md"
       ]
     }
   ]

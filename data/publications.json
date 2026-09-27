@@ -133,11 +133,11 @@
     },
     {
       "id": "publication:zenodo-21404223",
-      "title": "SONIFICATION Zenodo concept DOI referenced by E8_MUSIC",
+      "title": "SONIFICATION model-lineage concept DOI referenced by E8_MUSIC",
       "doi": "10.5281/zenodo.21404223",
       "resource_type": "concept-doi",
       "version": null,
-      "repository_association": "project:e8-music",
+      "repository_association": "project:sonification",
       "source": "https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md",
       "concept_doi": "10.5281/zenodo.21404223"
     },

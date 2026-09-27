@@ -1,23 +1,9 @@
-# Falsification And Nonclaims
+# Falsification and Nonclaims
 
-## 1) Definition
-Recent repositories explicitly codify nonclaims and falsification boundaries.
+The later methodology increasingly records not only what a result supports, but also what it cannot support.
 
-## 2) Where it appears
-See `data/projects.json` theme tags and `evidence/project-theme-matrix.csv`.
+UFT-ID separates formal, diagnostic, empirical, interpretive and speculative layers and states explicit design rules against promoting simulation or analogy into truth. UFF uses nonclaim calibration to distinguish possibility, robustness, genericity, prevalence, empirical support and physical truth. QSOL-GEO-REASON is designed to falsify its motivating hypothesis and lists distinctions such as correlation versus mechanism and visualization versus evidence. COSMO separates formal, computational, scientific, hypothesis and symbolic claim classes.
 
-## 3) Cross-domain variation
-The same structural idea appears in different domains (physics modeling, AI protocol design, sonification, preservation engineering) with different evidential ceilings.
+Nonclaims function as **negative interfaces**: they prevent authority from leaking upward from a weaker evidence layer into a stronger conclusion.
 
-## 4) Exact relationship vs analogy
-Only explicit dependencies are treated as exact; cross-domain echoes remain analogical unless source text states stronger linkage.
-
-## 5) Counterexamples / limits
-Not all repositories foreground this theme, and presence in README language does not guarantee implementation maturity.
-
-## 6) What this recurrence does not prove
-It does not prove a shared physical mechanism or single unified ontology.
-
-## 7) Sources
-- `data/source-index.json`
-- project README/CITATION links indexed there.
+Primary sources: src:uft-id-3-0:readme, src:uff:readme, src:qsol-geo-reason:readme, src:cosmo:readme.

@@ -1,23 +1,11 @@
-# Provenance And Replay
+# Provenance and Replay
 
-## 1) Definition
-Receipt chains and replay gates are recurring trust mechanisms.
+Provenance is not a decorative metadata layer in the corpus; it is often part of the experimental object.
 
-## 2) Where it appears
-See `data/projects.json` theme tags and `evidence/project-theme-matrix.csv`.
+QEC binds artifacts through canonical serialization, hashes, receipts and replay checks. UFF freezes input identities and distinguishes integrity from replay and calibration. SPECTRAL and E8_MUSIC preserve source-to-render identities and receiver choices. PSYCLE-LINUX records source identities and compatibility evidence so historical behaviour can be compared without silently changing the reference.
 
-## 3) Cross-domain variation
-The same structural idea appears in different domains (physics modeling, AI protocol design, sonification, preservation engineering) with different evidential ceilings.
+Replay answers a narrow but essential question: **can the declared result be reconstructed from the declared inputs and transformation?** Provenance answers: **which inputs, implementation and lineage are being claimed?**
 
-## 4) Exact relationship vs analogy
-Only explicit dependencies are treated as exact; cross-domain echoes remain analogical unless source text states stronger linkage.
+Neither answers whether the scientific interpretation is true. That separation is a recurring design invariant.
 
-## 5) Counterexamples / limits
-Not all repositories foreground this theme, and presence in README language does not guarantee implementation maturity.
-
-## 6) What this recurrence does not prove
-It does not prove a shared physical mechanism or single unified ontology.
-
-## 7) Sources
-- `data/source-index.json`
-- project README/CITATION links indexed there.
+Primary sources: src:qec:readme, src:uff:readme, src:spectral:readme, src:e8-music:readme, src:psycle-linux:readme.

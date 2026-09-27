@@ -1,15 +1,15 @@
-# Research architecture (working hypothesis)
+# Research architecture (working synthesis)
 
-```mermaid
+~~~mermaid
 flowchart TD
   A[SOURCE / STATE] --> B[TRANSFORMATION]
   B --> C[OBSERVATION]
   C --> D[COMPARISON / VALIDATION]
-  D --> E{VALID?}
-  E -- no --> F[REJECT / QUALIFY]
-  E -- yes --> G[RECOVERY / PRESERVATION]
-  G --> H[PROVENANCE]
+  D --> E{SUPPORTED UNDER DECLARED CONTRACT?}
+  E -- no --> F[REJECT / QUALIFY / RETAIN ORACLE]
+  E -- yes --> G[RECOVERY / PRESERVATION / PROMOTION]
+  G --> H[PROVENANCE + REPLAY]
   H --> I[INTERPRETATION WITH CLAIM BOUNDARIES]
-```
+~~~
 
-Not every project implements every stage.
+Not every project implements every stage. The diagram is a comparison tool, not a universal physical model.

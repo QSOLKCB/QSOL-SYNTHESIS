@@ -39,7 +39,8 @@
         "provenance",
         "replay",
         "nonclaims",
-        "falsification"
+        "falsification",
+        "formal_verification"
       ],
       "source": "https://github.com/QSOLKCB/UFF/blob/main/README.md"
     },
@@ -113,7 +114,8 @@
         "observation",
         "recovery",
         "oracle_candidate_parity",
-        "nonclaims"
+        "nonclaims",
+        "evidence_promotion"
       ],
       "source": "https://github.com/QSOLKCB/QSOLQEC/blob/main/README.md"
     },
@@ -131,9 +133,31 @@
         "provenance",
         "replay",
         "recovery",
-        "preservation"
+        "preservation",
+        "evidence_promotion"
       ],
       "source": "https://github.com/QSOLKCB/QSOL-QEC-BRIDGE/blob/main/README.md"
+    },
+    {
+      "id": "project:qec",
+      "name": "QEC",
+      "repo": "QSOLKCB/QEC",
+      "url": "https://github.com/QSOLKCB/QEC",
+      "role": [
+        "quantum-error-correction-research",
+        "evidence-infrastructure",
+        "deterministic-proof-stack"
+      ],
+      "purpose": "Deterministic, replay-safe quantum error-correction and evidence architecture with canonical hashing, decoder governance, exact finite-code evidence, and explicit hardware-claim boundaries.",
+      "themes": [
+        "recovery",
+        "provenance",
+        "replay",
+        "nonclaims",
+        "oracle_candidate_parity",
+        "sonification"
+      ],
+      "source": "https://github.com/QSOLKCB/QEC/blob/main/README.md"
     },
     {
       "id": "project:sonification",
@@ -168,7 +192,8 @@
         "observation",
         "sonification",
         "provenance",
-        "nonclaims"
+        "nonclaims",
+        "formal_verification"
       ],
       "source": "https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md"
     },
@@ -186,7 +211,9 @@
         "sonification",
         "representation",
         "provenance",
-        "replay"
+        "replay",
+        "observation",
+        "nonclaims"
       ],
       "source": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md"
     },
@@ -223,7 +250,8 @@
         "representation",
         "observation",
         "falsification",
-        "nonclaims"
+        "nonclaims",
+        "formal_verification"
       ],
       "source": "https://github.com/QSOLKCB/QSOL-GEO-REASON/blob/main/README.md"
     },

@@ -1,25 +1,35 @@
 # res-rag-viz
 
+**Repository:** [QSOLKCB/res-rag-viz](https://github.com/QSOLKCB/res-rag-viz)
+
 ## Purpose
 Offline instrument visualising and sonifying RES=RAG diagnostics with local receipt verification.
 
-## Core research question
-Derived from first-party README language; refine as dedicated deep-reads proceed.
+## Research role
 
-## Method / architecture
-Current classification roles: sonification-visualisation-instrument, empirical-simulation-laboratory.
+- sonification-visualisation-instrument
+- empirical-simulation-laboratory
 
-## Major claim boundaries
-This summary does not treat structural similarity as evidence of shared physical mechanism.
+## Documented recurring themes
 
-## Recurring themes
-observation, sonification, visualisation, provenance
+- [observation](../themes/observation.md)
+- [sonification](../themes/sonification.md)
+- [visualisation](../themes/visualisation.md)
+- [provenance](../themes/provenance.md)
 
-## Connections
-- No explicit edges recorded in bootstrap graph yet.
+## Cross-project connections
 
-## Publications
-- No verified DOI link yet.
+- No curated relationship edge is registered yet. This means unindexed, not unrelated.
+
+## Publications and archival records
+
+- No curated publication link is registered yet.
+
+## Claim discipline
+
+This project summary records first-party project framing and synthesis relationships. A theme or relationship tag does not establish a shared physical mechanism, common ontology, or empirical confirmation.
 
 ## Sources
-- https://github.com/QSOLKCB/res-rag-viz/blob/main/README.md
+
+- [First-party project source](https://github.com/QSOLKCB/res-rag-viz/blob/main/README.md)
+- Source index key: **src:res-rag-viz:readme**

@@ -1,23 +1,9 @@
 # Externalised State
 
-## 1) Definition
-Persistent external artifacts mediate state transfer and continuity.
+Several projects move important state outside a single model invocation or process.
 
-## 2) Where it appears
-See `data/projects.json` theme tags and `evidence/project-theme-matrix.csv`.
+QSOL-SEMANTIC-RELAY tests whether task-relevant semantic state can persist through an external artifact between context-isolated agents. QSOL-SUBSTRATE provides external public context with explicit provenance and omission semantics. NEXUS maintains a persistent world whose state and evidence are not owned by an individual participating model. CONTROL stores files, collections and replay records outside transient model state. LATTICE supplies persistent structural addressing/memory functions used by other QSOL systems.
 
-## 3) Cross-domain variation
-The same structural idea appears in different domains (physics modeling, AI protocol design, sonification, preservation engineering) with different evidential ceilings.
+The common question is not “are these systems conscious together?” It is narrower: **what information can persist, be rediscovered, be validated, and retain identity when individual computational contexts are replaced?**
 
-## 4) Exact relationship vs analogy
-Only explicit dependencies are treated as exact; cross-domain echoes remain analogical unless source text states stronger linkage.
-
-## 5) Counterexamples / limits
-Not all repositories foreground this theme, and presence in README language does not guarantee implementation maturity.
-
-## 6) What this recurrence does not prove
-It does not prove a shared physical mechanism or single unified ontology.
-
-## 7) Sources
-- `data/source-index.json`
-- project README/CITATION links indexed there.
+Primary sources: src:qsol-semantic-relay:readme, src:qsol-substrate:readme, src:qsol-nexus:readme, src:qsol-control:readme, src:lattice:readme.

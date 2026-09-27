@@ -1,23 +1,11 @@
-# Determinism And Truth
+# Determinism and Truth
 
-## 1) Definition
-Deterministic replay appears as reproducibility infrastructure, not truth guarantee.
+Determinism is pervasive in QSOL-IMC, but the mature repositories generally treat it as an **audit property**, not a truth criterion.
 
-## 2) Where it appears
-See `data/projects.json` theme tags and `evidence/project-theme-matrix.csv`.
+QEC uses canonical hashing and replay-safe validation to establish artifact identity and reproducibility. UFF explicitly separates replay verification from ensemble calibration and physical truth. E8_MUSIC proves or tests transform properties while stating that transform correctness is distinct from implementation conformance, scientific validation, and physical truth. NEXUS states that deterministic instrument output does not become authoritative merely because it replays.
 
-## 3) Cross-domain variation
-The same structural idea appears in different domains (physics modeling, AI protocol design, sonification, preservation engineering) with different evidential ceilings.
+The synthesis implication is important: deterministic systems reduce uncertainty about **what computation occurred**. They do not, by themselves, reduce uncertainty about **whether the model corresponds to nature**.
 
-## 4) Exact relationship vs analogy
-Only explicit dependencies are treated as exact; cross-domain echoes remain analogical unless source text states stronger linkage.
+That distinction connects software engineering and research methodology across the corpus without claiming they are the same discipline.
 
-## 5) Counterexamples / limits
-Not all repositories foreground this theme, and presence in README language does not guarantee implementation maturity.
-
-## 6) What this recurrence does not prove
-It does not prove a shared physical mechanism or single unified ontology.
-
-## 7) Sources
-- `data/source-index.json`
-- project README/CITATION links indexed there.
+Primary sources: src:qec:readme, src:uff:readme, src:e8-music:readme, src:qsol-nexus:readme.

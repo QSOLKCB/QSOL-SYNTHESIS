@@ -1,30 +1,40 @@
 # SONIFICATION
 
+**Repository:** [QSOLKCB/SONIFICATION](https://github.com/QSOLKCB/SONIFICATION)
+
 ## Purpose
 ETQ-303 and D4-triality exact event protocols with deterministic exports and explicit claim boundaries.
 
-## Core research question
-Derived from first-party README language; refine as dedicated deep-reads proceed.
+## Research role
 
-## Method / architecture
-Current classification roles: formalisation, sonification-visualisation-instrument.
+- formalisation
+- sonification-visualisation-instrument
 
-## Major claim boundaries
-This summary does not treat structural similarity as evidence of shared physical mechanism.
+## Documented recurring themes
 
-## Recurring themes
-representation, sonification, nonclaims, provenance
+- [representation](../themes/representation.md)
+- [sonification](../themes/sonification.md)
+- [nonclaims](../themes/nonclaims.md)
+- [provenance](../themes/provenance.md)
 
-## Connections
-Connections list both outgoing and incoming relationship edges:
-- `project:sonification -> project:e8-music` `historical-lineage` (sonification); mechanism_claim=false
-- `project:spectral -> project:sonification` `shared-methodological-principle` (provenance); mechanism_claim=false
+## Cross-project connections
 
-## Publications
-- 10.5281/zenodo.21494678 (ETQ-303 v3: Exact 303-State Root-Indexed Event Protocol)
-- 10.5281/zenodo.21455181 (ETQ-303 original release)
-- 10.5281/zenodo.21432511 (ETQ-101 v2.0.0 base release)
-- 10.5281/zenodo.22831753 (D4-TIA v2.0.0)
+- → **project:e8-music** — historical-lineage; theme: sonification; mechanism_claim=false. E8_MUSIC README cites SONIFICATION release line and concept DOI lineage.
+- ← **project:spectral** — shared-methodological-principle; theme: provenance; mechanism_claim=false. Both emphasize deterministic render contracts and replay/provenance artifacts.
+
+## Publications and archival records
+
+- **repository-associated-publication** — 10.5281/zenodo.21494678: ETQ-303 v3: Exact 303-State Root-Indexed Event Protocol
+- **repository-associated-publication** — 10.5281/zenodo.21455181: ETQ-303 original release
+- **repository-associated-publication** — 10.5281/zenodo.21432511: ETQ-101 v2.0.0 base release
+- **repository-associated-publication** — 10.5281/zenodo.22831753: D4-TIA v2.0.0
+- **repository-associated-publication** — 10.5281/zenodo.21404223: SONIFICATION model-lineage concept DOI referenced by E8_MUSIC
+
+## Claim discipline
+
+This project summary records first-party project framing and synthesis relationships. A theme or relationship tag does not establish a shared physical mechanism, common ontology, or empirical confirmation.
 
 ## Sources
-- https://github.com/QSOLKCB/SONIFICATION/blob/main/README.md
+
+- [First-party project source](https://github.com/QSOLKCB/SONIFICATION/blob/main/README.md)
+- Source index key: **src:sonification:readme**

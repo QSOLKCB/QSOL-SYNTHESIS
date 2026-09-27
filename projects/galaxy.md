@@ -1,26 +1,36 @@
 # GALAXY
 
+**Repository:** [QSOLKCB/GALAXY](https://github.com/QSOLKCB/GALAXY)
+
 ## Purpose
 Deterministic galaxy dynamics instrument with CPU/GPU parity and Barnes-Hut correctness ladder.
 
-## Core research question
-Derived from first-party README language; refine as dedicated deep-reads proceed.
+## Research role
 
-## Method / architecture
-Current classification roles: empirical-simulation-laboratory, formalisation.
+- empirical-simulation-laboratory
+- formalisation
 
-## Major claim boundaries
-This summary does not treat structural similarity as evidence of shared physical mechanism.
+## Documented recurring themes
 
-## Recurring themes
-simulation, observation, oracle_candidate_parity, provenance, nonclaims
+- [simulation](../themes/simulation.md)
+- [observation](../themes/observation.md)
+- [oracle_candidate_parity](../themes/oracle-candidate-parity.md)
+- [provenance](../themes/provenance.md)
+- [nonclaims](../themes/nonclaims.md)
 
-## Connections
-Connections list both outgoing and incoming relationship edges:
-- `project:galaxy -> project:uff` `shared-validation-architecture` (oracle_candidate_parity); mechanism_claim=false
+## Cross-project connections
 
-## Publications
-- 10.5281/zenodo.22756969 (GALAXY v0.4.0: Deterministic Native CPU Runtime and Scaling Evidence)
+- → **project:uff** — shared-validation-architecture; theme: oracle_candidate_parity; mechanism_claim=false. Both emphasize deterministic runtime, parity checks, replay evidence, and explicit claim boundaries.
+
+## Publications and archival records
+
+- **repository-associated-publication** — 10.5281/zenodo.22756969: GALAXY v0.4.0: Deterministic Native CPU Runtime and Scaling Evidence
+
+## Claim discipline
+
+This project summary records first-party project framing and synthesis relationships. A theme or relationship tag does not establish a shared physical mechanism, common ontology, or empirical confirmation.
 
 ## Sources
-- https://github.com/QSOLKCB/GALAXY/blob/main/README.md
+
+- [First-party project source](https://github.com/QSOLKCB/GALAXY/blob/main/README.md)
+- Source index key: **src:galaxy:readme**

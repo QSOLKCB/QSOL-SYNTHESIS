@@ -1,28 +1,39 @@
 # SPECTRAL
 
+**Repository:** [QSOLKCB/SPECTRAL](https://github.com/QSOLKCB/SPECTRAL)
+
 ## Purpose
 Deterministic sonification and spectral-analysis suite with reproducible artifact receipts.
 
-## Core research question
-Derived from first-party README language; refine as dedicated deep-reads proceed.
+## Research role
 
-## Method / architecture
-Current classification roles: sonification-visualisation-instrument, empirical-simulation-laboratory.
+- sonification-visualisation-instrument
+- empirical-simulation-laboratory
 
-## Major claim boundaries
-This summary does not treat structural similarity as evidence of shared physical mechanism.
+## Documented recurring themes
 
-## Recurring themes
-sonification, representation, provenance, replay
+- [sonification](../themes/sonification.md)
+- [representation](../themes/representation.md)
+- [provenance](../themes/provenance.md)
+- [replay](../themes/replay.md)
+- [observation](../themes/observation.md)
+- [nonclaims](../themes/nonclaims.md)
 
-## Connections
-Connections list both outgoing and incoming relationship edges:
-- `project:spectral -> project:sonification` `shared-methodological-principle` (provenance); mechanism_claim=false
+## Cross-project connections
 
-## Publications
-- 10.5281/zenodo.21308248 (Spectral Algebraics: Audible Geometry via E8-Inspired Signal Synthesis and 3D Visualization)
-- 10.5281/zenodo.21293821 (Collective Modes... (v1.2))
-- 10.5281/zenodo.21292906 (Collective Modes... (v1.0))
+- → **project:sonification** — shared-methodological-principle; theme: provenance; mechanism_claim=false. Both emphasize deterministic render contracts and replay/provenance artifacts.
+
+## Publications and archival records
+
+- **repository-associated-publication** — 10.5281/zenodo.21308248: Spectral Algebraics: Audible Geometry via E8-Inspired Signal Synthesis and 3D Visualization
+- **repository-associated-publication** — 10.5281/zenodo.21293821: Collective Modes... (v1.2)
+- **repository-associated-publication** — 10.5281/zenodo.21292906: Collective Modes... (v1.0)
+
+## Claim discipline
+
+This project summary records first-party project framing and synthesis relationships. A theme or relationship tag does not establish a shared physical mechanism, common ontology, or empirical confirmation.
 
 ## Sources
-- https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md
+
+- [First-party project source](https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md)
+- Source index key: **src:spectral:readme**

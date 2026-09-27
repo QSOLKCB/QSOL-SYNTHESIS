@@ -1,26 +1,37 @@
 # E8_MUSIC
 
+**Repository:** [QSOLKCB/E8_MUSIC](https://github.com/QSOLKCB/E8_MUSIC)
+
 ## Purpose
 Offline sonification workbench separating interpretive authored audio from frozen canonical source-forced profiles.
 
-## Core research question
-Derived from first-party README language; refine as dedicated deep-reads proceed.
+## Research role
 
-## Method / architecture
-Current classification roles: sonification-visualisation-instrument, creative-interpretive-experiment.
+- sonification-visualisation-instrument
+- creative-interpretive-experiment
 
-## Major claim boundaries
-This summary does not treat structural similarity as evidence of shared physical mechanism.
+## Documented recurring themes
 
-## Recurring themes
-representation, observation, sonification, provenance, nonclaims
+- [representation](../themes/representation.md)
+- [observation](../themes/observation.md)
+- [sonification](../themes/sonification.md)
+- [provenance](../themes/provenance.md)
+- [nonclaims](../themes/nonclaims.md)
+- [formal_verification](../themes/formal-verification.md)
 
-## Connections
-Connections list both outgoing and incoming relationship edges:
-- `project:sonification -> project:e8-music` `historical-lineage` (sonification); mechanism_claim=false
+## Cross-project connections
 
-## Publications
-- 10.5281/zenodo.21404223 (SONIFICATION Zenodo concept DOI referenced by E8_MUSIC)
+- ← **project:sonification** — historical-lineage; theme: sonification; mechanism_claim=false. E8_MUSIC README cites SONIFICATION release line and concept DOI lineage.
+
+## Publications and archival records
+
+- **lineage-reference** — 10.5281/zenodo.21404223: SONIFICATION model-lineage concept DOI referenced by E8_MUSIC
+
+## Claim discipline
+
+This project summary records first-party project framing and synthesis relationships. A theme or relationship tag does not establish a shared physical mechanism, common ontology, or empirical confirmation.
 
 ## Sources
-- https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md
+
+- [First-party project source](https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md)
+- Source index key: **src:e8-music:readme**

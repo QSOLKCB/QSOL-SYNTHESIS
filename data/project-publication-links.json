@@ -106,7 +106,15 @@
       ]
     },
     {
-      "project_id": "project:e8-music",
+      "project_id": "project:qsol-nexus",
+      "publication_id": "publication:zenodo-21895577",
+      "relation": "repository-associated-publication",
+      "evidence": [
+        "https://github.com/QSOLKCB/QSOL-NEXUS/blob/main/README.md"
+      ]
+    },
+    {
+      "project_id": "project:sonification",
       "publication_id": "publication:zenodo-21404223",
       "relation": "repository-associated-publication",
       "evidence": [
@@ -114,11 +122,11 @@
       ]
     },
     {
-      "project_id": "project:qsol-nexus",
-      "publication_id": "publication:zenodo-21895577",
-      "relation": "repository-associated-publication",
+      "project_id": "project:e8-music",
+      "publication_id": "publication:zenodo-21404223",
+      "relation": "lineage-reference",
       "evidence": [
-        "https://github.com/QSOLKCB/QSOL-NEXUS/blob/main/README.md"
+        "https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md"
       ]
     }
   ]

@@ -1,27 +1,38 @@
 # QSOL-QEC-BRIDGE
 
+**Repository:** [QSOLKCB/QSOL-QEC-BRIDGE](https://github.com/QSOLKCB/QSOL-QEC-BRIDGE)
+
 ## Purpose
 Conformance airlock translating and reproducing QSOLQEC candidates before canonical QEC review.
 
-## Core research question
-Derived from first-party README language; refine as dedicated deep-reads proceed.
+## Research role
 
-## Method / architecture
-Current classification roles: evidence-infrastructure, compatibility-research.
+- evidence-infrastructure
+- compatibility-research
 
-## Major claim boundaries
-This summary does not treat structural similarity as evidence of shared physical mechanism.
+## Documented recurring themes
 
-## Recurring themes
-provenance, replay, recovery, preservation
+- [provenance](../themes/provenance.md)
+- [replay](../themes/replay.md)
+- [recovery](../themes/recovery.md)
+- [preservation](../themes/preservation.md)
+- [evidence_promotion](../themes/evidence-promotion.md)
 
-## Connections
-Connections list both outgoing and incoming relationship edges:
-- `project:qsolqec -> project:qsol-qec-bridge` `formal-dependency` (recovery); mechanism_claim=false
-- `project:qsol-qec-bridge -> project:qsolqec` `evidence-dependency` (provenance); mechanism_claim=false
+## Cross-project connections
 
-## Publications
-- No verified DOI link yet.
+- → **project:qsolqec** — evidence-dependency; theme: provenance; mechanism_claim=false. Bridge expects candidate package exports from QSOLQEC.
+- → **project:qec** — promotion-dependency; theme: evidence_promotion; mechanism_claim=false. The bridge emits bounded integration artifacts for QEC review; bridge success means eligibility for review, not canonical adoption.
+- ← **project:qsolqec** — promotion-dependency; theme: evidence_promotion; mechanism_claim=false. QSOLQEC states that candidates intended for canonical integration must pass through QSOL-QEC-BRIDGE.
+
+## Publications and archival records
+
+- No curated publication link is registered yet.
+
+## Claim discipline
+
+This project summary records first-party project framing and synthesis relationships. A theme or relationship tag does not establish a shared physical mechanism, common ontology, or empirical confirmation.
 
 ## Sources
-- https://github.com/QSOLKCB/QSOL-QEC-BRIDGE/blob/main/README.md
+
+- [First-party project source](https://github.com/QSOLKCB/QSOL-QEC-BRIDGE/blob/main/README.md)
+- Source index key: **src:qsol-qec-bridge:readme**

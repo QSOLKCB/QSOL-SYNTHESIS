@@ -105,7 +105,10 @@ class BuildIndexesRegressionTests(unittest.TestCase):
         publications["publications"][0]["source"] = "https://doi.org/10.5281/zenodo.99999999"
         self.write(root, "publications.json", publications)
 
-        with self.assertRaisesRegex(RuntimeError, "external source does not match"):
+        with self.assertRaisesRegex(
+            RuntimeError,
+            "publication ownership evidence must bind both asserted project and selected publication",
+        ):
             build_indexes.build(root)
 
     def test_equivalent_repository_case_is_canonicalized(self):

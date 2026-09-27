@@ -61,12 +61,30 @@ def hit_matches_requested_doi(hit: dict, requested_doi: str) -> bool:
 
 def merge_record(index: dict[str, dict], rec: dict) -> None:
     key = str(rec.get("record_id") or rec.get("doi") or rec.get("title"))
-    if key in index:
-        seen = set(index[key].get("discovered_by", []))
-        seen.update(rec.get("discovered_by", []))
-        index[key]["discovered_by"] = sorted(seen)
-    else:
+    if key not in index:
         index[key] = rec
+        return
+
+    existing = index[key]
+    seen = set(existing.get("discovered_by", []))
+    seen.update(rec.get("discovered_by", []))
+    incoming_exact = any(
+        isinstance(tag, str) and tag.startswith("exact-doi:")
+        for tag in rec.get("discovered_by", [])
+    )
+    existing_exact = any(
+        isinstance(tag, str) and tag.startswith("exact-doi:")
+        for tag in existing.get("discovered_by", [])
+    )
+
+    if incoming_exact:
+        replacement = dict(rec)
+        replacement["discovered_by"] = sorted(seen)
+        index[key] = replacement
+    elif existing_exact:
+        existing["discovered_by"] = sorted(seen)
+    else:
+        existing["discovered_by"] = sorted(seen)
 
 
 def query_all(query: str, per_page: int, max_pages: int):
@@ -78,11 +96,21 @@ def query_all(query: str, per_page: int, max_pages: int):
     while page <= max_pages:
         params = urllib.parse.urlencode({"q": query, "size": per_page, "page": page, "sort": "mostrecent"})
         payload = get_json(f"{API}?{params}")
-        hits_obj = payload.get("hits") or {}
+        if not isinstance(payload, dict):
+            raise RuntimeError("unexpected Zenodo query response")
+        hits_obj = payload.get("hits")
+        if not isinstance(hits_obj, dict):
+            raise RuntimeError("unexpected Zenodo query response: missing hits object")
+        hits = hits_obj.get("hits")
+        if not isinstance(hits, list):
+            raise RuntimeError("unexpected Zenodo query response: hits must be a list")
         if total is None:
-            raw_total = hits_obj.get("total", 0)
-            total = raw_total.get("value", 0) if isinstance(raw_total, dict) else int(raw_total or 0)
-        hits = hits_obj.get("hits", [])
+            raw_total = hits_obj.get("total")
+            if isinstance(raw_total, dict):
+                raw_total = raw_total.get("value")
+            if not isinstance(raw_total, int) or isinstance(raw_total, bool) or raw_total < 0:
+                raise RuntimeError("unexpected Zenodo query response: invalid total")
+            total = raw_total
         yield total, hits
         if not hits or len(hits) < per_page:
             break
@@ -140,6 +168,7 @@ def main(argv: list[str] | None = None) -> int:
             urllib.error.HTTPError,
             TimeoutError,
             json.JSONDecodeError,
+            RuntimeError,
         ) as exc:
             result["errors"].append({"query": query, "error": str(exc)})
 
@@ -155,6 +184,8 @@ def main(argv: list[str] | None = None) -> int:
                 matched = 0
                 if m:
                     hit = get_json(f"{API}/{m.group(1)}")
+                    if not isinstance(hit, dict):
+                        raise RuntimeError("unexpected Zenodo exact-record response")
                     if hit_matches_requested_doi(hit, doi):
                         merge_record(index, normalise(hit, f"exact-doi:{doi}"))
                         matched += 1
@@ -174,6 +205,7 @@ def main(argv: list[str] | None = None) -> int:
                 urllib.error.HTTPError,
                 TimeoutError,
                 json.JSONDecodeError,
+                RuntimeError,
             ) as exc:
                 result["errors"].append({"doi": doi, "error": str(exc)})
 

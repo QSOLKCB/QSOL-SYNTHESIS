@@ -314,13 +314,16 @@ def validate(root: pathlib.Path) -> list[str]:
                 f"{row.get('full_name')}"
             )
         curated_publication_dois = row.get("publication_dois")
+        normalized_curated_dois = (
+            [doi.casefold() for doi in curated_publication_dois]
+            if isinstance(curated_publication_dois, list)
+            and all(isinstance(doi, str) and doi for doi in curated_publication_dois)
+            else []
+        )
         if (
             not isinstance(curated_publication_dois, list)
-            or any(
-                not isinstance(doi, str) or not doi
-                for doi in curated_publication_dois
-            )
-            or len(curated_publication_dois) != len(set(curated_publication_dois))
+            or len(normalized_curated_dois) != len(curated_publication_dois)
+            or len(normalized_curated_dois) != len(set(normalized_curated_dois))
         ):
             fail(
                 f"curated GitHub publication_dois must be a unique string list: "
@@ -336,16 +339,57 @@ def validate(root: pathlib.Path) -> list[str]:
                     and pub.get("doi")
                 )
             }
-            actual_publication_dois = {
-                doi.casefold()
-                for doi in curated_publication_dois
-            }
+            actual_publication_dois = set(normalized_curated_dois)
             if actual_publication_dois != expected_publication_dois:
                 fail(
                     f"curated GitHub publication ownership mismatch: "
                     f"{row.get('full_name')} expected={sorted(expected_publication_dois)} "
                     f"actual={sorted(actual_publication_dois)}"
                 )
+
+        publication_sources = row.get("publication_sources")
+        if not isinstance(publication_sources, dict):
+            fail(
+                f"curated GitHub publication_sources must be an object: "
+                f"{row.get('full_name')}"
+            )
+        else:
+            source_keys = [
+                key.casefold()
+                for key in publication_sources
+                if isinstance(key, str) and key
+            ]
+            if (
+                len(source_keys) != len(publication_sources)
+                or len(source_keys) != len(set(source_keys))
+                or any(
+                    not isinstance(url, str) or not traceable_publication_source(url)
+                    for url in publication_sources.values()
+                )
+            ):
+                fail(
+                    f"curated GitHub publication_sources must have unique DOI keys "
+                    f"and traceable source URLs: {row.get('full_name')}"
+                )
+            else:
+                expected_publication_sources = {
+                    pub.get("doi").casefold(): pub.get("source")
+                    for pub in pubs
+                    if (
+                        pub.get("repository_association") == project.get("id")
+                        and isinstance(pub.get("doi"), str)
+                        and pub.get("doi")
+                    )
+                }
+                actual_publication_sources = {
+                    doi.casefold(): url
+                    for doi, url in publication_sources.items()
+                }
+                if actual_publication_sources != expected_publication_sources:
+                    fail(
+                        f"curated GitHub publication source binding mismatch: "
+                        f"{row.get('full_name')}"
+                    )
 
     pub_ids = [p.get("id") for p in pubs]
     invalid_pub_ids = [
@@ -431,6 +475,34 @@ def validate(root: pathlib.Path) -> list[str]:
                 fail(
                     f"publication source repository must match associated repository: "
                     f"{pub.get('id')} -> {source_repo}"
+                )
+            owner_row = next(
+                (
+                    row
+                    for row in github_rows
+                    if normalize_repository(row.get("full_name"))
+                    == normalize_repository(owner_repo)
+                ),
+                None,
+            )
+            owner_sources = owner_row.get("publication_sources") if owner_row else None
+            expected_source = None
+            if isinstance(owner_sources, dict) and isinstance(doi, str):
+                expected_source = next(
+                    (
+                        url
+                        for manifest_doi, url in owner_sources.items()
+                        if isinstance(manifest_doi, str)
+                        and manifest_doi.casefold() == doi.casefold()
+                    ),
+                    None,
+                )
+            if expected_source is None or not github_blob_source_matches(
+                source_url, expected_source
+            ):
+                fail(
+                    f"publication GitHub source must match independently curated source: "
+                    f"{pub.get('id')}"
                 )
         elif traceable_publication_source(source_url):
             if not publication_external_source_matches(pub, source_url):
@@ -658,6 +730,25 @@ def validate(root: pathlib.Path) -> list[str]:
             f"missing={missing} extra={extra}"
         )
 
+    expected_lineage_links = {
+        (rel.get("target"), rel.get("publication_id"))
+        for rel in rels
+        if rel.get("relation_type") == "historical-lineage"
+        and rel.get("publication_id") is not None
+    }
+    actual_lineage_links = {
+        (link.get("project_id"), link.get("publication_id"))
+        for link in links
+        if link.get("relation") == "lineage-reference"
+    }
+    if actual_lineage_links != expected_lineage_links:
+        missing = sorted(expected_lineage_links - actual_lineage_links)
+        extra = sorted(actual_lineage_links - expected_lineage_links)
+        fail(
+            f"lineage-reference links must exactly match historical-lineage declarations: "
+            f"missing={missing} extra={extra}"
+        )
+
     relationship_keys = []
     for rel in rels:
         source_id = rel.get("source")
@@ -668,8 +759,21 @@ def validate(root: pathlib.Path) -> list[str]:
             fail(f"relationship target missing: {target_id}")
         if source_id == target_id:
             fail(f"self relationship is not allowed: {source_id}")
-        if rel.get("relation_type") not in NON_MECHANISM_RELATIONS:
-            fail(f"unknown/unreviewed relationship type: {rel.get('relation_type')}")
+        relation_type = rel.get("relation_type")
+        if relation_type not in NON_MECHANISM_RELATIONS:
+            fail(f"unknown/unreviewed relationship type: {relation_type}")
+        if relation_type == "historical-lineage":
+            publication_id = rel.get("publication_id")
+            if publication_id not in pub_set:
+                fail(
+                    f"historical-lineage relationship must bind a curated publication: "
+                    f"{source_id} -> {target_id}: {publication_id}"
+                )
+        elif "publication_id" in rel:
+            fail(
+                f"non-lineage relationship must not declare publication_id: "
+                f"{source_id} -> {target_id}"
+            )
         if rel.get("mechanism_claim") is not False:
             fail(f"current relationship classes must set mechanism_claim=false: {source_id} -> {target_id}")
         theme = rel.get("theme")

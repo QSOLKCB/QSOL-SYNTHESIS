@@ -27,8 +27,12 @@ class ValidateSourcesRegressionTests(unittest.TestCase):
     def fixture(self) -> pathlib.Path:
         root = pathlib.Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, root)
-        for directory in ("data", "evidence", "paper", "themes", "projects", "figures"):
-            shutil.copytree(REPO_ROOT / directory, root / directory)
+        for directory in ("data", "evidence", "paper", "themes", "projects", "figures", "docs"):
+            source = REPO_ROOT / directory
+            if source.exists():
+                shutil.copytree(source, root / directory)
+        for path in REPO_ROOT.glob("*.md"):
+            shutil.copy2(path, root / path.name)
         return root
 
     def read_json(self, root: pathlib.Path, name: str) -> dict:
@@ -961,6 +965,97 @@ class ValidateSourcesRegressionTests(unittest.TestCase):
         self.write_json(root, "publications.json", doc)
 
         self.assert_has(validate_sources.validate(root), "publication requires a traceable source URL")
+
+    def test_relationship_evidence_must_support_asserted_theme(self):
+        root = self.fixture()
+        relationships = self.read_json(root, "relationships.json")
+        rel = next(
+            rel for rel in relationships["relationships"]
+            if rel.get("source") == "project:qsol-qec-bridge"
+            and rel.get("target") == "project:qsolqec"
+            and rel.get("theme") == "provenance"
+        )
+        rel["evidence"] = [
+            "https://github.com/QSOLKCB/QSOLQEC/blob/main/README.md"
+        ]
+        self.write_json(root, "relationships.json", relationships)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "relationship evidence must come from an endpoint supporting the theme",
+        )
+
+    def test_relationship_graph_rejects_unlabeled_extra_edge(self):
+        root = self.fixture()
+        graph = root / "figures" / "theme-network.dot"
+        text = graph.read_text(encoding="utf-8")
+        graph.write_text(
+            text.replace(
+                "}\n",
+                '  "project:galaxy" -> "project:qsolqec";\n}\n',
+                1,
+            ),
+            encoding="utf-8",
+        )
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "relationship graph edge endpoints must match data/relationships.json exactly",
+        )
+
+    def test_project_summary_themes_must_match_registry(self):
+        root = self.fixture()
+        path = root / "projects" / "galaxy.md"
+        text = path.read_text(encoding="utf-8")
+        text = text.replace(
+            "- [simulation](../themes/simulation.md)",
+            "- [preservation](../themes/preservation.md)",
+            1,
+        )
+        path.write_text(text, encoding="utf-8")
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "project summary themes must match curated project themes",
+        )
+
+    def test_project_name_must_be_string_even_if_github_registry_agrees(self):
+        root = self.fixture()
+        projects = self.read_json(root, "projects.json")
+        github = self.read_json(root, "github-repositories.json")
+        project = next(
+            project for project in projects["projects"]
+            if project.get("id") == "project:uft-id-3-0"
+        )
+        project["name"] = 123
+        row = next(
+            row for row in github["repositories"]
+            if row.get("full_name") == "QSOLKCB/UFT-ID-3.0"
+        )
+        row["name"] = 123
+        self.write_json(root, "projects.json", projects)
+        self.write_json(root, "github-repositories.json", github)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "project name must be a non-empty string",
+        )
+
+    def test_top_level_markdown_source_ids_must_resolve(self):
+        root = self.fixture()
+        path = root / "README4AI.md"
+        text = path.read_text(encoding="utf-8")
+        self.assertIn("src:qec:readme", text)
+        path.write_text(
+            text.replace("src:qec:readme", "src:not-a-project:readme"),
+            encoding="utf-8",
+        )
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "unknown source index reference in Markdown document",
+        )
+
 
 
 if __name__ == "__main__":

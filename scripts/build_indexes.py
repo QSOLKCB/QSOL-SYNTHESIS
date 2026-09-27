@@ -16,6 +16,7 @@ ZENODO_DOI_RE = re.compile(r"^10\.5281/zenodo\.(\d+)$", re.IGNORECASE)
 PROJECT_ID_RE = re.compile(r"^project:[A-Za-z0-9._-]+$")
 PUBLICATION_ID_RE = re.compile(r"^publication:[A-Za-z0-9._-]+$")
 ZENODO_PUBLICATION_ID_RE = re.compile(r"^publication:zenodo-(\d+)$")
+THEME_NAME_RE = re.compile(r"^[a-z0-9]+(?:_[a-z0-9]+)*$")
 BILATERAL_RELATIONS = {
     "shared-methodological-principle",
     "shared-provenance-architecture",
@@ -199,6 +200,17 @@ def build(root: pathlib.Path) -> dict:
         project_id = project.get("id")
         if not isinstance(project_id, str) or not PROJECT_ID_RE.fullmatch(project_id):
             raise RuntimeError(f"invalid project ID namespace: {project_id!r}")
+        project_themes = project.get("themes")
+        if (
+            not isinstance(project_themes, list)
+            or any(
+                not isinstance(theme, str) or not THEME_NAME_RE.fullmatch(theme)
+                for theme in project_themes
+            )
+        ):
+            raise RuntimeError(
+                f"project themes must use the atomic theme slug namespace: {project_id}"
+            )
 
     ownership_concept_by_publication: dict[str, str | None] = {}
     ownership_link_by_publication: dict[str, dict] = {}
@@ -290,6 +302,17 @@ def build(root: pathlib.Path) -> dict:
             if isinstance(url, str)
         }
         evidence_sources.discard(None)
+        theme = rel.get("theme")
+        if (
+            not isinstance(theme, str)
+            or not THEME_NAME_RE.fullmatch(theme)
+            or theme not in set(source_project.get("themes", []))
+            or theme not in set(target_project.get("themes", []))
+        ):
+            raise RuntimeError(
+                f"bilateral relationship theme must be supported by both endpoints: "
+                f"{source_id} -> {target_id}: {theme}"
+            )
         if evidence_sources != expected_sources:
             raise RuntimeError(
                 f"bilateral relationship evidence must cover both endpoints: "
@@ -344,6 +367,29 @@ def build(root: pathlib.Path) -> dict:
         publication_id = pub.get("id")
         if not isinstance(publication_id, str) or not PUBLICATION_ID_RE.fullmatch(publication_id):
             raise RuntimeError(f"invalid publication ID namespace: {publication_id!r}")
+        title = pub.get("title")
+        resource_type = pub.get("resource_type")
+        version = pub.get("version")
+        association = pub.get("repository_association")
+        if not isinstance(title, str) or not title.strip():
+            raise RuntimeError(
+                f"publication title must be a non-empty string: {publication_id}"
+            )
+        if not isinstance(resource_type, str) or not resource_type.strip():
+            raise RuntimeError(
+                f"publication resource_type must be a non-empty string: {publication_id}"
+            )
+        if version is not None and (
+            not isinstance(version, str) or not version.strip()
+        ):
+            raise RuntimeError(
+                f"publication version must be a non-empty string or null: {publication_id}"
+            )
+        if not isinstance(association, str) or not PROJECT_ID_RE.fullmatch(association):
+            raise RuntimeError(
+                f"publication repository_association must be a project ID: "
+                f"{publication_id} -> {association!r}"
+            )
         doi = pub.get("doi")
         zenodo_id_match = ZENODO_PUBLICATION_ID_RE.fullmatch(publication_id)
         zenodo_doi_match = ZENODO_DOI_RE.fullmatch(doi) if isinstance(doi, str) else None
@@ -392,7 +438,6 @@ def build(root: pathlib.Path) -> dict:
         except RuntimeError as exc:
             raise RuntimeError(f"publication {pub.get('id')} has no traceable source: {exc}") from exc
 
-        association = pub.get("repository_association")
         owner_repository = project_repo_by_id.get(association)
         owner_project = project_by_id.get(association)
         if owner_repository is None or owner_project is None:

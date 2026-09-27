@@ -28,9 +28,9 @@ class CollectGithubRegressionTests(unittest.TestCase):
             calls.append(url)
             if "/orgs/QSOLKCB/repos" in url:
                 return [self.repo()]
-            if "/releases?" in url and "page=1" in url:
+            if "/releases?" in url and url.endswith("&page=1"):
                 return [{"id": i} for i in range(100)]
-            if "/releases?" in url and "page=2" in url:
+            if "/releases?" in url and url.endswith("&page=2"):
                 return [{"id": 100}]
             if "/contents/" in url:
                 return {"sha": "abc"}
@@ -70,9 +70,9 @@ class CollectGithubRegressionTests(unittest.TestCase):
         def fake(url, token, cache_dir, ttl_seconds):
             if "/orgs/QSOLKCB/repos" in url:
                 return [self.repo()]
-            if "/releases?" in url and "page=1" in url:
+            if "/releases?" in url and url.endswith("&page=1"):
                 return [{"id": i} for i in range(100)]
-            if "/releases?" in url and "page=2" in url:
+            if "/releases?" in url and url.endswith("&page=2"):
                 raise RuntimeError("rate limited")
             if "/contents/" in url:
                 return {"sha": "abc"}

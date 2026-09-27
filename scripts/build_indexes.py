@@ -13,6 +13,7 @@ ZENODO_RECORD_RE = re.compile(r"^https://zenodo\.org/records/(\d+)/?$")
 DOI_SOURCE_RE = re.compile(r"^https://doi\.org/(10\.\d{4,9}/[-._;()/:A-Z0-9]+)$", re.IGNORECASE)
 ZENODO_DOI_RE = re.compile(r"^10\.5281/zenodo\.(\d+)$", re.IGNORECASE)
 PROJECT_ID_RE = re.compile(r"^project:[A-Za-z0-9._-]+$")
+PUBLICATION_ID_RE = re.compile(r"^publication:[A-Za-z0-9._-]+$")
 
 
 def read_json(path: pathlib.Path):
@@ -52,6 +53,8 @@ def project_source_id(project_id: str) -> str:
 
 
 def publication_source_id(publication_id: str) -> str:
+    if not isinstance(publication_id, str) or not PUBLICATION_ID_RE.fullmatch(publication_id):
+        raise RuntimeError(f"invalid publication ID namespace: {publication_id!r}")
     return f"src:{publication_id.removeprefix('publication:')}"
 
 
@@ -83,10 +86,12 @@ def build(root: pathlib.Path) -> dict:
     projects_doc = read_json(data / "projects.json")
     publications_doc = read_json(data / "publications.json")
     links_doc = read_json(data / "project-publication-links.json")
+    github_doc = read_json(data / "github-repositories.json")
     dates = {
         projects_doc.get("generated_at"),
         publications_doc.get("generated_at"),
         links_doc.get("generated_at"),
+        github_doc.get("generated_at"),
     }
     dates.discard(None)
     if len(dates) != 1:
@@ -96,6 +101,20 @@ def build(root: pathlib.Path) -> dict:
     projects = projects_doc.get("projects", [])
     publications = publications_doc.get("publications", [])
     links = links_doc.get("links", [])
+    github_rows = github_doc.get("repositories", [])
+
+    curated_source_by_repo: dict[str, str] = {}
+    for row in github_rows:
+        full_name = row.get("full_name")
+        source = row.get("source")
+        normalized_repo = normalize_repository(full_name)
+        if normalized_repo is None:
+            raise RuntimeError(f"curated GitHub row requires full_name: {full_name!r}")
+        if normalized_repo in curated_source_by_repo:
+            raise RuntimeError(f"duplicate curated GitHub repository: {full_name}")
+        if not isinstance(source, str):
+            raise RuntimeError(f"curated GitHub row requires source: {full_name}")
+        curated_source_by_repo[normalized_repo] = source
 
     for project in projects:
         project_id = project.get("id")
@@ -143,6 +162,26 @@ def build(root: pathlib.Path) -> dict:
                 f"does not match {project.get('repo')!r}"
             )
         repository = project.get("repo")
+        curated_source = curated_source_by_repo.get(normalize_repository(repository))
+        if curated_source is None:
+            raise RuntimeError(
+                f"project {project.get('id')} missing independently curated source binding"
+            )
+        try:
+            curated_kind, curated_repository, curated_branch, curated_path = parse_source(curated_source)
+        except RuntimeError as exc:
+            raise RuntimeError(
+                f"project {project.get('id')} curated source is invalid: {exc}"
+            ) from exc
+        if (
+            curated_kind != "github"
+            or normalize_repository(curated_repository) != normalize_repository(repository)
+            or curated_branch != branch
+            or curated_path != path
+        ):
+            raise RuntimeError(
+                f"project {project.get('id')} source does not match independently curated source"
+            )
         sources.append({
             "source_id": project_source_id(project["id"]),
             "repository": repository,
@@ -155,6 +194,8 @@ def build(root: pathlib.Path) -> dict:
 
     for pub in publications:
         publication_id = pub.get("id")
+        if not isinstance(publication_id, str) or not PUBLICATION_ID_RE.fullmatch(publication_id):
+            raise RuntimeError(f"invalid publication ID namespace: {publication_id!r}")
         if publication_id not in ownership_concept_by_publication:
             raise RuntimeError(
                 f"publication requires a curated ownership concept binding: {publication_id}"
@@ -222,6 +263,7 @@ def build(root: pathlib.Path) -> dict:
             "data/projects.json",
             "data/publications.json",
             "data/project-publication-links.json",
+            "data/github-repositories.json",
         ],
         "sources": sources,
     }

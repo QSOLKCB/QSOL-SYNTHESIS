@@ -101,6 +101,28 @@ class CollectZenodoRegressionTests(unittest.TestCase):
                 for error in doc["errors"]
             ))
 
+    def test_non_json_response_is_recorded_and_snapshot_is_written(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            output = root / "zenodo.json"
+            with mock.patch.object(
+                collect_zenodo,
+                "get_json",
+                side_effect=json.JSONDecodeError("bad json", "not-json", 0),
+            ):
+                rc = collect_zenodo.main([
+                    "--queries", "probe",
+                    "--publications", str(root / "missing-publications.json"),
+                    "--projects", str(root / "missing-projects.json"),
+                    "--output", str(output),
+                ])
+
+            self.assertEqual(rc, 0)
+            doc = json.loads(output.read_text(encoding="utf-8"))
+            self.assertEqual(doc["records"], [])
+            self.assertTrue(doc["errors"])
+            self.assertEqual(doc["errors"][0]["query"], "probe")
+
 
 if __name__ == "__main__":
     unittest.main()

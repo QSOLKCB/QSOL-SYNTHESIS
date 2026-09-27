@@ -134,6 +134,7 @@ def build(root: pathlib.Path) -> dict:
     github_rows = github_doc.get("repositories", [])
 
     curated_source_by_repo: dict[str, str] = {}
+    curated_publication_dois_by_repo: dict[str, set[str]] = {}
     for row in github_rows:
         full_name = row.get("full_name")
         source = row.get("source")
@@ -144,7 +145,19 @@ def build(root: pathlib.Path) -> dict:
             raise RuntimeError(f"duplicate curated GitHub repository: {full_name}")
         if not isinstance(source, str):
             raise RuntimeError(f"curated GitHub row requires source: {full_name}")
+        publication_dois = row.get("publication_dois")
+        if (
+            not isinstance(publication_dois, list)
+            or any(not isinstance(doi, str) or not doi for doi in publication_dois)
+            or len(publication_dois) != len(set(publication_dois))
+        ):
+            raise RuntimeError(
+                f"curated GitHub row requires unique publication_dois: {full_name}"
+            )
         curated_source_by_repo[normalized_repo] = source
+        curated_publication_dois_by_repo[normalized_repo] = {
+            doi.casefold() for doi in publication_dois
+        }
 
     for project in projects:
         project_id = project.get("id")
@@ -287,6 +300,18 @@ def build(root: pathlib.Path) -> dict:
         if owner_repository is None or owner_project is None:
             raise RuntimeError(
                 f"publication {pub.get('id')} requires a valid repository_association"
+            )
+        owner_manifest_dois = curated_publication_dois_by_repo.get(
+            normalize_repository(owner_repository)
+        )
+        if (
+            owner_manifest_dois is None
+            or not isinstance(doi, str)
+            or doi.casefold() not in owner_manifest_dois
+        ):
+            raise RuntimeError(
+                f"publication ownership disagrees with curated GitHub registry: "
+                f"{publication_id} -> {association}"
             )
         ownership_link = ownership_link_by_publication.get(publication_id)
         if ownership_link is None or ownership_link.get("project_id") != association:

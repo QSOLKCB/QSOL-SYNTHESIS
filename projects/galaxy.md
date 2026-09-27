@@ -20,7 +20,7 @@ Deterministic galaxy dynamics instrument with CPU/GPU parity and Barnes-Hut corr
 
 ## Cross-project connections
 
-- → **project:uff** — shared-validation-architecture; theme: oracle_candidate_parity; mechanism_claim=false. Both emphasize deterministic runtime, parity checks, replay evidence, and explicit claim boundaries.
+- → **project:uff** — shared-validation-architecture; theme: provenance; mechanism_claim=false. Both emphasize deterministic runtime, parity checks, replay evidence, and explicit claim boundaries.
 
 ## Publications and archival records
 

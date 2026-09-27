@@ -20,7 +20,8 @@
         "nonclaims",
         "falsification"
       ],
-      "source": "https://github.com/QSOLKCB/UFT-ID-3.0/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/UFT-ID-3.0/blob/main/README.md",
+      "summary_path": "projects/uft-id-3.0.md"
     },
     {
       "id": "project:uff",
@@ -42,7 +43,8 @@
         "falsification",
         "formal_verification"
       ],
-      "source": "https://github.com/QSOLKCB/UFF/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/UFF/blob/main/README.md",
+      "summary_path": "projects/uff.md"
     },
     {
       "id": "project:qai-uft",
@@ -59,7 +61,8 @@
         "sonification",
         "interpretation"
       ],
-      "source": "https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QAI-UFT/blob/main/README.md",
+      "summary_path": "projects/qai-uft.md"
     },
     {
       "id": "project:res-rag",
@@ -79,7 +82,8 @@
         "falsification",
         "nonclaims"
       ],
-      "source": "https://github.com/QSOLKCB/res-rag/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/res-rag/blob/main/README.md",
+      "summary_path": "projects/res-rag.md"
     },
     {
       "id": "project:res-rag-viz",
@@ -97,7 +101,8 @@
         "visualisation",
         "provenance"
       ],
-      "source": "https://github.com/QSOLKCB/res-rag-viz/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/res-rag-viz/blob/main/README.md",
+      "summary_path": "projects/res-rag-viz.md"
     },
     {
       "id": "project:qsolqec",
@@ -117,7 +122,8 @@
         "nonclaims",
         "evidence_promotion"
       ],
-      "source": "https://github.com/QSOLKCB/QSOLQEC/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QSOLQEC/blob/main/README.md",
+      "summary_path": "projects/qsolqec.md"
     },
     {
       "id": "project:qsol-qec-bridge",
@@ -136,7 +142,8 @@
         "preservation",
         "evidence_promotion"
       ],
-      "source": "https://github.com/QSOLKCB/QSOL-QEC-BRIDGE/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QSOL-QEC-BRIDGE/blob/main/README.md",
+      "summary_path": "projects/qsol-qec-bridge.md"
     },
     {
       "id": "project:qec",
@@ -157,7 +164,8 @@
         "oracle_candidate_parity",
         "sonification"
       ],
-      "source": "https://github.com/QSOLKCB/QEC/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QEC/blob/main/README.md",
+      "summary_path": "projects/qec.md"
     },
     {
       "id": "project:sonification",
@@ -175,7 +183,8 @@
         "nonclaims",
         "provenance"
       ],
-      "source": "https://github.com/QSOLKCB/SONIFICATION/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/SONIFICATION/blob/main/README.md",
+      "summary_path": "projects/sonification.md"
     },
     {
       "id": "project:e8-music",
@@ -195,7 +204,8 @@
         "nonclaims",
         "formal_verification"
       ],
-      "source": "https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md",
+      "summary_path": "projects/e8_music.md"
     },
     {
       "id": "project:spectral",
@@ -215,7 +225,8 @@
         "observation",
         "nonclaims"
       ],
-      "source": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/SPECTRAL/blob/main/README.md",
+      "summary_path": "projects/spectral.md"
     },
     {
       "id": "project:qsol-map",
@@ -233,7 +244,8 @@
         "external_state",
         "nonclaims"
       ],
-      "source": "https://github.com/QSOLKCB/QSOL-MAP/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QSOL-MAP/blob/main/README.md",
+      "summary_path": "projects/qsol-map.md"
     },
     {
       "id": "project:qsol-geo-reason",
@@ -253,7 +265,8 @@
         "nonclaims",
         "formal_verification"
       ],
-      "source": "https://github.com/QSOLKCB/QSOL-GEO-REASON/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QSOL-GEO-REASON/blob/main/README.md",
+      "summary_path": "projects/qsol-geo-reason.md"
     },
     {
       "id": "project:qsol-semantic-relay",
@@ -271,7 +284,8 @@
         "falsification",
         "provenance"
       ],
-      "source": "https://github.com/QSOLKCB/QSOL-SEMANTIC-RELAY/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QSOL-SEMANTIC-RELAY/blob/main/README.md",
+      "summary_path": "projects/qsol-semantic-relay.md"
     },
     {
       "id": "project:qsol-substrate",
@@ -290,7 +304,8 @@
         "authority_partitioning",
         "nonclaims"
       ],
-      "source": "https://github.com/QSOLKCB/QSOL-SUBSTRATE/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QSOL-SUBSTRATE/blob/main/README.md",
+      "summary_path": "projects/qsol-substrate.md"
     },
     {
       "id": "project:qsol-oracle",
@@ -310,7 +325,8 @@
         "replay",
         "nonclaims"
       ],
-      "source": "https://github.com/QSOLKCB/QSOL-ORACLE/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QSOL-ORACLE/blob/main/README.md",
+      "summary_path": "projects/qsol-oracle.md"
     },
     {
       "id": "project:qsol-nexus",
@@ -328,7 +344,8 @@
         "provenance",
         "nonclaims"
       ],
-      "source": "https://github.com/QSOLKCB/QSOL-NEXUS/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QSOL-NEXUS/blob/main/README.md",
+      "summary_path": "projects/qsol-nexus.md"
     },
     {
       "id": "project:qsol-control",
@@ -347,7 +364,8 @@
         "external_state",
         "preservation"
       ],
-      "source": "https://github.com/QSOLKCB/QSOL-CONTROL/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QSOL-CONTROL/blob/main/README.md",
+      "summary_path": "projects/qsol-control.md"
     },
     {
       "id": "project:galaxy",
@@ -366,7 +384,8 @@
         "provenance",
         "nonclaims"
       ],
-      "source": "https://github.com/QSOLKCB/GALAXY/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/GALAXY/blob/main/README.md",
+      "summary_path": "projects/galaxy.md"
     },
     {
       "id": "project:psycle-linux",
@@ -384,7 +403,8 @@
         "provenance",
         "replay"
       ],
-      "source": "https://github.com/QSOLKCB/PSYCLE-LINUX/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/PSYCLE-LINUX/blob/main/README.md",
+      "summary_path": "projects/psycle-linux.md"
     },
     {
       "id": "project:rivet",
@@ -401,7 +421,8 @@
         "minimal_sufficient_systems",
         "external_state"
       ],
-      "source": "https://github.com/QSOLKCB/RIVET/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/RIVET/blob/main/README.md",
+      "summary_path": "projects/rivet.md"
     },
     {
       "id": "project:cosmo",
@@ -418,7 +439,8 @@
         "formal_verification",
         "nonclaims"
       ],
-      "source": "https://github.com/QSOLKCB/COSMO/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/COSMO/blob/main/README.md",
+      "summary_path": "projects/cosmo.md"
     },
     {
       "id": "project:qsol-ark",
@@ -437,7 +459,8 @@
         "external_state",
         "nonclaims"
       ],
-      "source": "https://github.com/QSOLKCB/QSOL-ARK/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/QSOL-ARK/blob/main/README.md",
+      "summary_path": "projects/qsol-ark.md"
     },
     {
       "id": "project:lattice",
@@ -455,7 +478,8 @@
         "authority_partitioning",
         "nonclaims"
       ],
-      "source": "https://github.com/QSOLKCB/LATTICE/blob/main/README.md"
+      "source": "https://github.com/QSOLKCB/LATTICE/blob/main/README.md",
+      "summary_path": "projects/lattice.md"
     }
   ]
 }

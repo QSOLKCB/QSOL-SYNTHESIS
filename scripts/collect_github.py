@@ -81,6 +81,7 @@ def collect_public_repositories(
     request_fn=request,
 ) -> dict:
     repos = []
+    seen_repositories: set[str] = set()
     page = 1
     while True:
         batch = request_fn(
@@ -104,6 +105,12 @@ def collect_public_repositories(
                 or not repo.get("default_branch")
             ):
                 raise RuntimeError("Unexpected GitHub repository inventory entry")
+            identity = repo["full_name"].casefold()
+            if identity in seen_repositories:
+                raise RuntimeError(
+                    f"Duplicate GitHub repository inventory identity: {repo['full_name']}"
+                )
+            seen_repositories.add(identity)
         repos.extend(batch)
         if len(batch) < 100:
             break

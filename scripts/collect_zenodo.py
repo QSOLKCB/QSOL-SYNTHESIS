@@ -49,10 +49,24 @@ def normalise(hit: dict, discovered_by: str) -> dict:
     links = hit.get("links") or {}
     if not isinstance(links, dict):
         raise RuntimeError("unexpected Zenodo links: expected object")
+    record_id = hit.get("id")
+    doi = hit.get("doi")
+    conceptdoi = hit.get("conceptdoi")
+    has_record_id = (
+        isinstance(record_id, int)
+        and not isinstance(record_id, bool)
+        and record_id > 0
+    )
+    has_doi_identity = any(
+        isinstance(identifier, str) and identifier.strip()
+        for identifier in (doi, conceptdoi)
+    )
+    if not has_record_id and not has_doi_identity:
+        raise RuntimeError("unexpected Zenodo hit: missing stable identity")
     return {
-        "record_id": hit.get("id"),
-        "doi": hit.get("doi"),
-        "conceptdoi": hit.get("conceptdoi"),
+        "record_id": record_id,
+        "doi": doi,
+        "conceptdoi": conceptdoi,
         "title": metadata.get("title"),
         "publication_date": metadata.get("publication_date"),
         "resource_type": resource.get("type"),

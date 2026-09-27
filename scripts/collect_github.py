@@ -20,7 +20,10 @@ def request(url: str, token: str | None, cache_dir: pathlib.Path, ttl_seconds: i
     key = urllib.parse.quote(url, safe="") + ".json"
     cache_file = cache_dir / key
     if cache_file.exists() and time.time() - cache_file.stat().st_mtime < ttl_seconds:
-        return json.loads(cache_file.read_text(encoding="utf-8"))
+        try:
+            return json.loads(cache_file.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+            raise RuntimeError(f"GitHub cached response is not valid JSON: {url}") from exc
     headers = {"User-Agent": "QSOL-SYNTHESIS-collector", "Accept": "application/vnd.github+json"}
     if token:
         headers["Authorization"] = f"Bearer {token}"
@@ -33,6 +36,8 @@ def request(url: str, token: str | None, cache_dir: pathlib.Path, ttl_seconds: i
     except (urllib.error.URLError, TimeoutError) as exc:
         reason = getattr(exc, "reason", str(exc))
         raise RuntimeError(f"GitHub request failed: {url} -> {reason}") from exc
+    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+        raise RuntimeError(f"GitHub response is not valid JSON: {url}") from exc
     cache_file.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     return payload
 
@@ -54,7 +59,7 @@ def collect_release_pages(
         )
         try:
             batch = request_fn(url, token, cache_dir, ttl_seconds)
-        except RuntimeError as exc:
+        except (RuntimeError, json.JSONDecodeError, UnicodeDecodeError) as exc:
             return releases, False, str(exc)
         if not isinstance(batch, list):
             return releases, False, "unexpected GitHub releases response"
@@ -126,7 +131,7 @@ def collect_public_repositories(
                         "exists": True,
                         "sha": meta.get("sha") if isinstance(meta, dict) else None,
                     }
-                except RuntimeError as exc:
+                except (RuntimeError, json.JSONDecodeError, UnicodeDecodeError) as exc:
                     message = str(exc)
                     if "HTTP 404" in message:
                         row["first_party_files"][candidate] = {"exists": False}

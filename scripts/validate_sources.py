@@ -39,7 +39,9 @@ def read_json(path: pathlib.Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def source_id_for_project(project_id: str) -> str:
+def source_id_for_project(project_id: str | None) -> str | None:
+    if not isinstance(project_id, str) or not project_id:
+        return None
     return f"src:{project_id.removeprefix('project:')}:readme"
 
 
@@ -64,6 +66,24 @@ def normalize_repository(value: str | None) -> str | None:
     if not isinstance(value, str) or not value:
         return None
     return value.casefold()
+
+
+def github_blob_identity(url: str | None) -> tuple[str, str, str] | None:
+    """Return canonical repository identity plus exact ref/path for a GitHub blob."""
+    if not isinstance(url, str):
+        return None
+    match = GITHUB_BLOB_RE.fullmatch(url)
+    if not match:
+        return None
+    repository = normalize_repository(match.group(1))
+    if repository is None:
+        return None
+    return repository, match.group(2), match.group(3)
+
+
+def github_blob_source_matches(candidate: str | None, curated: str | None) -> bool:
+    candidate_identity = github_blob_identity(candidate)
+    return candidate_identity is not None and candidate_identity == github_blob_identity(curated)
 
 
 def traceable_publication_source(url: str | None) -> bool:
@@ -106,6 +126,7 @@ def publication_link_evidence_is_valid(
     url: str,
     relation: str,
     project_repo: str | None,
+    project_source: str | None,
     publication: dict | None,
     repository_by_project: dict[str, str],
 ) -> bool:
@@ -122,21 +143,17 @@ def publication_link_evidence_is_valid(
         # accepts only those two evidence classes; the link-level validator
         # below requires that both classes are present.
         if evidence_repo is not None:
-            evidence_identity = normalize_repository(evidence_repo)
             return (
-                evidence_identity == normalize_repository(project_repo)
-                or (
-                    url == publication.get("source")
-                    and evidence_identity == normalize_repository(owner_repo)
-                )
+                github_blob_source_matches(url, project_source)
+                or github_blob_source_matches(url, publication.get("source"))
             )
         return publication_external_source_matches(publication, url)
 
     if relation == "repository-associated-publication":
-        # Ownership may be established by first-party metadata in the owning
-        # project or by an external DOI/Zenodo source bound to this publication.
+        # Ownership evidence must identify the selected publication, not merely
+        # some path in the owning repository.
         if evidence_repo is not None:
-            return normalize_repository(evidence_repo) == normalize_repository(owner_repo)
+            return github_blob_source_matches(url, publication.get("source"))
 
         return publication_external_source_matches(publication, url)
 
@@ -272,6 +289,17 @@ def validate(root: pathlib.Path) -> list[str]:
         concept_doi = pub.get("concept_doi")
         if concept_doi and not DOI_RE.fullmatch(concept_doi):
             fail(f"invalid concept DOI syntax: {concept_doi}")
+        if pub.get("resource_type") == "concept-doi":
+            if (
+                not isinstance(concept_doi, str)
+                or not concept_doi
+                or not isinstance(doi, str)
+                or concept_doi.casefold() != doi.casefold()
+            ):
+                fail(
+                    f"concept-doi publication must self-identify with concept_doi equal to doi: "
+                    f"{pub.get('id')}"
+                )
         assoc = pub.get("repository_association")
         if assoc and assoc not in project_set:
             fail(f"publication association missing project: {pub.get('id')} -> {assoc}")
@@ -397,10 +425,12 @@ def validate(root: pathlib.Path) -> list[str]:
             fail(f"publication link requires evidence: {link.get('project_id')} -> {link.get('publication_id')}")
         else:
             publication = publication_by_id.get(link.get("publication_id"))
-            project_repo = repo_by_project.get(link.get("project_id"))
+            project = project_by_id.get(link.get("project_id"), {})
+            project_repo = project.get("repo")
+            project_source = project.get("source")
             for url in evidence:
                 if not isinstance(url, str) or not publication_link_evidence_is_valid(
-                    url, relation, project_repo, publication, repo_by_project
+                    url, relation, project_repo, project_source, publication, repo_by_project
                 ):
                     fail(
                         f"publication link evidence is not traceable to the linked project/publication: "
@@ -409,14 +439,13 @@ def validate(root: pathlib.Path) -> list[str]:
             if relation == "lineage-reference" and publication is not None:
                 project_bound = any(
                     isinstance(url, str)
-                    and normalize_repository(github_repository(url))
-                    == normalize_repository(project_repo)
+                    and github_blob_source_matches(url, project_source)
                     for url in evidence
                 )
                 publication_bound = any(
                     isinstance(url, str)
                     and (
-                        url == publication.get("source")
+                        github_blob_source_matches(url, publication.get("source"))
                         or publication_external_source_matches(publication, url)
                     )
                     for url in evidence
@@ -481,6 +510,11 @@ def validate(root: pathlib.Path) -> list[str]:
             normalize_repository(repo_by_project.get(source_id)),
             normalize_repository(repo_by_project.get(target_id)),
         }
+        endpoint_sources = {
+            github_blob_identity(project_by_id.get(endpoint_id, {}).get("source"))
+            for endpoint_id in (source_id, target_id)
+        }
+        endpoint_sources.discard(None)
         if not isinstance(evidence, list) or not evidence:
             fail(f"relationship requires first-party GitHub evidence: {source_id} -> {target_id}")
         else:
@@ -492,6 +526,11 @@ def validate(root: pathlib.Path) -> list[str]:
                     fail(
                         f"relationship evidence repository must match an endpoint: "
                         f"{source_id} -> {target_id}: {evidence_repo}"
+                    )
+                elif github_blob_identity(url) not in endpoint_sources:
+                    fail(
+                        f"relationship evidence must match a curated endpoint source: "
+                        f"{source_id} -> {target_id}: {url!r}"
                     )
         relationship_keys.append((source_id, target_id, rel.get("relation_type"), theme))
     if len(relationship_keys) != len(set(relationship_keys)):
@@ -531,7 +570,9 @@ def validate(root: pathlib.Path) -> list[str]:
                 fail(f"unknown source support tag: {src.get('source_id')} -> {support}")
 
     for project in projects:
-        sid = source_id_for_project(project["id"])
+        sid = source_id_for_project(project.get("id"))
+        if sid is None:
+            continue
         src = source_by_id.get(sid)
         if not src:
             fail(f"project source missing from source index: {sid}")
@@ -563,6 +604,8 @@ def validate(root: pathlib.Path) -> list[str]:
     for row in rows:
         pid = row.get("project_id")
         sid = source_id_for_project(pid)
+        if sid is None:
+            continue
         supports = set(source_by_id.get(sid, {}).get("supports", []))
         for theme in theme_set:
             value = row.get(theme)
@@ -581,12 +624,22 @@ def validate(root: pathlib.Path) -> list[str]:
             text = path.read_text(encoding="utf-8")
             if "Bootstrap placeholder" in text or "Draft section. This bootstrap" in text:
                 fail(f"placeholder prose remains: {path.relative_to(root)}")
-            for source_ref in sorted(set(SOURCE_ID_RE.findall(text))):
+            source_refs = sorted(set(SOURCE_ID_RE.findall(text)))
+            for source_ref in source_refs:
                 if source_ref not in source_by_id:
                     fail(
                         f"unknown source index reference in synthesis document: "
                         f"{path.relative_to(root)} -> {source_ref}"
                     )
+            if (
+                directory == "paper"
+                and re.match(r"^(?:0[2-9]|1[0-4])-", path.name)
+                and not source_refs
+            ):
+                fail(
+                    f"substantive paper section requires source index references: "
+                    f"{path.relative_to(root)}"
+                )
 
     return errors
 

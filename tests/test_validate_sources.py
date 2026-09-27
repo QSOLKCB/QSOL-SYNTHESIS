@@ -326,6 +326,86 @@ class ValidateSourcesRegressionTests(unittest.TestCase):
             "unknown source index reference in synthesis document",
         )
 
+    def test_relationship_evidence_must_match_curated_endpoint_source(self):
+        root = self.fixture()
+        doc = self.read_json(root, "relationships.json")
+        rel = doc["relationships"][0]
+        endpoint_repo = validate_sources.github_repository(rel["evidence"][0])
+        rel["evidence"] = [
+            f"https://github.com/{endpoint_repo}/blob/main/DOES-NOT-EXIST.md"
+        ]
+        self.write_json(root, "relationships.json", doc)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "relationship evidence must match a curated endpoint source",
+        )
+
+    def test_ownership_evidence_must_identify_selected_publication(self):
+        root = self.fixture()
+        links = self.read_json(root, "project-publication-links.json")
+        pubs = {
+            pub["id"]: pub
+            for pub in self.read_json(root, "publications.json")["publications"]
+        }
+        link = next(
+            link for link in links["links"]
+            if link.get("relation") == "repository-associated-publication"
+            and validate_sources.github_repository(pubs[link["publication_id"]].get("source"))
+        )
+        pub = pubs[link["publication_id"]]
+        repo = validate_sources.github_repository(pub["source"])
+        link["evidence"] = [f"https://github.com/{repo}/blob/main/DOES-NOT-EXIST.md"]
+        self.write_json(root, "project-publication-links.json", links)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "publication link evidence is not traceable to the linked project/publication",
+        )
+
+    def test_concept_record_must_retain_self_identity(self):
+        root = self.fixture()
+        pubs = self.read_json(root, "publications.json")
+        zenodo = self.read_json(root, "zenodo-records.json")
+        concept = next(
+            pub for pub in pubs["publications"]
+            if pub.get("resource_type") == "concept-doi"
+        )
+        concept["concept_doi"] = None
+        zenodo_row = next(
+            row for row in zenodo["records"]
+            if row.get("doi", "").casefold() == concept["doi"].casefold()
+        )
+        zenodo_row["concept_doi"] = None
+        self.write_json(root, "publications.json", pubs)
+        self.write_json(root, "zenodo-records.json", zenodo)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "concept-doi publication must self-identify with concept_doi equal to doi",
+        )
+
+    def test_null_project_id_reports_error_without_crashing(self):
+        root = self.fixture()
+        projects = self.read_json(root, "projects.json")
+        projects["projects"][0]["id"] = None
+        self.write_json(root, "projects.json", projects)
+
+        errors = validate_sources.validate(root)
+        self.assert_has(errors, "project IDs must be non-null and unique")
+
+    def test_substantive_paper_section_requires_source_reference(self):
+        root = self.fixture()
+        path = root / "paper" / "03-project-families.md"
+        text = path.read_text(encoding="utf-8")
+        text = validate_sources.SOURCE_ID_RE.sub("source-removed", text)
+        path.write_text(text, encoding="utf-8")
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "substantive paper section requires source index references",
+        )
+
     def test_matrix_cannot_deny_declared_theme_support(self):
         root = self.fixture()
         projects = self.read_json(root, "projects.json")["projects"]

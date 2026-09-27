@@ -63,6 +63,19 @@ class BuildIndexesRegressionTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "external source does not match"):
             build_indexes.build(root)
 
+    def test_equivalent_repository_case_is_canonicalized(self):
+        root = self.fixture()
+        projects = self.read(root, "projects.json")
+        project = projects["projects"][0]
+        declared_repo = project["repo"]
+        project["source"] = project["source"].replace(declared_repo, declared_repo.swapcase())
+        self.write(root, "projects.json", projects)
+
+        built = build_indexes.build(root)
+        source_id = build_indexes.project_source_id(project["id"])
+        row = next(row for row in built["sources"] if row["source_id"] == source_id)
+        self.assertEqual(row["repository"], declared_repo)
+
     def test_generated_date_can_advance_without_old_index_state(self):
         root = self.fixture()
         for name in ("projects.json", "publications.json"):

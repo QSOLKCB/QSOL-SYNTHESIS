@@ -18,6 +18,12 @@ def read_json(path: pathlib.Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def normalize_repository(value: str | None) -> str | None:
+    if not isinstance(value, str) or not value:
+        return None
+    return value.casefold()
+
+
 def parse_source(url: str | None) -> tuple[str, str | None, str | None, str]:
     """Return (kind, repository, branch, path) for a traceable source.
 
@@ -94,11 +100,12 @@ def build(root: pathlib.Path) -> dict:
             raise RuntimeError(f"project {project.get('id')} has no traceable source: {exc}") from exc
         if kind != "github":
             raise RuntimeError(f"project {project.get('id')} source must be a GitHub blob URL")
-        if repository != project.get("repo"):
+        if normalize_repository(repository) != normalize_repository(project.get("repo")):
             raise RuntimeError(
                 f"project {project.get('id')} source repository {repository!r} "
                 f"does not match {project.get('repo')!r}"
             )
+        repository = project.get("repo")
         sources.append({
             "source_id": project_source_id(project["id"]),
             "repository": repository,
@@ -115,18 +122,25 @@ def build(root: pathlib.Path) -> dict:
         except RuntimeError as exc:
             raise RuntimeError(f"publication {pub.get('id')} has no traceable source: {exc}") from exc
 
+        association = pub.get("repository_association")
+        owner_repository = project_repo_by_id.get(association)
+        if owner_repository is None:
+            raise RuntimeError(
+                f"publication {pub.get('id')} requires a valid repository_association"
+            )
+
         if kind == "external":
             if not publication_external_source_matches(pub, path):
                 raise RuntimeError(
                     f"publication {pub.get('id')} external source does not match its DOI/concept DOI"
                 )
-            association = pub.get("repository_association")
-            repository = project_repo_by_id.get(association)
-            if repository is None:
-                raise RuntimeError(
-                    f"publication {pub.get('id')} external source requires a valid repository_association"
-                )
+        elif normalize_repository(repository) != normalize_repository(owner_repository):
+            raise RuntimeError(
+                f"publication {pub.get('id')} source repository {repository!r} "
+                f"does not match associated repository {owner_repository!r}"
+            )
 
+        repository = owner_repository
         sources.append({
             "source_id": publication_source_id(pub["id"]),
             "repository": repository,

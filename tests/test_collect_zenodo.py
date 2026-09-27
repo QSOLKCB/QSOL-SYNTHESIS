@@ -178,6 +178,29 @@ class CollectZenodoRegressionTests(unittest.TestCase):
             ["exact-doi:10.5281/zenodo.123", "query:probe"],
         )
 
+    def test_malformed_hit_object_is_recorded_and_snapshot_written(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            output = root / "zenodo.json"
+            with mock.patch.object(
+                collect_zenodo,
+                "get_json",
+                return_value={"hits": {"total": 1, "hits": [None]}},
+            ):
+                rc = collect_zenodo.main([
+                    "--queries", "probe",
+                    "--publications", str(root / "missing-publications.json"),
+                    "--projects", str(root / "missing-projects.json"),
+                    "--output", str(output),
+                ])
+
+            self.assertEqual(rc, 0)
+            doc = json.loads(output.read_text(encoding="utf-8"))
+            self.assertEqual(doc["records"], [])
+            self.assertTrue(doc["errors"])
+            self.assertEqual(doc["errors"][0]["query"], "probe")
+            self.assertIn("hit must be an object", doc["errors"][0]["error"])
+
 
 if __name__ == "__main__":
     unittest.main()

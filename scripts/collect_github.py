@@ -91,6 +91,19 @@ def collect_public_repositories(
         )
         if not isinstance(batch, list):
             raise RuntimeError("Unexpected GitHub repositories response")
+        for repo in batch:
+            if (
+                not isinstance(repo, dict)
+                or not isinstance(repo.get("name"), str)
+                or not repo.get("name")
+                or not isinstance(repo.get("full_name"), str)
+                or not repo.get("full_name")
+                or not isinstance(repo.get("html_url"), str)
+                or not repo.get("html_url")
+                or not isinstance(repo.get("default_branch"), str)
+                or not repo.get("default_branch")
+            ):
+                raise RuntimeError("Unexpected GitHub repository inventory entry")
         repos.extend(batch)
         if len(batch) < 100:
             break

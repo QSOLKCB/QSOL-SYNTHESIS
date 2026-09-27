@@ -763,6 +763,109 @@ class ValidateSourcesRegressionTests(unittest.TestCase):
             "matrix rows must match the declared header width exactly",
         )
 
+    def test_nonhashable_generated_at_reports_error_without_crashing(self):
+        root = self.fixture()
+        doc = self.read_json(root, "projects.json")
+        doc["generated_at"] = []
+        self.write_json(root, "projects.json", doc)
+
+        errors = validate_sources.validate(root)
+        self.assert_has(errors, "projects.json generated_at must use a real YYYY-MM-DD date")
+        self.assert_has(errors, "curated generated_at values must agree")
+
+    def test_publication_metadata_title_must_be_string(self):
+        root = self.fixture()
+        pubs = self.read_json(root, "publications.json")
+        zenodo = self.read_json(root, "zenodo-records.json")
+        pub = pubs["publications"][0]
+        pub["title"] = 123
+        row = next(
+            row for row in zenodo["records"]
+            if isinstance(row.get("doi"), str)
+            and row["doi"].casefold() == pub["doi"].casefold()
+        )
+        row["title"] = 123
+        self.write_json(root, "publications.json", pubs)
+        self.write_json(root, "zenodo-records.json", zenodo)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "publication title must be a non-empty string",
+        )
+
+    def test_theme_name_must_remain_atomic_slug(self):
+        root = self.fixture()
+        themes = self.read_json(root, "themes.json")
+        theme = next(t for t in themes["themes"] if t["name"] == "visualisation")
+        theme["name"] = "../projects/res-rag-viz"
+        theme["id"] = "theme:../projects/res-rag-viz"
+        self.write_json(root, "themes.json", themes)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "theme names must use the atomic theme slug namespace",
+        )
+
+    def test_bilateral_relationship_theme_requires_both_endpoint_support(self):
+        root = self.fixture()
+        projects = self.read_json(root, "projects.json")
+        uff = next(p for p in projects["projects"] if p["id"] == "project:uff")
+        uff["themes"] = [theme for theme in uff["themes"] if theme != "provenance"]
+        self.write_json(root, "projects.json", projects)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "bilateral relationship theme must be supported by both endpoints",
+        )
+
+    def test_project_summary_first_party_link_must_match_curated_source(self):
+        root = self.fixture()
+        path = root / "projects" / "uff.md"
+        text = path.read_text(encoding="utf-8")
+        text = text.replace(
+            "https://github.com/QSOLKCB/UFF/blob/main/README.md",
+            "https://github.com/QSOLKCB/GALAXY/blob/main/README.md",
+            1,
+        )
+        path.write_text(text, encoding="utf-8")
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "project summary first-party source link must match curated source",
+        )
+
+    def test_project_summary_relationships_must_match_registry(self):
+        root = self.fixture()
+        path = root / "projects" / "uff.md"
+        text = path.read_text(encoding="utf-8")
+        text = text.replace(
+            "project:galaxy",
+            "project:qsolqec",
+            1,
+        )
+        path.write_text(text, encoding="utf-8")
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "project summary relationships must match curated registry",
+        )
+
+    def test_project_summary_publication_relation_type_must_match_registry(self):
+        root = self.fixture()
+        path = root / "projects" / "uff.md"
+        text = path.read_text(encoding="utf-8")
+        text = text.replace(
+            "**repository-associated-publication** — 10.5281/zenodo.22026554",
+            "**lineage-reference** — 10.5281/zenodo.22026554",
+            1,
+        )
+        path.write_text(text, encoding="utf-8")
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "project summary publications must match curated links and relation types",
+        )
+
     def test_matrix_cannot_deny_declared_theme_support(self):
         root = self.fixture()
         projects = self.read_json(root, "projects.json")["projects"]

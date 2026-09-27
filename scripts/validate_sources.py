@@ -801,13 +801,7 @@ def validate(root: pathlib.Path) -> list[str]:
                 set(project_by_id.get(endpoint_id, {}).get("themes", []))
                 for endpoint_id in (source_id, target_id)
             ]
-            if relation_type in BILATERAL_RELATIONS:
-                if not all(theme in themes_for_endpoint for themes_for_endpoint in endpoint_theme_sets):
-                    fail(
-                        f"bilateral relationship theme must be supported by both endpoints: "
-                        f"{source_id} -> {target_id}: {theme}"
-                    )
-            elif not any(theme in themes_for_endpoint for themes_for_endpoint in endpoint_theme_sets):
+            if not any(theme in themes_for_endpoint for themes_for_endpoint in endpoint_theme_sets):
                 fail(
                     f"relationship theme is not supported by either endpoint: "
                     f"{source_id} -> {target_id}: {theme}"

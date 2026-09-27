@@ -143,6 +143,21 @@ class CollectGithubRegressionTests(unittest.TestCase):
         self.assertFalse(complete)
         self.assertEqual(error, "unexpected GitHub release entry")
 
+    def test_malformed_repository_inventory_entry_is_rejected(self):
+        def fake(url, token, cache_dir, ttl_seconds):
+            if "/orgs/QSOLKCB/repos" in url:
+                return [{}]
+            raise AssertionError(url)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaisesRegex(
+                RuntimeError,
+                "Unexpected GitHub repository inventory entry",
+            ):
+                collect_github.collect_public_repositories(
+                    "QSOLKCB", None, pathlib.Path(tmp), 0, False, request_fn=fake
+                )
+
 
 if __name__ == "__main__":
     unittest.main()

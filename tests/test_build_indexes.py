@@ -263,6 +263,41 @@ class BuildIndexesRegressionTests(unittest.TestCase):
         ):
             build_indexes.build(root)
 
+    def test_rejects_lineage_publication_from_unrelated_origin(self):
+        root = self.fixture()
+        relationships = self.read(root, "relationships.json")
+        rel = next(
+            rel for rel in relationships["relationships"]
+            if rel.get("relation_type") == "historical-lineage"
+        )
+        rel["source"] = "project:qsolqec"
+        self.write(root, "relationships.json", relationships)
+
+        with self.assertRaisesRegex(
+            RuntimeError,
+            "historical-lineage publication must belong to the origin project",
+        ):
+            build_indexes.build(root)
+
+    def test_rejects_bilateral_relationship_without_both_endpoint_sources(self):
+        root = self.fixture()
+        relationships = self.read(root, "relationships.json")
+        rel = next(
+            rel for rel in relationships["relationships"]
+            if rel.get("relation_type") == "shared-validation-architecture"
+        )
+        rel["target"] = "project:spectral"
+        rel["evidence"] = [
+            "https://github.com/QSOLKCB/GALAXY/blob/main/README.md"
+        ]
+        self.write(root, "relationships.json", relationships)
+
+        with self.assertRaisesRegex(
+            RuntimeError,
+            "bilateral relationship evidence must cover both endpoints",
+        ):
+            build_indexes.build(root)
+
     def test_generated_date_can_advance_without_old_index_state(self):
         root = self.fixture()
         current_date = dt.date.today().isoformat()

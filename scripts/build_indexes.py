@@ -16,6 +16,12 @@ ZENODO_DOI_RE = re.compile(r"^10\.5281/zenodo\.(\d+)$", re.IGNORECASE)
 PROJECT_ID_RE = re.compile(r"^project:[A-Za-z0-9._-]+$")
 PUBLICATION_ID_RE = re.compile(r"^publication:[A-Za-z0-9._-]+$")
 ZENODO_PUBLICATION_ID_RE = re.compile(r"^publication:zenodo-(\d+)$")
+BILATERAL_RELATIONS = {
+    "shared-methodological-principle",
+    "shared-provenance-architecture",
+    "shared-validation-architecture",
+    "analogous-computational-structure",
+}
 
 
 def read_json(path: pathlib.Path):
@@ -217,12 +223,30 @@ def build(root: pathlib.Path) -> dict:
         ownership_concept_by_publication[publication_id] = expected_concept_doi
         ownership_link_by_publication[publication_id] = link
 
-    expected_lineage_links = {
-        (rel.get("target"), rel.get("publication_id"))
-        for rel in relationships
-        if rel.get("relation_type") == "historical-lineage"
-        and rel.get("publication_id") is not None
+    publication_by_id = {
+        pub.get("id"): pub
+        for pub in publications
+        if pub.get("id")
     }
+    expected_lineage_links = set()
+    for rel in relationships:
+        relation_type = rel.get("relation_type")
+        source_id = rel.get("source")
+        target_id = rel.get("target")
+        if relation_type == "historical-lineage":
+            publication_id = rel.get("publication_id")
+            publication = publication_by_id.get(publication_id)
+            if publication is None:
+                raise RuntimeError(
+                    f"historical-lineage relationship must bind a curated publication: "
+                    f"{source_id} -> {target_id}: {publication_id}"
+                )
+            if publication.get("repository_association") != source_id:
+                raise RuntimeError(
+                    f"historical-lineage publication must belong to the origin project: "
+                    f"{source_id} -> {target_id}: {publication_id}"
+                )
+            expected_lineage_links.add((target_id, publication_id))
     actual_lineage_links = {
         (link.get("project_id"), link.get("publication_id"))
         for link in links
@@ -244,6 +268,42 @@ def build(root: pathlib.Path) -> dict:
         for project in projects
         if project.get("id")
     }
+
+    for rel in relationships:
+        relation_type = rel.get("relation_type")
+        if relation_type not in BILATERAL_RELATIONS:
+            continue
+        source_id = rel.get("source")
+        target_id = rel.get("target")
+        theme = rel.get("theme")
+        source_project = project_by_id.get(source_id)
+        target_project = project_by_id.get(target_id)
+        if source_project is None or target_project is None:
+            continue
+        if (
+            theme not in set(source_project.get("themes", []))
+            or theme not in set(target_project.get("themes", []))
+        ):
+            raise RuntimeError(
+                f"bilateral relationship theme must be supported by both endpoints: "
+                f"{source_id} -> {target_id}: {theme}"
+            )
+        expected_sources = {
+            github_blob_identity(source_project.get("source")),
+            github_blob_identity(target_project.get("source")),
+        }
+        expected_sources.discard(None)
+        evidence_sources = {
+            github_blob_identity(url)
+            for url in rel.get("evidence", [])
+            if isinstance(url, str)
+        }
+        evidence_sources.discard(None)
+        if evidence_sources != expected_sources:
+            raise RuntimeError(
+                f"bilateral relationship evidence must cover both endpoints: "
+                f"{source_id} -> {target_id}"
+            )
 
     sources = []
     for project in projects:

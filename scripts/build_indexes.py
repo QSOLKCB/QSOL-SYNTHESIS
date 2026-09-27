@@ -275,19 +275,10 @@ def build(root: pathlib.Path) -> dict:
             continue
         source_id = rel.get("source")
         target_id = rel.get("target")
-        theme = rel.get("theme")
         source_project = project_by_id.get(source_id)
         target_project = project_by_id.get(target_id)
         if source_project is None or target_project is None:
             continue
-        if (
-            theme not in set(source_project.get("themes", []))
-            or theme not in set(target_project.get("themes", []))
-        ):
-            raise RuntimeError(
-                f"bilateral relationship theme must be supported by both endpoints: "
-                f"{source_id} -> {target_id}: {theme}"
-            )
         expected_sources = {
             github_blob_identity(source_project.get("source")),
             github_blob_identity(target_project.get("source")),

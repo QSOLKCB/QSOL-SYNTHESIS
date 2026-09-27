@@ -406,6 +406,51 @@ class ValidateSourcesRegressionTests(unittest.TestCase):
             "substantive paper section requires source index references",
         )
 
+    def test_version_concept_doi_requires_independent_ownership_binding(self):
+        root = self.fixture()
+        pubs = self.read_json(root, "publications.json")
+        zenodo = self.read_json(root, "zenodo-records.json")
+        concept = next(
+            pub for pub in pubs["publications"]
+            if pub.get("resource_type") == "concept-doi"
+        )
+        version = next(
+            pub for pub in pubs["publications"]
+            if pub.get("repository_association") == concept.get("repository_association")
+            and pub.get("resource_type") != "concept-doi"
+        )
+        version["concept_doi"] = concept["doi"]
+        zenodo_row = next(
+            row for row in zenodo["records"]
+            if row.get("doi", "").casefold() == version["doi"].casefold()
+        )
+        zenodo_row["concept_doi"] = concept["doi"]
+        self.write_json(root, "publications.json", pubs)
+        self.write_json(root, "zenodo-records.json", zenodo)
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "publication concept DOI disagrees with curated ownership binding",
+        )
+
+    def test_non_string_concept_doi_reports_error_without_crashing(self):
+        root = self.fixture()
+        pubs = self.read_json(root, "publications.json")
+        pubs["publications"][0]["concept_doi"] = 123
+        self.write_json(root, "publications.json", pubs)
+
+        errors = validate_sources.validate(root)
+        self.assert_has(errors, "invalid concept DOI syntax")
+
+    def test_every_curated_project_requires_a_summary_document(self):
+        root = self.fixture()
+        (root / "projects" / "uff.md").unlink()
+
+        self.assert_has(
+            validate_sources.validate(root),
+            "project summaries must cover projects.json exactly",
+        )
+
     def test_matrix_cannot_deny_declared_theme_support(self):
         root = self.fixture()
         projects = self.read_json(root, "projects.json")["projects"]

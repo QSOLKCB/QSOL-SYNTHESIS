@@ -32,7 +32,8 @@
       "summary": "E8_MUSIC README cites SONIFICATION release line and concept DOI lineage.",
       "evidence": [
         "https://github.com/QSOLKCB/E8_MUSIC/blob/main/README.md"
-      ]
+      ],
+      "publication_id": "publication:zenodo-21404223"
     },
     {
       "source": "project:spectral",

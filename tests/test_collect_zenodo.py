@@ -123,6 +123,61 @@ class CollectZenodoRegressionTests(unittest.TestCase):
             self.assertTrue(doc["errors"])
             self.assertEqual(doc["errors"][0]["query"], "probe")
 
+    def test_valid_json_error_payload_is_recorded_as_uncertainty(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            output = root / "zenodo.json"
+            with mock.patch.object(
+                collect_zenodo,
+                "get_json",
+                return_value={"status": 500, "message": "temporary failure"},
+            ):
+                rc = collect_zenodo.main([
+                    "--queries", "probe",
+                    "--publications", str(root / "missing-publications.json"),
+                    "--projects", str(root / "missing-projects.json"),
+                    "--output", str(output),
+                ])
+
+            self.assertEqual(rc, 0)
+            doc = json.loads(output.read_text(encoding="utf-8"))
+            self.assertEqual(doc["records"], [])
+            self.assertTrue(doc["errors"])
+            self.assertEqual(doc["errors"][0]["query"], "probe")
+            self.assertIn("missing hits object", doc["errors"][0]["error"])
+
+    def test_exact_doi_hit_replaces_conflicting_query_metadata(self):
+        index = {}
+        query_record = collect_zenodo.normalise(
+            {
+                "id": 123,
+                "doi": "10.5281/zenodo.999",
+                "metadata": {"title": "Query title", "resource_type": {}},
+                "links": {},
+            },
+            "query:probe",
+        )
+        exact_record = collect_zenodo.normalise(
+            {
+                "id": 123,
+                "doi": "10.5281/zenodo.123",
+                "metadata": {"title": "Exact title", "resource_type": {}},
+                "links": {},
+            },
+            "exact-doi:10.5281/zenodo.123",
+        )
+
+        collect_zenodo.merge_record(index, query_record)
+        collect_zenodo.merge_record(index, exact_record)
+
+        record = index["123"]
+        self.assertEqual(record["doi"], "10.5281/zenodo.123")
+        self.assertEqual(record["title"], "Exact title")
+        self.assertEqual(
+            record["discovered_by"],
+            ["exact-doi:10.5281/zenodo.123", "query:probe"],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
